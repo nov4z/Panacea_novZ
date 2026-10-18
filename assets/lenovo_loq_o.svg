@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <g fill="#ff2825">
+    <!-- Segmento Superior (Corona la cima del triangulo) -->
+    <path d="M 63.76 75.04 L 25.60 53.00 A 88 88 0 0 1 174.40 53.00 L 136.24 75.04 A 44 44 0 0 0 63.76 75.04 Z" />
+    <!-- Segmento Inferior Derecho -->
+    <path d="M 139.73 81.10 L 177.90 59.07 A 88 88 0 0 1 103.50 187.93 L 103.50 143.86 A 44 44 0 0 0 139.73 81.10 Z" />
+    <!-- Segmento Inferior Izquierdo -->
+    <path d="M 96.50 143.86 L 96.50 187.93 A 88 88 0 0 1 22.10 59.07 L 60.27 81.10 A 44 44 0 0 0 96.50 143.86 Z" />
+  </g>
+</svg>

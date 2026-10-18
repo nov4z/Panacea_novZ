@@ -1,0 +1,25 @@
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+
+# Agent working trees and debug artifacts
+.agents/
+backups/
+*.orig_bak
+*.bak
+*~
+=
+
+# Local runtime states and hardware caches
+.antigravity_status.json
+.vibrance
+last_wifi_ssid
+sounds/tmp/
+.version
+
+# OS metadata
+.DS_Store
+Thumbs.db
