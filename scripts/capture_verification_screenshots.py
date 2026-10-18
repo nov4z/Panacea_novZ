@@ -15,8 +15,8 @@ import time
 import subprocess
 from pathlib import Path
 
-PANACEA_DIR = Path('/home/nova/.config/panacea')
-OUTPUT_DIR = PANACEA_DIR / '.agents/teamwork_preview_implementer_r1/screenshots'
+PANACEA_DIR = Path(os.environ.get('PANACEA_DIR', Path(__file__).resolve().parent.parent))
+OUTPUT_DIR = Path(os.environ.get('OUTPUT_DIR', PANACEA_DIR / 'screenshots'))
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 def ipc_call(method: str):

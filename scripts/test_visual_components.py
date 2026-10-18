@@ -39,7 +39,7 @@ import unittest
 import subprocess
 from pathlib import Path
 
-PANACEA_DIR = Path("/home/nova/.config/panacea")
+PANACEA_DIR = Path(os.environ.get("PANACEA_DIR", Path(__file__).resolve().parent.parent))
 ASSETS_DIR = PANACEA_DIR / "assets"
 LOGO_ASSET = ASSETS_DIR / "antigravity.png"
 LOGO_QML = PANACEA_DIR / "AntigravityLogo.qml"

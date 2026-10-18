@@ -2319,7 +2319,8 @@ Item {
                                 var idStr = String(trayBtn.modelData.id || "").toLowerCase();
                                 var nameStr = String(trayBtn.modelData.iconName || "").toLowerCase();
                                 if (idStr.indexOf("spotify") !== -1 || raw.indexOf("spotify") !== -1 || nameStr.indexOf("spotify") !== -1) {
-                                    return "file:///home/nova/.local/share/icons/hicolor/32x32/apps/spotify-linux-32.png";
+                                    var homeDir = Quickshell.env("HOME") || "";
+                                    return (homeDir.length > 0) ? ("file://" + homeDir + "/.local/share/icons/hicolor/32x32/apps/spotify-linux-32.png") : "spotify";
                                 }
                                 return raw;
                             }
@@ -2330,7 +2331,8 @@ Item {
                                 if (status === Image.Error) {
                                     var idStr = String(trayBtn.modelData.id || "").toLowerCase();
                                     if (idStr.indexOf("spotify") !== -1) {
-                                        source = "file:///home/nova/.local/share/icons/hicolor/scalable/apps/com.spotify.Client.svg";
+                                        var homeDir = Quickshell.env("HOME") || "";
+                                        source = (homeDir.length > 0) ? ("file://" + homeDir + "/.local/share/icons/hicolor/scalable/apps/com.spotify.Client.svg") : "spotify";
                                     }
                                 }
                             }

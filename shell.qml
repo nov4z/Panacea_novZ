@@ -1225,7 +1225,7 @@ PanelWindow {
     Process {
         id: pUpdNotify
         command: ["notify-send", "-p", "-a", "Panacea", "-i",
-                  Quickshell.env("HOME") + "/.config/panacea/assets/logo-128.png",
+                  ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/panacea/assets/logo-128.png"),
                   root.tr("Доступно обновление Panacea"), root.updSubject]
         stdout: StdioCollector {
             onStreamFinished: root.updNotifId = parseInt(String(text).trim()) || -1
@@ -1324,7 +1324,7 @@ PanelWindow {
     Timer { interval: 6 * 3600 * 1000; running: true; repeat: true; onTriggered: root.checkUpdate() }
 
     readonly property string scriptDir:
-        Quickshell.env("HOME") + "/.config/panacea/scripts"
+        (Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/panacea/scripts"
 
     // capture.sh off зовёт этот IPC, чтобы панель сняла режим захвата
     signal cancelCaptureRequested()

@@ -33,7 +33,7 @@ import select
 from pathlib import Path
 
 # Add scripts directory to sys.path
-SCRIPTS_DIR = Path("/home/nova/.config/panacea/scripts")
+SCRIPTS_DIR = Path(os.environ.get("PANACEA_DIR", Path(__file__).resolve().parent.parent)) / "scripts"
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 

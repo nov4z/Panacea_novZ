@@ -77,12 +77,12 @@ Item {
 
     // Migas de pan interactivas
     function computeBreadcrumbs(path) {
-        var home = Quickshell.env("HOME") || "/home/nova";
+        var home = Quickshell.env("HOME") || "";
         var res = [];
         if (!path || path === "/") {
             return [{ label: "/", path: "/" }];
         }
-        if (path.indexOf(home) === 0) {
+        if (home.length > 0 && path.indexOf(home) === 0) {
             res.push({ label: "~", path: home });
             var rel = path.substring(home.length).replace(/^\/+/, "");
             if (rel.length > 0) {
@@ -160,7 +160,7 @@ Item {
             view.dir = view.sys.filesStartDir;
             view.sys.filesStartDir = "";
         }
-        if (!view.dir.length) view.dir = view.sys.filesDir || Quickshell.env("HOME") || "/home/nova";
+        if (!view.dir.length) view.dir = view.sys.filesDir || Quickshell.env("HOME") || "/";
         view.dirHist = [view.dir];
         view.dirHistAt = 0;
         forceActiveFocus();

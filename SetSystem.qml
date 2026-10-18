@@ -455,7 +455,7 @@ ColumnLayout {
                             anchors.centerIn: parent
                             width: 74
                             height: 74
-                            source: "file:///home/nova/.config/panacea/assets/arch_cachy_nothing.svg"
+                            source: Qt.resolvedUrl("assets/arch_cachy_nothing.svg")
                             sourceSize.width: 148
                             sourceSize.height: 148
                             fillMode: Image.PreserveAspectFit
@@ -593,7 +593,7 @@ ColumnLayout {
                         anchors.centerIn: parent
                         width: 210
                         height: 210
-                        source: "file:///home/nova/.config/panacea/assets/lenovo_loq_o.svg"
+                        source: Qt.resolvedUrl("assets/lenovo_loq_o.svg")
                         sourceSize.width: 420
                         sourceSize.height: 420
                         fillMode: Image.PreserveAspectFit
@@ -620,7 +620,7 @@ ColumnLayout {
                         anchors.centerIn: parent
                         width: 180
                         height: 180
-                        source: "file:///home/nova/.config/panacea/assets/arch_cachy_nothing.svg"
+                        source: Qt.resolvedUrl("assets/arch_cachy_nothing.svg")
                         sourceSize.width: 360
                         sourceSize.height: 360
                         fillMode: Image.PreserveAspectFit

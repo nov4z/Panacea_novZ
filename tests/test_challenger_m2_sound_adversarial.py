@@ -22,7 +22,7 @@ import subprocess
 import unittest
 from pathlib import Path
 
-PROJECT_ROOT = Path("/home/nova/.config/panacea")
+PROJECT_ROOT = Path(os.environ.get("PANACEA_DIR", Path(__file__).resolve().parent.parent))
 import sound_engine
 from sound_engine import (
     SAMPLE_RATE,

@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 import sys
+import os
 import time
+from pathlib import Path
 import dbus
 import dbus.service
 import dbus.exceptions
@@ -8,6 +10,12 @@ from dbus.mainloop.glib import DBusGMainLoop
 from gi.repository import GLib
 
 DBusGMainLoop(set_as_default=True)
+
+_repo_root = Path(__file__).resolve().parent.parent
+_bw_cover = _repo_root / "screenshots" / "bw_cover.png"
+if not _bw_cover.exists():
+    _bw_cover = Path(os.environ.get("XDG_CONFIG_HOME", os.path.expanduser("~/.config"))) / "panacea" / "screenshots" / "bw_cover.png"
+_bw_cover_url = f"file://{_bw_cover.resolve()}"
 
 class MprisPlayer(dbus.service.Object):
     def __init__(self, bus_name):
@@ -17,12 +25,12 @@ class MprisPlayer(dbus.service.Object):
         self.metadata = {
             'mpris:trackid': dbus.ObjectPath('/org/mpris/MediaPlayer2/Track/1', variant_level=1),
             'mpris:length': dbus.Int64(215000000, variant_level=1),
-            'mpris:artUrl': dbus.String('file:///home/nova/.config/panacea/screenshots/bw_cover.png', variant_level=1),
+            'mpris:artUrl': dbus.String(_bw_cover_url, variant_level=1),
             'xesam:album': dbus.String('Monochrome Sessions', variant_level=1),
             'xesam:albumArtist': dbus.Array(['Panacea Studio'], signature='s', variant_level=1),
             'xesam:artist': dbus.Array(['Nova & Panacea'], signature='s', variant_level=1),
             'xesam:title': dbus.String('Pure Radiant White (Acoustic B&W)', variant_level=1),
-            'xesam:url': dbus.String('file:///home/nova/.config/panacea/screenshots/bw_cover.png', variant_level=1)
+            'xesam:url': dbus.String(_bw_cover_url, variant_level=1)
         }
 
     @dbus.service.method('org.freedesktop.DBus.Properties', in_signature='ss', out_signature='v')

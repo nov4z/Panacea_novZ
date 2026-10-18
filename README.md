@@ -2,8 +2,9 @@
 
 # 🌌 Panacea Shell — Edición Perfeccionada `V:NOVZ`
 
-**El entorno de interfaz unificado, Notch Dinámico e Isla Inteligente para Wayland & Hyprland**
+**Modificación y perfeccionamiento del proyecto original [Panacea](https://github.com/EnsixD/Panacea) creado por [EnsixD](https://github.com/EnsixD)**
 
+[![Repositorio Original](https://img.shields.io/badge/Repositorio%20Original-EnsixD%2FPanacea-blue?style=for-the-badge&logo=github)](https://github.com/EnsixD/Panacea)
 [![Versión](https://img.shields.io/badge/Versi%C3%B3n-V%3ANOVZ%20(1.0.14)-8A2BE2?style=for-the-badge&logo=rocket)](https://github.com/nov4z/Panacea_shell)
 [![Wayland](https://img.shields.io/badge/Display-Wayland-00599C?style=for-the-badge&logo=wayland&logoColor=white)](https://wayland.freedesktop.org/)
 [![Hyprland](https://img.shields.io/badge/Window%20Manager-Hyprland-00C7B7?style=for-the-badge&logo=archlinux&logoColor=white)](https://hyprland.org/)
@@ -13,11 +14,20 @@
 
 <br/>
 
-> [!NOTE]
-> ### 📢 Declaración de Modificación y Autoría
-> Este repositorio es una **modificación y perfeccionamiento integral** del proyecto base *Panacea Shell*, refactorizado, extendido y mantenido por **NovZ ([@nov4z](https://github.com/nov4z))**.
+> [!IMPORTANT]
+> ### 📢 Reconocimiento y Atribución al Creador Original
+> **Quiero dejar completamente claro que yo (NovZ) NO creé este software desde cero.**
 > 
-> Esta edición **`V:NOVZ`** introduce cinemática a 60 FPS sin tirones, estética estricta **Dark Unibody**, visor **SpicyLyrics** con predicción de márgenes sin salto de palabras, corrección de esquinas redondeadas en el Centro de Control `Super + Z`, integración reactiva con **Antigravity AI**, motor acústico desacoplado con reverberación independiente y solución definitiva al bug de volumen de Spotify en PipeWire.
+> Este repositorio es una **modificación, bifurcación y versión perfeccionada** del trabajo original **[Panacea](https://github.com/EnsixD/Panacea)**, cuyo creador y autor intelectual original es **[EnsixD](https://github.com/EnsixD)**. Todo el reconocimiento, mérito de la arquitectura base, concepto de diseño y la interfaz de Notch le pertenecen a él.
+> 
+> **¿Qué cambios y mejoras aporta esta edición (`V:NOVZ`)?**
+> Esta versión reúne optimizaciones profundas de rendimiento, estabilidad y estética visual:
+> 1. **Diseño Estricto Dark Unibody**: Chasis unibody oscuro satinado (`#141218`) sin recuadros cuadrados residuales detrás de las esquinas redondeadas en el Centro de Control (`Super + Z`).
+> 2. **SpicyLyrics con Predicción Acústica de Márgenes**: Eliminación definitiva del "efecto punto seguido" (ninguna palabra se quiebra a otra línea al escalar el texto en tiempo real) y anticipación temporal (~120 ms).
+> 3. **Estudio Acústico de Sonido**: Separación estricta y procesamiento independiente del *Stereo Spatial Width* (ancho estéreo) y la *Cola de Reverb* (Room Decay Reverb).
+> 4. **Antigravity AI Live Engine**: Daemon de monitoreo reactivo de tareas y subagentes en la barra con ola armónica y atajo instantáneo `Super + O`.
+> 5. **Solución al bug de volumen de Spotify en PipeWire**: Regla de configuración para `pipewire-pulse` que erradica la molesta caída de volumen al 13% en los cambios de canción.
+> 6. **Portabilidad y Despliegue Limpio de Cero**: Eliminación de rutas fijas/hardcodeadas y creación del instalador interactivo [`install.sh`](install.sh) para que cualquier persona pueda instalarlo y disfrutarlo idéntico en su equipo.
 
 </div>
 
@@ -64,7 +74,7 @@
 
 ---
 
-## ✨ Características Destacadas de la Versión `NOVZ`
+## ✨ Características de la Edición `V:NOVZ`
 
 ### 🎵 1. SpicyLyrics con Predicción de Márgenes Acústica
 - **Cero salto de palabras ("efecto punto seguido")**: El motor de layout precalcula el ancho de línea considerando la escala expandida de la frase activa. Las frases nunca sufren saltos de renglón abruptos al cambiar de tamaño durante el canto.
@@ -203,7 +213,7 @@ Panacea_shell/
 ├── scripts/                      # Daemons y scripts de sistema (brillo, red, IA)
 ├── screenshots/                  # Galería de capturas de pantalla de la interfaz
 ├── sounds/                       # Soundpacks acústicos completos
-└── tests/                        # Suite de pruebas automatizadas E2E
+└── tests/                        # Suite de pruebas automatizadas E2E (451 tests)
 ```
 
 ---
@@ -220,12 +230,14 @@ El script detectará automáticamente los respaldos previos creados durante la i
 
 ---
 
-## 📄 Licencia
+## 📄 Créditos y Licencia
 
-Este proyecto se distribuye bajo la licencia **MIT**. Consulta el archivo [LICENSE](LICENSE) para más detalles.
+- **Proyecto Original**: [Panacea](https://github.com/EnsixD/Panacea) desarrollado por [EnsixD](https://github.com/EnsixD).
+- **Modificación y Perfeccionamiento V:NOVZ**: NovZ ([@nov4z](https://github.com/nov4z)).
+- Distribuido bajo licencia **MIT** en honor a los términos del código abierto original. Consulta el archivo [LICENSE](LICENSE) para más información.
 
 ---
 
 <div align="center">
-  <sub>Desarrollado y optimizado con dedicación por <b>NovZ</b> (nov4z) • 2026</sub>
+  <sub>Basado con admiración en el trabajo original de <b><a href="https://github.com/EnsixD/Panacea">EnsixD</a></b> • Edición <b>V:NOVZ</b> por NovZ</sub>
 </div>

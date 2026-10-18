@@ -103,7 +103,11 @@ def make_pop(start_freq, end_freq, duration_ms, amp=5200, attack_ms=1.5, decay_m
     return samples
 
 def save_wav(filename, samples):
-    path = os.path.join("/home/nova/.config/panacea/sounds", filename)
+    sounds_dir = os.environ.get("PANACEA_SOUNDS_DIR") or os.path.join(os.environ.get("PANACEA_DIR", os.path.expanduser("~/.config/panacea")), "sounds")
+    if not os.path.isdir(sounds_dir):
+        sounds_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "sounds")
+    os.makedirs(sounds_dir, exist_ok=True)
+    path = os.path.join(sounds_dir, filename)
     data = struct.pack(f"<{len(samples)}h", *samples)
     with wave.open(path, "wb") as w:
         w.setnchannels(1)

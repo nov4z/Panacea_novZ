@@ -156,7 +156,7 @@ class TestTier4RealWorldScenarios(unittest.TestCase):
             self.assertEqual(txt_badge, "4")
 
     def test_scenario_04_live_system_antigravity_conversations_scan(self):
-        """Scenario 4: Live system verification against host /home/nova/.gemini/antigravity/conversations."""
+        """Scenario 4: Live system verification against host Antigravity conversations directory."""
         if not ANTIGRAVITY_CONV_DIR.exists():
             self.skipTest(f"{ANTIGRAVITY_CONV_DIR} does not exist on this machine.")
 
@@ -281,6 +281,8 @@ class TestTier4RealWorldScenarios(unittest.TestCase):
 
         # R4: Proportion & visual quality verification via live screenshots
         challenger_dir = PANACEA_DIR / ".agents" / "teamwork_preview_challenger_m4"
+        if not challenger_dir.exists() or not list(challenger_dir.glob("*.png")):
+            challenger_dir = PANACEA_DIR / "screenshots"
         screenshots = list(challenger_dir.glob("*.png"))
         self.assertGreater(len(screenshots), 0, "R4: Live screenshot artifacts must exist")
         for shot in screenshots:

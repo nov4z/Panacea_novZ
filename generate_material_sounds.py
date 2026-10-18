@@ -121,7 +121,10 @@ def make_tactile_click(high_freq, low_freq, duration_ms, amp=7500):
     return samples
 
 def save_wav(filename, samples):
-    dest_dir = "/home/nova/.config/panacea/sounds/material"
+    base_sounds = os.environ.get("PANACEA_SOUNDS_DIR") or os.path.join(os.environ.get("PANACEA_DIR", os.path.expanduser("~/.config/panacea")), "sounds")
+    if not os.path.isdir(base_sounds):
+        base_sounds = os.path.join(os.path.dirname(os.path.abspath(__file__)), "sounds")
+    dest_dir = os.path.join(base_sounds, "material")
     os.makedirs(dest_dir, exist_ok=True)
     filepath = os.path.join(dest_dir, filename)
     data = struct.pack(f"<{len(samples)}h", *samples)

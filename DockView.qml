@@ -46,7 +46,7 @@ Item {
             return {
                 id: id,
                 name: "PANACEA",
-                icon: (dock.sys && dock.sys.themeMaterial) ? "" : "/home/nova/.config/panacea/assets/arch_cachy_nothing.svg",
+                icon: (dock.sys && dock.sys.themeMaterial) ? "" : Qt.resolvedUrl("assets/arch_cachy_nothing.svg"),
                 glyph: (dock.sys && dock.sys.themeMaterial) ? "󰀻" : "",
                 glyphColor: (dock.sys && dock.sys.themeMaterial) ? dock.sys.colOn : "#ffffff",
                 isBuiltin: true,

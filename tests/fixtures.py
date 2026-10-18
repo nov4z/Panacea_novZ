@@ -10,15 +10,15 @@ import re
 from pathlib import Path
 
 # Base Paths
-PANACEA_DIR = Path("/home/nova/.config/panacea")
+PANACEA_DIR = Path(os.environ.get("PANACEA_DIR", Path(__file__).resolve().parent.parent))
 SCRIPTS_DIR = PANACEA_DIR / "scripts"
 ASSETS_DIR = PANACEA_DIR / "assets"
 TESTS_DIR = PANACEA_DIR / "tests"
 SETTINGS_FILE = PANACEA_DIR / "settings.json"
 SHELL_QML = PANACEA_DIR / "shell.qml"
-ANTIGRAVITY_DIR = Path("/home/nova/.gemini/antigravity")
+ANTIGRAVITY_DIR = Path(os.environ.get("HOME", "/home/nova")) / ".gemini" / "antigravity"
 ANTIGRAVITY_CONV_DIR = ANTIGRAVITY_DIR / "conversations"
-HYPR_BINDS_FILE = Path("/home/nova/.config/hypr/lua/keybindings.lua")
+HYPR_BINDS_FILE = Path(os.environ.get("XDG_CONFIG_HOME", os.path.expanduser("~/.config"))) / "hypr" / "lua" / "keybindings.lua"
 
 # Add project root to sys.path
 if str(PANACEA_DIR) not in sys.path:

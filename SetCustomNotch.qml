@@ -898,6 +898,26 @@ ColumnLayout {
                         active: page.previewWavePlaying
                         morphPause: true
                     }
+
+                    // Boton interactivo de Letras en vista colapsada
+                    Item {
+                        id: prevCollapsedLyricsBtn
+                        anchors.right: prevWaveBars.left
+                        anchors.rightMargin: 6
+                        width: 18
+                        height: 18
+                        anchors.verticalCenter: parent.verticalCenter
+                        visible: false
+
+                        MouseArea {
+                            id: prevCollLyrMa
+                            anchors.fill: parent
+                            onClicked: {
+                                page.previewIsExpanded = true;
+                                page.previewLyricsOpen = !page.previewLyricsOpen;
+                            }
+                        }
+                    }
                 }
 
                 // 1b) Vista MÚSICA - ISLA DINÁMICA EXPANDIDA (Super+M)

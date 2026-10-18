@@ -105,7 +105,9 @@ Item {
         root.lines = [];
         root.activeIndex = -1;
 
-        var sDir = (root.sys && root.sys.scriptDir) ? root.sys.scriptDir : "/home/nova/.config/panacea/scripts";
+        var sDir = (root.sys && root.sys.scriptDir)
+            ? root.sys.scriptDir
+            : ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/panacea/scripts");
         var cmd = [
             "python3", sDir + "/lyrics.py",
             "--title", tit,

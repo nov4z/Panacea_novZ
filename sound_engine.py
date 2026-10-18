@@ -17,6 +17,14 @@ import os
 import sys
 import argparse
 
+_script_sounds = os.path.join(os.path.dirname(os.path.abspath(__file__)), "sounds")
+if "PANACEA_DIR" in os.environ:
+    DEFAULT_SOUNDS_DIR = os.path.join(os.environ["PANACEA_DIR"], "sounds")
+elif os.path.isdir(_script_sounds):
+    DEFAULT_SOUNDS_DIR = _script_sounds
+else:
+    DEFAULT_SOUNDS_DIR = os.path.expanduser(f"{os.environ.get('XDG_CONFIG_HOME', '~/.config')}/panacea/sounds")
+
 SAMPLE_RATE = 48000
 
 # Frecuencias base estándar (misma tonalidad e intervalos en todos los packs)
@@ -242,7 +250,7 @@ def generate_pack(pack_name, style="marimba", depth=0.5, attack=0.5, decay=1.0, 
                   pitch=0.0, warmth=0.2, spatial=0.5, reverb=0.2, vibrato=0.0, cutoff=1.0, gain=1.0,
                   channels=2):
     """Genera la suite completa de 23 sonidos con los parámetros dados."""
-    base_dir = pack_name if os.path.isabs(pack_name) else f"/home/nova/.config/panacea/sounds/{pack_name}"
+    base_dir = pack_name if os.path.isabs(pack_name) else os.path.join(DEFAULT_SOUNDS_DIR, pack_name)
     os.makedirs(base_dir, exist_ok=True)
     kw = dict(style=style, depth=depth, attack=attack, decay=decay, brightness=brightness,
               pitch=pitch, warmth=warmth, spatial=spatial, reverb=reverb, vibrato=vibrato, cutoff=cutoff, gain=gain, channels=channels)
@@ -430,7 +438,7 @@ def generate_pack(pack_name, style="marimba", depth=0.5, attack=0.5, decay=1.0, 
 
 def generate_antigravity(pack_name, **kw):
     """Sintetiza la firma acústica de Antigravity AI adaptada a los parámetros acústicos y DSP del estudio."""
-    base_dir = pack_name if os.path.isabs(pack_name) else f"/home/nova/.config/panacea/sounds/{pack_name}"
+    base_dir = pack_name if os.path.isabs(pack_name) else os.path.join(DEFAULT_SOUNDS_DIR, pack_name)
     os.makedirs(base_dir, exist_ok=True)
     channels = kw.get("channels", 2)
 
@@ -485,7 +493,7 @@ def main():
     args = parser.parse_args()
 
     if args.action == "list":
-        sounds_dir = "/home/nova/.config/panacea/sounds"
+        sounds_dir = DEFAULT_SOUNDS_DIR
         packs = [d for d in os.listdir(sounds_dir) if os.path.isdir(os.path.join(sounds_dir, d))]
         print(",".join(packs))
         return
