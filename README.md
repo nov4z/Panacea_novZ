@@ -39,8 +39,8 @@
 
 <div align="center">
 
-### 🎬 Demostración en Vivo (Live Showcase)
-*Transición cinemática y física fluida: Isla Dinámica contraída → Expansión Musical con onda reactiva y SpicyLyrics → Centro de Control Unibody (`Super + Z`)*
+### 🎬 Demostración en Vivo (Tour Completo de la Suite)
+*Recorrido fluido en tiempo real: Isla Dinámica contraída → Cápsula Musical con SpicyLyrics sincronizado → Centro de Control Unibody (`Super + Z`) → Menú Rápido Wi-Fi → Estudio Completo de Configuración (`Super + I`) explorando Notch e Isla Dinámica, Estudio de Sonido Acústico y Apariencia.*
 
 ![Panacea_novZ Live Demo](screenshots/demo.gif)
 
@@ -256,27 +256,37 @@ El script detectará los respaldos generados previamente durante la instalación
 
 ---
 
-## 📄 Créditos y Licencia
+## 📄 Créditos, Atribuciones y Recursos
 
-- **Proyecto Original**: [Panacea](https://github.com/EnsixD/Panacea) desarrollado por [EnsixD](https://github.com/EnsixD).
-- **Modificación, vibecoding y perfeccionamiento**: NovZ ([@nov4z](https://github.com/nov4z)).
-- Distribuido bajo licencia **MIT** en estricto cumplimiento y honor a los términos del software libre original. Consulta el archivo [LICENSE](LICENSE) para más detalles.
+Quiero dar el debido crédito y agradecer de corazón a las personas y proyectos que hacen posible esta experiencia:
+
+- **Proyecto Original**: Todo el reconocimiento y respeto a **[EnsixD](https://github.com/EnsixD)** por concebir la idea y crear la base de **[Panacea](https://github.com/EnsixD/Panacea)**. Yo tomé su excelente trabajo como punto de partida y me dediqué a vibecodearlo, rediseñarlo y pulirlo a fondo para llevarlo al siguiente nivel.
+- **Modificación y Vibecoding**: NovZ ([@nov4z](https://github.com/nov4z)) — arquitectura visual Dark Unibody, motor acústico procedural desacoplado, sincronización y predicción cinemática de SpicyLyrics, optimizaciones de rendimiento y estabilidad en Wayland/Hyprland.
+- **Licencia de Código**: Publicado bajo licencia abierta **MIT**, en total respeto y apego a los términos del software libre original. Revisa el archivo [LICENSE](LICENSE) para más información.
 
 <br/>
 
-### Credits (Recursos & Upstream)
+### 🎨 Fondos de Pantalla (Wallpapers)
 
-No wallpaper here is mine — each belongs to its author, and they are bundled only so a fresh install has something to show. Author of one and want it gone? Open an issue.
+> Ninguno de los fondos de pantalla incluidos en este repositorio es de mi autoría — cada uno pertenece íntegramente a su autor original, y los empaqueté aquí únicamente para que una instalación limpia tenga algo hermoso que mostrar de inmediato. Si eres el autor de alguno y quieres que sea retirado, abre un issue y lo quitaré sin ningún problema.
 
-- [matteogini/dotfiles](https://github.com/matteogini/dotfiles) — `ember_stripes.jpg` and `misty_peaks.jpg`; the rice this setup grew out of.
-- [HyDE](https://github.com/HyDE-Project/HyDE) — `spring_bloom.jpg`, from its Graphite Mono theme; `hypr/palette.conf` is derived from it.
-- [ilyamiro/shell-wallpapers](https://github.com/ilyamiro/shell-wallpapers) — the wallpaper collection bundled in `wallpapers/`.
+- **[matteogini/dotfiles](https://github.com/matteogini/dotfiles)** — `ember_stripes.jpg` y `misty_peaks.jpg`; la personalización (*rice*) original de la cual nació este setup.
+- **[HyDE](https://github.com/HyDE-Project/HyDE)** — `spring_bloom.jpg`, de su tema Graphite Mono; de aquí se derivó la paleta en `hypr/palette.conf`.
+- **[ilyamiro/shell-wallpapers](https://github.com/ilyamiro/shell-wallpapers)** — la colección de fondos empaquetada en la carpeta `wallpapers/`.
 
-Video wallpapers play through [mpvpaper](https://github.com/GhostNaN/mpvpaper); none are bundled. Drop `.mp4`, `.webm`, `.mkv` or `.mov` into `~/.config/hypr/wallpaper/live`, or take them from [DesktopHut](https://www.desktophut.com/), [Wallper](https://wallper.co/), [TuxPapers](https://tuxpapers.com/) or [Papyrus](https://papyrus.co/) — each on its own terms.
+### 🎥 Wallpapers en Video / Live
 
-Interface font: [JetBrains Mono Nerd Font](https://www.jetbrains.com/lp/mono/) (SIL OFL), with [Material Design Icons](https://materialdesignicons.com/) for every glyph. `assets/logo*.png` is drawn for this project, same licence as the code.
+La reproducción de fondos de video dinámicos se gestiona mediante **[mpvpaper](https://github.com/GhostNaN/mpvpaper)** (no incluye videos pesados preinstalados para mantener la descarga ligera). Puedes colocar tus propios videos en formato `.mp4`, `.webm`, `.mkv` o `.mov` dentro de `~/.config/hypr/wallpaper/live/`, o conseguirlos bajo sus propios términos en comunidades como [DesktopHut](https://www.desktophut.com/), [Wallper](https://wallper.co/), [TuxPapers](https://tuxpapers.com/) o [Papyrus](https://papyrus.co/).
 
-Built on [Hyprland](https://hyprland.org/) · [Quickshell](https://quickshell.outfoxxed.me/) · [cava](https://github.com/karlstav/cava) · [cliphist](https://github.com/sentriz/cliphist) · [hyprpaper](https://github.com/hyprwm/hyprpaper) / [hyprsunset](https://github.com/hyprwm/hyprsunset) · [wf-recorder](https://github.com/ammen99/wf-recorder) · [fish](https://fishshell.com/)
+### 🔤 Tipografía, Iconografía y Gráficos
+
+- **Tipografía de la Interfaz**: **[JetBrains Mono Nerd Font](https://www.jetbrains.com/lp/mono/)** (licencia SIL OFL), junto a **[Material Design Icons](https://materialdesignicons.com/)** para cada glifo de los paneles.
+- **Logos y Assets**: Los gráficos `assets/logo*.png` fueron dibujados para este proyecto y comparten la misma licencia del código.
+
+### ⚙️ Sobre Hombros de Gigantes (Tecnologías Base)
+
+Esta suite fue construida sobre el trabajo de fantásticos proyectos de la comunidad:  
+[Hyprland](https://hyprland.org/) · [Quickshell](https://quickshell.outfoxxed.me/) · [cava](https://github.com/karlstav/cava) · [cliphist](https://github.com/sentriz/cliphist) · [hyprpaper](https://github.com/hyprwm/hyprpaper) / [hyprsunset](https://github.com/hyprwm/hyprsunset) · [wf-recorder](https://github.com/ammen99/wf-recorder) · [fish](https://fishshell.com/)
 
 ---
 
