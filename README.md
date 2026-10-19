@@ -98,6 +98,7 @@ A continuación se detalla punto por punto el compendio de novedades, refactoriz
 ### 2. 🎤 SpicyLyrics: Motor de Letras Sincronizadas en Tiempo Real
 - **Eliminación Total del "Efecto Punto Seguido"**: En implementaciones estándar de letras sincronizadas, al expandir tipográficamente la frase que está sonando, la última palabra salta de renglón de manera tosca. En `Panacea_novZ`, el motor precalcula márgenes y saltos de línea con predicción elástica, logrando que el texto fluya de forma 100% natural.
 - **Anticipación Acústica Milimétrica (~50 ms)**: Adelanto de fotograma acústico calibrado para que el resplandor de la frase coincida exactamente con el golpe de voz del cantante.
+- **Detección Dinámica de Tempo & Alineación Métrica (BPM Sync)**: Botón interactivo integrado en la cabecera de las letras sincronizadas que analiza armónicamente la cadencia de la canción, calculando el BPM y alineando los versos con el pulso rítmico (*downbeat*), junto con controles de micro-ajuste fino (±10 ms).
 - **Backend LRCLIB Robusto**: Estrategia de búsqueda de 4 niveles (coincidencia estricta, limpieza de remasters/feat, búsqueda difusa y fallback para piezas puramente instrumentales).
 - **Caché Local Persistente y Atómico**: Almacenamiento local en `~/.cache/panacea/lyrics/` con hashes SHA-256 de alta velocidad, permitiendo lectura instantánea sin latencia de red.
 - **Desvanecimiento de Canvas**: Las ondas acústicas de fondo atenúan suavemente su opacidad al abrirse la vista de letras para garantizar contraste y legibilidad absoluta.

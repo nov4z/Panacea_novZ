@@ -43,6 +43,13 @@ Item {
     // Anticipación acústica centralizada (~50 ms)
     readonly property real acousticLeadSec: 0.050
 
+    // Calibración y alineación métrica de tempo (BPM Sync)
+    property real tempoOffsetSec: 0.0
+    property bool tempoAlignEnabled: false
+    property int detectedBpm: 0
+    property bool isDetectingTempo: false
+    property int manualOffsetMs: 0
+
     // Datos del reproductor
     readonly property string trackTitle: player ? String(player.trackTitle || "").trim() : ""
     readonly property string trackArtist: player ? String(player.trackArtist || "").trim() : ""
@@ -77,6 +84,12 @@ Item {
                     root.lines = (data.lines && Array.isArray(data.lines)) ? data.lines : [];
                     root.plainText = data.plain_lyrics || "";
                     root.statusMessage = data.message || "";
+                    if (root.tempoAlignEnabled && root.isSynced && root.lines.length >= 2) {
+                        root.detectTempo();
+                    } else if (!root.tempoAlignEnabled) {
+                        root.detectedBpm = 0;
+                        root.tempoOffsetSec = 0.0;
+                    }
                     root.updateActiveIndex();
                 } catch (err) {
                     root.status = "error";
@@ -240,6 +253,95 @@ Item {
         if (root.active) root.fetchLyrics(false);
     }
 
+    // Algoritmo de detección armónica de tempo (BPM) y micro-alineación métrica de compás
+    function detectTempo() {
+        if (!root.lines || root.lines.length < 2) {
+            root.detectedBpm = 120;
+            root.tempoOffsetSec = 0.0;
+            root.tempoAlignEnabled = true;
+            return;
+        }
+
+        root.isDetectingTempo = true;
+
+        // 1. Filtrado de marcas de tiempo secuenciales válidas
+        var ts = [];
+        for (var i = 0; i < root.lines.length; i++) {
+            var l = root.lines[i];
+            if (l && l.time_sec !== undefined && l.time_sec > 0) {
+                if (ts.length === 0 || (l.time_sec - ts[ts.length - 1] >= 0.35)) {
+                    ts.push(l.time_sec);
+                }
+            }
+        }
+
+        if (ts.length < 3) {
+            root.detectedBpm = 120;
+            root.tempoOffsetSec = 0.0;
+            root.tempoAlignEnabled = true;
+            root.isDetectingTempo = false;
+            return;
+        }
+
+        // 2. Intervalos entre versos musicales (delta IOI)
+        var deltas = [];
+        for (var d = 0; d < ts.length - 1; d++) {
+            var diff = ts[d + 1] - ts[d];
+            if (diff >= 0.75 && diff <= 16.0) {
+                deltas.push(diff);
+            }
+        }
+
+        // 3. Resonancia de subdivisión métrica binaria típica (1, 2, 4, 8, 12, 16 pulsos de compás)
+        var bestBpm = 120;
+        var minErr = 999999.0;
+        var subDivs = [1, 2, 4, 6, 8, 12, 16];
+
+        for (var bpm = 75; bpm <= 175; bpm++) {
+            var tb = 60.0 / bpm;
+            var totalErr = 0.0;
+            for (var k = 0; k < deltas.length; k++) {
+                var delta = deltas[k];
+                var bestK = 999.0;
+                for (var s = 0; s < subDivs.length; s++) {
+                    var cand = subDivs[s] * tb;
+                    var err = Math.abs(delta - cand);
+                    if (err < bestK) bestK = err;
+                }
+                totalErr += bestK;
+            }
+            var prior = Math.abs(bpm - 118) * 0.0006;
+            var score = (totalErr / (deltas.length || 1)) + prior;
+            if (score < minErr) {
+                minErr = score;
+                bestBpm = bpm;
+            }
+        }
+
+        // 4. Estimación de fase circular y cálculo de alineación al pulso (downbeat)
+        var bestTb = 60.0 / bestBpm;
+        var sumSin = 0.0, sumCos = 0.0;
+        for (var p = 0; p < ts.length; p++) {
+            var phase = (ts[p] % bestTb) / bestTb * 2.0 * Math.PI;
+            sumSin += Math.sin(phase);
+            sumCos += Math.cos(phase);
+        }
+        var meanPhaseAngle = Math.atan2(sumSin, sumCos);
+        var phaseSec = (meanPhaseAngle / (2.0 * Math.PI)) * bestTb;
+        if (phaseSec < 0) phaseSec += bestTb;
+
+        var beatCenter = bestTb / 2.0;
+        var dev = phaseSec - beatCenter;
+        // Compensación milimétrica acotada en ventana de seguridad (-40 ms a +40 ms)
+        var calculatedOffset = Math.max(-0.040, Math.min(0.040, -dev * 0.35));
+
+        root.detectedBpm = bestBpm;
+        root.tempoOffsetSec = calculatedOffset + (root.manualOffsetMs / 1000.0);
+        root.tempoAlignEnabled = true;
+        root.isDetectingTempo = false;
+        root.updateActiveIndex();
+    }
+
     // Cálculo y seguimiento de la línea activa en reproducción sincronizada
     function updateActiveIndex() {
         if (!root.isSynced || !root.lines || root.lines.length === 0) {
@@ -247,6 +349,7 @@ Item {
             return;
         }
         var pos = ((root.smoothPos > 0) ? root.smoothPos : root.currentPosition) + root.acousticLeadSec;
+        if (root.tempoAlignEnabled) pos += root.tempoOffsetSec;
         var n = root.lines.length;
 
         if (pos < root.lines[0].time_sec) {
@@ -420,10 +523,160 @@ Item {
         anchors.fill: parent
         visible: root.status === "ok" && root.isSynced
 
+        // Control flotante de detección y alineación de tempo (BPM Sync)
+        RowLayout {
+            id: tempoBar
+            anchors.top: parent.top
+            anchors.right: parent.right
+            anchors.topMargin: 4
+            anchors.rightMargin: 10
+            z: 20
+            spacing: 4
+
+            // Píldora interactiva de detección de tempo
+            Rectangle {
+                id: tempoBtn
+                implicitHeight: 22
+                implicitWidth: tempoRow.implicitWidth + 16
+                radius: 11
+                color: root.tempoAlignEnabled
+                       ? (tempoHover.hovered ? Qt.rgba(root.colAccent.r, root.colAccent.g, root.colAccent.b, 0.28) : Qt.rgba(root.colAccent.r, root.colAccent.g, root.colAccent.b, 0.18))
+                       : (tempoHover.hovered ? Qt.rgba(1, 1, 1, 0.16) : Qt.rgba(1, 1, 1, 0.08))
+                border.color: root.tempoAlignEnabled
+                              ? (root.isMonochrome ? Qt.rgba(1, 1, 1, 0.50) : Qt.rgba(root.colAccent.r, root.colAccent.g, root.colAccent.b, 0.50))
+                              : Qt.rgba(1, 1, 1, 0.15)
+                border.width: 1
+
+                Behavior on color { ColorAnimation { duration: 180 } }
+                Behavior on border.color { ColorAnimation { duration: 180 } }
+
+                RowLayout {
+                    id: tempoRow
+                    anchors.centerIn: parent
+                    spacing: 5
+
+                    Text {
+                        text: root.isDetectingTempo ? "󰑐" : (root.tempoAlignEnabled ? "⚡" : "󰎆")
+                        font.family: root.fontFam
+                        font.pixelSize: 10
+                        font.bold: true
+                        color: root.tempoAlignEnabled ? (root.isMonochrome ? "#ffffff" : root.glowColor) : root.colMuted
+
+                        SequentialAnimation on rotation {
+                            running: root.isDetectingTempo
+                            loops: Animation.Infinite
+                            NumberAnimation { from: 0; to: 360; duration: 800 }
+                        }
+                    }
+
+                    Text {
+                        text: {
+                            if (root.isDetectingTempo) return "Analizando tempo...";
+                            if (root.tempoAlignEnabled && root.detectedBpm > 0) {
+                                var off = Math.round((root.acousticLeadSec + root.tempoOffsetSec) * 1000);
+                                return root.detectedBpm + " BPM · " + off + "ms";
+                            }
+                            return "Detectar Tempo";
+                        }
+                        font.family: root.lyricsFontFam
+                        font.pixelSize: 10
+                        font.bold: true
+                        font.weight: Font.DemiBold
+                        font.letterSpacing: -0.1
+                        color: root.tempoAlignEnabled ? "#ffffff" : Qt.rgba(1, 1, 1, 0.70)
+                    }
+                }
+
+                HoverHandler { id: tempoHover; cursorShape: Qt.PointingHandCursor }
+
+                MouseArea {
+                    anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+                    acceptedButtons: Qt.LeftButton | Qt.RightButton
+                    onClicked: mouse => {
+                        if (mouse.button === Qt.RightButton) {
+                            root.tempoAlignEnabled = !root.tempoAlignEnabled;
+                            root.updateActiveIndex();
+                        } else {
+                            if (!root.tempoAlignEnabled || root.detectedBpm === 0) {
+                                root.detectTempo();
+                            } else {
+                                root.detectTempo();
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Controles de micro-ajuste (±10 ms) cuando la alineación está activa
+            RowLayout {
+                spacing: 3
+                visible: root.tempoAlignEnabled
+
+                Rectangle {
+                    implicitWidth: 18
+                    implicitHeight: 22
+                    radius: 8
+                    color: minusHover.hovered ? Qt.rgba(1, 1, 1, 0.22) : Qt.rgba(1, 1, 1, 0.08)
+                    border.color: Qt.rgba(1, 1, 1, 0.14)
+                    border.width: 1
+
+                    Text {
+                        anchors.centerIn: parent
+                        text: "−"
+                        font.family: root.fontFam
+                        font.pixelSize: 10
+                        font.bold: true
+                        color: root.colFg
+                    }
+
+                    HoverHandler { id: minusHover; cursorShape: Qt.PointingHandCursor }
+                    MouseArea {
+                        anchors.fill: parent
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: {
+                            root.manualOffsetMs -= 10;
+                            root.tempoOffsetSec = root.tempoOffsetSec - 0.010;
+                            root.updateActiveIndex();
+                        }
+                    }
+                }
+
+                Rectangle {
+                    implicitWidth: 18
+                    implicitHeight: 22
+                    radius: 8
+                    color: plusHover.hovered ? Qt.rgba(1, 1, 1, 0.22) : Qt.rgba(1, 1, 1, 0.08)
+                    border.color: Qt.rgba(1, 1, 1, 0.14)
+                    border.width: 1
+
+                    Text {
+                        anchors.centerIn: parent
+                        text: "+"
+                        font.family: root.fontFam
+                        font.pixelSize: 10
+                        font.bold: true
+                        color: root.colFg
+                    }
+
+                    HoverHandler { id: plusHover; cursorShape: Qt.PointingHandCursor }
+                    MouseArea {
+                        anchors.fill: parent
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: {
+                            root.manualOffsetMs += 10;
+                            root.tempoOffsetSec = root.tempoOffsetSec + 0.010;
+                            root.updateActiveIndex();
+                        }
+                    }
+                }
+            }
+        }
+
         ListView {
             id: lyricsList
             anchors.fill: parent
-            anchors.topMargin: 8
+            anchors.topMargin: 26
             anchors.bottomMargin: 8
             clip: true
             boundsBehavior: Flickable.StopAtBounds
@@ -476,6 +729,7 @@ Item {
                     if (!isCurrent) return 0.0;
                     var pos = (root.smoothPos > 0) ? root.smoothPos : root.currentPosition;
                     var leadPos = pos + root.acousticLeadSec;
+                    if (root.tempoAlignEnabled) leadPos += root.tempoOffsetSec;
                     if (leadPos < timeSec) return 0.0;
                     return Math.max(0.0, Math.min(1.0, (leadPos - timeSec) / lineSingDuration));
                 }

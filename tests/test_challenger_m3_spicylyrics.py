@@ -254,6 +254,17 @@ class TestSpicyLyricsComponentContracts(unittest.TestCase):
         self.assertIn("var pos = ((root.smoothPos > 0) ? root.smoothPos : root.currentPosition) + root.acousticLeadSec;", self.lyrics_qml)
         self.assertIn("var leadPos = pos + root.acousticLeadSec;", self.lyrics_qml)
 
+    def test_22_spicy_lyrics_tempo_detection_and_alignment(self):
+        """SpicyLyricsView.qml provides dynamic tempo detection and micro-offset alignment."""
+        self.assertIn("function detectTempo()", self.lyrics_qml)
+        self.assertIn("property bool tempoAlignEnabled: false", self.lyrics_qml)
+        self.assertIn("property real tempoOffsetSec: 0.0", self.lyrics_qml)
+        self.assertIn("property int detectedBpm: 0", self.lyrics_qml)
+        self.assertIn("id: tempoBtn", self.lyrics_qml)
+        self.assertIn("Detectar Tempo", self.lyrics_qml)
+        self.assertIn("if (root.tempoAlignEnabled) pos += root.tempoOffsetSec;", self.lyrics_qml)
+        self.assertIn("if (root.tempoAlignEnabled) leadPos += root.tempoOffsetSec;", self.lyrics_qml)
+
 
 class TestSpicyLyricsSynchronizationLogic(unittest.TestCase):
     """Validates the mathematical time-synchronization logic implemented in updateActiveIndex."""
@@ -314,6 +325,29 @@ class TestSpicyLyricsSynchronizationLogic(unittest.TestCase):
         self.assertEqual(self.simulate_update_active_index(lines, 9.94 + acoustic_lead), 0)
         # At position 9.95s: pos + lead = 10.00s >= 10.0s -> transitions to Line 2 (index 1) exactly 50ms before vocal onset
         self.assertEqual(self.simulate_update_active_index(lines, 9.95 + acoustic_lead), 1)
+
+    def test_05_tempo_harmonic_detection_model(self):
+        """Simulates harmonic tempo detection: resolves correct BPM and downbeat alignment."""
+        # Simulated lines spaced by 1.875s (4 beats at 128 BPM)
+        timestamps = [4.0, 5.875, 7.75, 9.625, 11.5, 13.375, 15.25]
+        deltas = [timestamps[i+1] - timestamps[i] for i in range(len(timestamps)-1)]
+        sub_divs = [1, 2, 4, 6, 8, 12, 16]
+
+        best_bpm = 120
+        min_err = 999999.0
+        for bpm in range(75, 176):
+            tb = 60.0 / bpm
+            total_err = 0.0
+            for d in deltas:
+                best_k = min(abs(d - s * tb) for s in sub_divs)
+                total_err += best_k
+            prior = abs(bpm - 118) * 0.0006
+            score = (total_err / len(deltas)) + prior
+            if score < min_err:
+                min_err = score
+                best_bpm = bpm
+
+        self.assertEqual(best_bpm, 128)
 
 
 class TestLyricsEngineSpicyHydration(unittest.TestCase):
