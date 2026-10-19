@@ -20,6 +20,7 @@ from pathlib import Path
 PROJECT_ROOT = Path(os.environ.get("PANACEA_DIR", Path(__file__).resolve().parent.parent))
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
+QML_DIR = PROJECT_ROOT / "qml" if (PROJECT_ROOT / "qml").is_dir() else PROJECT_ROOT
 
 from tests.test_challenger_m1_settings import QmlLexerBracketParser
 
@@ -29,8 +30,8 @@ class TestNotchAmbientGlowBoundaryAndStress(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.notch_qml = (PROJECT_ROOT / "SetCustomNotch.qml").read_text(encoding="utf-8")
-        cls.shell_qml = (PROJECT_ROOT / "shell.qml").read_text(encoding="utf-8")
+        cls.notch_qml = (QML_DIR / "SetCustomNotch.qml").read_text(encoding="utf-8")
+        cls.shell_qml = (QML_DIR / "shell.qml").read_text(encoding="utf-8")
         cls.settings = json.loads((PROJECT_ROOT / "settings.json").read_text(encoding="utf-8"))
 
     def test_settings_json_glow_defaults(self):
@@ -136,9 +137,9 @@ class TestIslandLyricsHeightAndBehaviorStress(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.notch_qml = (PROJECT_ROOT / "SetCustomNotch.qml").read_text(encoding="utf-8")
-        cls.island_qml = (PROJECT_ROOT / "IslandMusicView.qml").read_text(encoding="utf-8")
-        cls.shell_qml = (PROJECT_ROOT / "shell.qml").read_text(encoding="utf-8")
+        cls.notch_qml = (QML_DIR / "SetCustomNotch.qml").read_text(encoding="utf-8")
+        cls.island_qml = (QML_DIR / "IslandMusicView.qml").read_text(encoding="utf-8")
+        cls.shell_qml = (QML_DIR / "shell.qml").read_text(encoding="utf-8")
         cls.settings = json.loads((PROJECT_ROOT / "settings.json").read_text(encoding="utf-8"))
 
     def test_settings_json_lyrics_defaults(self):
@@ -226,7 +227,7 @@ class TestSetCustomNotchPreviewStateInteractions(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.notch_qml = (PROJECT_ROOT / "SetCustomNotch.qml").read_text(encoding="utf-8")
+        cls.notch_qml = (QML_DIR / "SetCustomNotch.qml").read_text(encoding="utf-8")
 
     def test_preview_state_properties_defined(self):
         """Verify state properties exist with expected initial values."""
@@ -268,7 +269,7 @@ class TestPreviewLyricsToggleBehavior(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.notch_qml = (PROJECT_ROOT / "SetCustomNotch.qml").read_text(encoding="utf-8")
+        cls.notch_qml = (QML_DIR / "SetCustomNotch.qml").read_text(encoding="utf-8")
 
     def test_collapsed_lyrics_button_triggers_auto_expand_and_open(self):
         """Verify clicking prevCollapsedLyricsBtn sets previewIsExpanded = true AND toggles lyrics."""
@@ -351,13 +352,13 @@ class TestQmlDelimiterIntegrity(unittest.TestCase):
     """Verify delimiter balance on modified QML files."""
 
     def test_set_custom_notch_balance(self):
-        path = PROJECT_ROOT / "SetCustomNotch.qml"
+        path = QML_DIR / "SetCustomNotch.qml"
         parser = QmlLexerBracketParser(path.read_text(encoding="utf-8"), str(path))
         ok, errs = parser.parse()
         self.assertTrue(ok, f"SetCustomNotch.qml delimiter errors: {errs}")
 
     def test_island_music_view_balance(self):
-        path = PROJECT_ROOT / "IslandMusicView.qml"
+        path = QML_DIR / "IslandMusicView.qml"
         parser = QmlLexerBracketParser(path.read_text(encoding="utf-8"), str(path))
         ok, errs = parser.parse()
         self.assertTrue(ok, f"IslandMusicView.qml delimiter errors: {errs}")

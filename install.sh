@@ -220,6 +220,17 @@ deploy_files() {
     chmod +x "$INSTALL_DIR"/sound_engine.py 2>/dev/null || true
     chmod +x "$INSTALL_DIR"/generate_*.py 2>/dev/null || true
 
+    # Compatibilidad transparente para arranque con 'qs -c ~/.config/panacea' y 'qs -c ~/.config/panacea/qml'
+    if [ -d "$INSTALL_DIR/qml" ]; then
+        log_info "Vinculando componentes QML para compatibilidad de arranque..."
+        for f in "$INSTALL_DIR/qml/"*.qml "$INSTALL_DIR/qml/Themes.js"; do
+            [ -f "$f" ] && ln -sf "qml/$(basename "$f")" "$INSTALL_DIR/$(basename "$f")"
+        done
+        ln -sf ../assets "$INSTALL_DIR/qml/assets" 2>/dev/null || true
+        ln -sf ../scripts "$INSTALL_DIR/qml/scripts" 2>/dev/null || true
+        ln -sf ../sounds "$INSTALL_DIR/qml/sounds" 2>/dev/null || true
+    fi
+
     log_success "Archivos desplegados y permisos configurados en $INSTALL_DIR"
 }
 

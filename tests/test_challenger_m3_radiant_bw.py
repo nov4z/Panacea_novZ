@@ -21,6 +21,7 @@ from pathlib import Path
 PROJECT_ROOT = Path(os.environ.get("PANACEA_DIR", Path(__file__).resolve().parent.parent))
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
+QML_DIR = PROJECT_ROOT / "qml" if (PROJECT_ROOT / "qml").is_dir() else PROJECT_ROOT
 
 from tests.test_challenger_m1_settings import QmlLexerBracketParser
 from scripts.art_color import extract_dominant_color
@@ -291,7 +292,7 @@ class TestM3QmlMonochromeStateMachineOracle(unittest.TestCase):
 
     def test_03_shell_effective_wave_color_contract(self):
         """shell.qml effectiveWaveColor returns #ffffff for monochrome art matching Photo 2."""
-        shell_qml = (PROJECT_ROOT / "shell.qml").read_text(encoding="utf-8")
+        shell_qml = (QML_DIR / "shell.qml").read_text(encoding="utf-8")
         # Ensure monochrome art check precedes mode 0 check
         mono_idx = shell_qml.find('if (root.isMonochromeArt) return "#ffffff";')
         mode0_idx = shell_qml.find('if (m === 0) return root.mediaArtColor;')
@@ -301,7 +302,7 @@ class TestM3QmlMonochromeStateMachineOracle(unittest.TestCase):
 
     def test_04_shell_qml_monochrome_token_declarations(self):
         """shell.qml defines isMonochromeArt, dark unibody surfaces, and white accent tokens."""
-        shell_qml = (PROJECT_ROOT / "shell.qml").read_text(encoding="utf-8")
+        shell_qml = (QML_DIR / "shell.qml").read_text(encoding="utf-8")
         self.assertIn("readonly property bool isMonochromeArt:", shell_qml)
         self.assertIn('root.isMonochromeArt ? "#ffffff"', shell_qml)
         self.assertIn("Qt.rgba(0.08, 0.08, 0.09, 0.98)", shell_qml)
@@ -319,7 +320,7 @@ class TestM3DelimiterIntegrity(unittest.TestCase):
             "SetSounds.qml",
         ]
         for f in files:
-            path = PROJECT_ROOT / f
+            path = QML_DIR / f
             self.assertTrue(path.is_file(), f"Missing file {path}")
             content = path.read_text(encoding="utf-8")
             parser = QmlLexerBracketParser(content, f)

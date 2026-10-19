@@ -32,6 +32,7 @@ from pathlib import Path
 PROJECT_ROOT = Path(os.environ.get("PANACEA_DIR", Path(__file__).resolve().parent.parent))
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
+QML_DIR = PROJECT_ROOT / "qml" if (PROJECT_ROOT / "qml").is_dir() else PROJECT_ROOT
 
 from tests.test_challenger_m1_settings import QmlLexerBracketParser
 from scripts.lyrics import fetch_lyrics, compute_cache_key
@@ -42,7 +43,7 @@ class TestSpicyLyricsQmlDelimiterAndSyntaxIntegrity(unittest.TestCase):
 
     def test_01_spicy_lyrics_view_qml_delimiter_balance(self):
         """SpicyLyricsView.qml must have perfectly balanced delimiters with 0 errors."""
-        qml_path = PROJECT_ROOT / "SpicyLyricsView.qml"
+        qml_path = QML_DIR / "SpicyLyricsView.qml"
         self.assertTrue(qml_path.is_file(), f"Missing {qml_path}")
         content = qml_path.read_text(encoding="utf-8")
         parser = QmlLexerBracketParser(content, "SpicyLyricsView.qml")
@@ -52,7 +53,7 @@ class TestSpicyLyricsQmlDelimiterAndSyntaxIntegrity(unittest.TestCase):
 
     def test_02_controls_view_qml_delimiter_balance(self):
         """ControlsView.qml must maintain 100% delimiter balance after mediaCard updates."""
-        qml_path = PROJECT_ROOT / "ControlsView.qml"
+        qml_path = QML_DIR / "ControlsView.qml"
         self.assertTrue(qml_path.is_file(), f"Missing {qml_path}")
         content = qml_path.read_text(encoding="utf-8")
         parser = QmlLexerBracketParser(content, "ControlsView.qml")
@@ -62,7 +63,7 @@ class TestSpicyLyricsQmlDelimiterAndSyntaxIntegrity(unittest.TestCase):
 
     def test_03_island_music_view_qml_delimiter_balance(self):
         """IslandMusicView.qml must maintain 100% delimiter balance with lyrics integration."""
-        qml_path = PROJECT_ROOT / "IslandMusicView.qml"
+        qml_path = QML_DIR / "IslandMusicView.qml"
         self.assertTrue(qml_path.is_file(), f"Missing {qml_path}")
         content = qml_path.read_text(encoding="utf-8")
         parser = QmlLexerBracketParser(content, "IslandMusicView.qml")
@@ -76,10 +77,10 @@ class TestSpicyLyricsComponentContracts(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.lyrics_qml = (PROJECT_ROOT / "SpicyLyricsView.qml").read_text(encoding="utf-8")
-        cls.controls_qml = (PROJECT_ROOT / "ControlsView.qml").read_text(encoding="utf-8")
-        cls.island_qml = (PROJECT_ROOT / "IslandMusicView.qml").read_text(encoding="utf-8")
-        cls.shell_qml = (PROJECT_ROOT / "shell.qml").read_text(encoding="utf-8")
+        cls.lyrics_qml = (QML_DIR / "SpicyLyricsView.qml").read_text(encoding="utf-8")
+        cls.controls_qml = (QML_DIR / "ControlsView.qml").read_text(encoding="utf-8")
+        cls.island_qml = (QML_DIR / "IslandMusicView.qml").read_text(encoding="utf-8")
+        cls.shell_qml = (QML_DIR / "shell.qml").read_text(encoding="utf-8")
 
     def test_01_spicy_lyrics_view_imports(self):
         """SpicyLyricsView.qml imports QtQuick, QtQuick.Layouts, QtQuick.Effects, Quickshell, Quickshell.Io."""
@@ -425,10 +426,10 @@ class TestM3RadiantWhiteMonochromeArt(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.shell_qml = (PROJECT_ROOT / "shell.qml").read_text(encoding="utf-8")
-        cls.controls_qml = (PROJECT_ROOT / "ControlsView.qml").read_text(encoding="utf-8")
-        cls.island_qml = (PROJECT_ROOT / "IslandMusicView.qml").read_text(encoding="utf-8")
-        cls.lyrics_qml = (PROJECT_ROOT / "SpicyLyricsView.qml").read_text(encoding="utf-8")
+        cls.shell_qml = (QML_DIR / "shell.qml").read_text(encoding="utf-8")
+        cls.controls_qml = (QML_DIR / "ControlsView.qml").read_text(encoding="utf-8")
+        cls.island_qml = (QML_DIR / "IslandMusicView.qml").read_text(encoding="utf-8")
+        cls.lyrics_qml = (QML_DIR / "SpicyLyricsView.qml").read_text(encoding="utf-8")
 
     def test_01_shell_monochrome_art_detection_and_tokens(self):
         """shell.qml maintains dark unibody surface and crisp white tokens for monochrome art."""
@@ -467,7 +468,7 @@ class TestM3RadiantWhiteMonochromeArt(unittest.TestCase):
     def test_05_delimiter_balance_all_m3_files(self):
         """All QML files touched by M3 maintain 100% bracket and quote balance with 0 errors."""
         for filename in ["ControlsView.qml", "IslandMusicView.qml", "SpicyLyricsView.qml"]:
-            qml_path = PROJECT_ROOT / filename
+            qml_path = QML_DIR / filename
             content = qml_path.read_text(encoding="utf-8")
             parser = QmlLexerBracketParser(content, filename)
             success, errors = parser.parse()

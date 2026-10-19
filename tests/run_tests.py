@@ -66,7 +66,7 @@ class JsonTestResult(unittest.TextTestResult):
         elapsed = time.perf_counter() - self.start_times.get(test.id(), time.perf_counter())
         self.test_details.append({
             "id": test.id(),
-            "name": test._testMethodName,
+            "name": getattr(test, "_testMethodName", str(test)),
             "status": "FAIL",
             "duration": round(elapsed, 4),
             "reason": self._exc_info_to_string(err, test),
@@ -77,7 +77,7 @@ class JsonTestResult(unittest.TextTestResult):
         elapsed = time.perf_counter() - self.start_times.get(test.id(), time.perf_counter())
         self.test_details.append({
             "id": test.id(),
-            "name": test._testMethodName,
+            "name": getattr(test, "_testMethodName", str(test)),
             "status": "ERROR",
             "duration": round(elapsed, 4),
             "reason": self._exc_info_to_string(err, test),

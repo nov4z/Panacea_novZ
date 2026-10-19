@@ -33,6 +33,7 @@ from pathlib import Path
 PROJECT_ROOT = Path(os.environ.get("PANACEA_DIR", Path(__file__).resolve().parent.parent))
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
+QML_DIR = PROJECT_ROOT / "qml" if (PROJECT_ROOT / "qml").is_dir() else PROJECT_ROOT
 
 
 class QmlLexerBracketParser:
@@ -208,7 +209,7 @@ class TestQmlDelimiterAndSyntaxIntegrity(unittest.TestCase):
 
     def test_settings_view_qml_delimiter_balance(self):
         """Validates delimiter balance of SettingsView.qml."""
-        filepath = PROJECT_ROOT / "SettingsView.qml"
+        filepath = QML_DIR / "SettingsView.qml"
         content = filepath.read_text(encoding="utf-8")
         parser = QmlLexerBracketParser(content, str(filepath))
         ok, errs = parser.parse()
@@ -216,7 +217,7 @@ class TestQmlDelimiterAndSyntaxIntegrity(unittest.TestCase):
 
     def test_set_custom_notch_qml_delimiter_balance(self):
         """Validates delimiter balance of SetCustomNotch.qml."""
-        filepath = PROJECT_ROOT / "SetCustomNotch.qml"
+        filepath = QML_DIR / "SetCustomNotch.qml"
         content = filepath.read_text(encoding="utf-8")
         parser = QmlLexerBracketParser(content, str(filepath))
         ok, errs = parser.parse()
@@ -224,7 +225,7 @@ class TestQmlDelimiterAndSyntaxIntegrity(unittest.TestCase):
 
     def test_set_media_qml_delimiter_balance(self):
         """Validates delimiter balance of SetMedia.qml."""
-        filepath = PROJECT_ROOT / "SetMedia.qml"
+        filepath = QML_DIR / "SetMedia.qml"
         content = filepath.read_text(encoding="utf-8")
         parser = QmlLexerBracketParser(content, str(filepath))
         ok, errs = parser.parse()
@@ -232,7 +233,7 @@ class TestQmlDelimiterAndSyntaxIntegrity(unittest.TestCase):
 
     def test_set_bar_island_qml_delimiter_balance(self):
         """Validates delimiter balance of SetBarIsland.qml."""
-        filepath = PROJECT_ROOT / "SetBarIsland.qml"
+        filepath = QML_DIR / "SetBarIsland.qml"
         content = filepath.read_text(encoding="utf-8")
         parser = QmlLexerBracketParser(content, str(filepath))
         ok, errs = parser.parse()
@@ -240,12 +241,12 @@ class TestQmlDelimiterAndSyntaxIntegrity(unittest.TestCase):
 
     def test_all_settings_section_pages_delimiter_balance(self):
         """Validates delimiter balance for all 18 referenced section pages."""
-        settings_view = (PROJECT_ROOT / "SettingsView.qml").read_text(encoding="utf-8")
+        settings_view = (QML_DIR / "SettingsView.qml").read_text(encoding="utf-8")
         page_names = re.findall(r'page:\s*"([^"]+)"', settings_view)
         self.assertGreater(len(page_names), 0, "Should discover section pages in SettingsView.qml")
 
         for page in page_names:
-            p = PROJECT_ROOT / page
+            p = QML_DIR / page
             self.assertTrue(p.exists(), f"Section page {p} referenced in SettingsView.qml must exist")
             content = p.read_text(encoding="utf-8")
             parser = QmlLexerBracketParser(content, str(p))
@@ -258,7 +259,7 @@ class TestComponentHierarchyAndContracts(unittest.TestCase):
 
     def test_settings_view_structure_and_imports(self):
         """Verifies imports, root item, and required functions in SettingsView.qml."""
-        content = (PROJECT_ROOT / "SettingsView.qml").read_text(encoding="utf-8")
+        content = (QML_DIR / "SettingsView.qml").read_text(encoding="utf-8")
         self.assertIn("import QtQuick", content)
         self.assertIn("import QtQuick.Layouts", content)
         self.assertIn("import QtQuick.Controls", content)
@@ -274,7 +275,7 @@ class TestComponentHierarchyAndContracts(unittest.TestCase):
 
     def test_set_media_cover_and_ripple_card(self):
         """Verifies the dedicated 'Efectos Visuales de Portada & Ondas' SetCard in SetMedia.qml."""
-        content = (PROJECT_ROOT / "SetMedia.qml").read_text(encoding="utf-8")
+        content = (QML_DIR / "SetMedia.qml").read_text(encoding="utf-8")
 
         self.assertIn('text: page.sys.tr("Efectos Visuales de Portada & Ondas")', content)
         self.assertIn('label: page.sys.tr("Pulsación de carátula (Cover Bounce)")', content)
@@ -289,7 +290,7 @@ class TestComponentHierarchyAndContracts(unittest.TestCase):
 
     def test_set_bar_island_interactivity_card(self):
         """Verifies the dedicated 'Interactividad del Notch' SetCard in SetBarIsland.qml."""
-        content = (PROJECT_ROOT / "SetBarIsland.qml").read_text(encoding="utf-8")
+        content = (QML_DIR / "SetBarIsland.qml").read_text(encoding="utf-8")
 
         self.assertIn('text: page.sys.tr("Interactividad del Notch")', content)
         self.assertIn('label: page.sys.tr("Ventana activa al pasar el cursor (Hover Peek)")', content)
@@ -301,7 +302,7 @@ class TestComponentHierarchyAndContracts(unittest.TestCase):
 
     def test_set_custom_notch_unibody_preview_fidelity(self):
         """Verifies authentic unibody geometry, lyrics, and expanded island in SetCustomNotch.qml."""
-        content = (PROJECT_ROOT / "SetCustomNotch.qml").read_text(encoding="utf-8")
+        content = (QML_DIR / "SetCustomNotch.qml").read_text(encoding="utf-8")
 
         # Unibody geometry without border break
         self.assertIn("color: page.sys.currentNotchBg || page.sys.colBg || \"#000000\"", content)
@@ -323,7 +324,7 @@ class TestComponentHierarchyAndContracts(unittest.TestCase):
 
     def test_set_custom_notch_new_customization_controls(self):
         """Verifies newly exposed sliders and selects in SetCustomNotch.qml."""
-        content = (PROJECT_ROOT / "SetCustomNotch.qml").read_text(encoding="utf-8")
+        content = (QML_DIR / "SetCustomNotch.qml").read_text(encoding="utf-8")
 
         # Ambient glow toggle and sliders
         self.assertIn('label: page.sys.tr("Resplandor ambiental del notch (Ambient Glow)")', content)
@@ -348,19 +349,19 @@ class TestComponentHierarchyAndContracts(unittest.TestCase):
                     "notchAmbientGlowRadius", "islandLyricsHeight", "islandLyricsBehavior"]:
             self.assertIn(key, data, f"Key {key} must exist in settings.json")
 
-        shell_content = (PROJECT_ROOT / "shell.qml").read_text(encoding="utf-8")
+        shell_content = (QML_DIR / "shell.qml").read_text(encoding="utf-8")
         for key in ["notchAmbientGlowEnabled: true", "notchAmbientGlowIntensity: 35",
                     "notchAmbientGlowRadius: 60", "islandLyricsHeight: 240", "islandLyricsBehavior: \"manual\""]:
             self.assertIn(key, shell_content, f"Default key {key} must be in shell.qml defaultCfg")
 
         self.assertIn("root.cfg.islandLyricsHeight", shell_content)
 
-        island_content = (PROJECT_ROOT / "IslandMusicView.qml").read_text(encoding="utf-8")
+        island_content = (QML_DIR / "IslandMusicView.qml").read_text(encoding="utf-8")
         self.assertIn("sys.cfg.islandLyricsHeight", island_content)
 
     def test_shell_qml_json_adapter_declares_all_new_m1_properties(self):
         """Verifies that adapter: JsonAdapter in shell.qml explicitly declares all new M1 properties so they survive writeAdapter() / saveCfg()."""
-        shell_content = (PROJECT_ROOT / "shell.qml").read_text(encoding="utf-8")
+        shell_content = (QML_DIR / "shell.qml").read_text(encoding="utf-8")
         adapter_match = re.search(
             r"FileView\s*\{\s*id:\s*cfgFile.*?adapter:\s*JsonAdapter\s*\{(.*?)\n\s*\}\s*\n\s*\}",
             shell_content,
@@ -390,7 +391,7 @@ class TestSearchDiscoverability(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        content = (PROJECT_ROOT / "SettingsView.qml").read_text(encoding="utf-8")
+        content = (QML_DIR / "SettingsView.qml").read_text(encoding="utf-8")
         # Extract sections definitions
         # Parse section objects { id: "...", title: "...", ... keys: "..." }
         sec_block_match = re.search(r"readonly\s+property\s+var\s+sections\s*:\s*\[(.*?)\]\s*\n\s*readonly", content, re.DOTALL)

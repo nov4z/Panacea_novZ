@@ -33,6 +33,7 @@ from pathlib import Path
 PROJECT_ROOT = Path(os.environ.get("PANACEA_DIR", Path(__file__).resolve().parent.parent))
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
+QML_DIR = PROJECT_ROOT / "qml" if (PROJECT_ROOT / "qml").is_dir() else PROJECT_ROOT
 
 import sound_engine
 from sound_engine import (
@@ -253,13 +254,13 @@ class TestQMLAndSettingsContracts(unittest.TestCase):
 
     def test_shell_qml_contains_sound_custom_spatial_width(self):
         """shell.qml must declare soundCustomSpatialWidth in JsonAdapter and defaultCfg."""
-        content = (PROJECT_ROOT / "shell.qml").read_text(encoding="utf-8")
+        content = (QML_DIR / "shell.qml").read_text(encoding="utf-8")
         self.assertIn("property real   soundCustomSpatialWidth", content)
         self.assertIn("soundCustomSpatialWidth: 0.50", content)
 
     def test_setsounds_qml_independent_sliders(self):
         """SetSounds.qml Block C must contain two independent SetSlider components."""
-        content = (PROJECT_ROOT / "SetSounds.qml").read_text(encoding="utf-8")
+        content = (QML_DIR / "SetSounds.qml").read_text(encoding="utf-8")
         self.assertIn("page.sys.cfg.soundCustomSpatialWidth", content)
         self.assertIn("page.sys.cfg.soundCustomReverb", content)
         self.assertIn("Espacialidad Estéreo (Apertura y difusión lateral)", content)
@@ -267,7 +268,7 @@ class TestQMLAndSettingsContracts(unittest.TestCase):
 
     def test_setsounds_qml_passes_spatial_and_reverb_cli_flags(self):
         """runPreview and generateCustomPack must pass --spatial and --reverb."""
-        content = (PROJECT_ROOT / "SetSounds.qml").read_text(encoding="utf-8")
+        content = (QML_DIR / "SetSounds.qml").read_text(encoding="utf-8")
         # Ensure --spatial and --reverb appear in commands
         spatial_count = content.count('"--spatial", spatial.toFixed(2)')
         reverb_count = content.count('"--reverb", reverb.toFixed(2)')
@@ -276,7 +277,7 @@ class TestQMLAndSettingsContracts(unittest.TestCase):
 
     def test_setsounds_qml_bracket_balance(self):
         """SetSounds.qml must have 100% balanced brackets and quotes with 0 parser errors."""
-        content = (PROJECT_ROOT / "SetSounds.qml").read_text(encoding="utf-8")
+        content = (QML_DIR / "SetSounds.qml").read_text(encoding="utf-8")
         parser = QmlLexerBracketParser(content, "SetSounds.qml")
         parser.parse()
         self.assertEqual(len(parser.errors), 0, f"Delimiter errors in SetSounds.qml: {parser.errors}")

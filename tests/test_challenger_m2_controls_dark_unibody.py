@@ -26,6 +26,7 @@ from pathlib import Path
 PROJECT_ROOT = Path(os.environ.get("PANACEA_DIR", Path(__file__).resolve().parent.parent))
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
+QML_DIR = PROJECT_ROOT / "qml" if (PROJECT_ROOT / "qml").is_dir() else PROJECT_ROOT
 
 from tests.test_challenger_m1_settings import QmlLexerBracketParser
 
@@ -35,7 +36,7 @@ class TestControlsViewMediaCardFixes(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.qml_path = PROJECT_ROOT / "ControlsView.qml"
+        cls.qml_path = QML_DIR / "ControlsView.qml"
         cls.content = cls.qml_path.read_text(encoding="utf-8")
 
     def test_01_rectangular_shadow_eliminated_from_media_card(self):
@@ -78,7 +79,7 @@ class TestStrictDarkUnibodyRule(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.shell_path = PROJECT_ROOT / "shell.qml"
+        cls.shell_path = QML_DIR / "shell.qml"
         cls.content = cls.shell_path.read_text(encoding="utf-8")
 
     def test_01_current_notch_bg_guarded_against_monochrome_white(self):
@@ -96,8 +97,8 @@ class TestHighContrastMonochromeControls(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.island_content = (PROJECT_ROOT / "IslandMusicView.qml").read_text(encoding="utf-8")
-        cls.lyrics_content = (PROJECT_ROOT / "SpicyLyricsView.qml").read_text(encoding="utf-8")
+        cls.island_content = (QML_DIR / "IslandMusicView.qml").read_text(encoding="utf-8")
+        cls.lyrics_content = (QML_DIR / "SpicyLyricsView.qml").read_text(encoding="utf-8")
 
     def test_01_no_lingering_black_text_overrides(self):
         """Neither IslandMusicView nor SpicyLyricsView contains #0f0f11 overrides."""
@@ -121,7 +122,7 @@ class TestTargetedDelimiterBalance(unittest.TestCase):
     def test_01_all_modified_files_delimiter_balance(self):
         files = ["ControlsView.qml", "IslandMusicView.qml", "SpicyLyricsView.qml"]
         for f in files:
-            p = PROJECT_ROOT / f
+            p = QML_DIR / f
             content = p.read_text(encoding="utf-8")
             parser = QmlLexerBracketParser(content, f)
             ok, errs = parser.parse()

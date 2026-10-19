@@ -215,24 +215,26 @@ qs -c ~/.config/panacea ipc call pill bluetooth
 
 ```text
 Panacea_novZ/
-├── shell.qml                     # Contenedor central, Notch Dinámico e IpcHandler
-├── ControlsView.qml              # Centro de Control Super + Z Dark Unibody
-├── IslandMusicView.qml           # Cápsula musical expandible Super + M
-├── SpicyLyricsView.qml           # Visor cinemático de letras en tiempo real
-├── SetCustomNotch.qml            # Estudio de personalización y vista previa de Notch
-├── SetSounds.qml                 # Estudio de audio, efectos y reverberación
-├── SettingsView.qml              # Hub central de configuración
-├── sound_engine.py               # Motor acústico en tiempo real (ancho + reverb)
-├── Themes.js                     # Paletas de color dinámicas y tokens de diseño
-├── Translations.qml              # Soporte multi-idioma (Español / Inglés)
-├── install.sh                    # Asistente de instalación automatizado
-├── uninstall.sh                  # Script de desinstalación y restauración
-├── settings.json.example         # Plantilla predeterminada de configuración
+├── qml/                          # Componentes QML, Notch Dinámico, Controles e Interfaz
+│   ├── shell.qml                 # Contenedor central, Notch Dinámico e IpcHandler
+│   ├── ControlsView.qml          # Centro de Control Super + Z Dark Unibody
+│   ├── IslandMusicView.qml       # Cápsula musical expandible Super + M
+│   ├── SpicyLyricsView.qml       # Visor cinemático de letras en tiempo real
+│   ├── SetCustomNotch.qml        # Estudio de personalización y vista previa de Notch
+│   ├── SetSounds.qml             # Estudio de audio, efectos y reverberación
+│   ├── SettingsView.qml          # Hub central de configuración
+│   ├── Themes.js                 # Paletas de color dinámicas y tokens de diseño
+│   └── Translations.qml          # Soporte multi-idioma (Español / Inglés)
 ├── assets/                       # Iconos vectoriales y gráficos de interfaz
 ├── scripts/                      # Daemons y scripts auxiliares (brillo, red, letras)
-├── screenshots/                  # Galería de capturas de pantalla de alta resolución
+├── screenshots/                  # Galería visual y demos grabadas en alta resolución
 ├── sounds/                       # Soundpacks acústicos completos
-└── tests/                        # Suite de pruebas de integridad
+├── tests/                        # Suite de pruebas de integridad automatizadas
+├── install.sh                    # Asistente de instalación automatizado
+├── uninstall.sh                  # Script de desinstalación y restauración
+├── sound_engine.py               # Motor acústico en tiempo real (ancho + reverb)
+├── settings.json.example         # Plantilla predeterminada de configuración
+└── LICENSE                       # Licencia MIT de software libre
 ```
 
 ---
