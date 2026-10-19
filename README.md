@@ -5,12 +5,18 @@
 **Suite de interfaz de escritorio, Notch Dinámico y Centro de Control para Wayland & Hyprland**  
 *Bifurcación, optimización y rediseño profundo del proyecto original [Panacea](https://github.com/EnsixD/Panacea) creado por [EnsixD](https://github.com/EnsixD)*
 
+[![Arch Linux](https://img.shields.io/badge/ARCH%20LINUX-1793D1?style=for-the-badge&logo=arch-linux&logoColor=white)](https://archlinux.org/)
+[![Ubuntu](https://img.shields.io/badge/UBUNTU-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)](https://ubuntu.com/)
+[![Debian](https://img.shields.io/badge/DEBIAN-A81D33?style=for-the-badge&logo=debian&logoColor=white)](https://debian.org/)
+[![Fedora](https://img.shields.io/badge/FEDORA-294172?style=for-the-badge&logo=fedora&logoColor=white)](https://getfedora.org/)
+<br/>
+[![Hyprland](https://img.shields.io/badge/HYPRLAND-00C7B7?style=for-the-badge&logo=hyprland&logoColor=white)](https://hyprland.org/)
+[![Niri](https://img.shields.io/badge/NIRI-BETA-7852FF?style=for-the-badge&labelColor=444444)](https://github.com/YaLTeR/niri)
+[![Quickshell](https://img.shields.io/badge/QUICKSHELL-777777?style=for-the-badge&logo=qt&logoColor=white)](https://quickshell.outfoxxed.me/)
+[![Fish](https://img.shields.io/badge/FISH-000000?style=for-the-badge&logo=fish&logoColor=white)](https://fishshell.com/)
+[![MIT](https://img.shields.io/badge/MIT-2B78FF?style=for-the-badge)](LICENSE)
+<br/>
 [![Repositorio Original](https://img.shields.io/badge/Repositorio%20Original-EnsixD%2FPanacea-blue?style=for-the-badge&logo=github)](https://github.com/EnsixD/Panacea)
-[![Wayland](https://img.shields.io/badge/Display-Wayland-00599C?style=for-the-badge&logo=wayland&logoColor=white)](https://wayland.freedesktop.org/)
-[![Hyprland](https://img.shields.io/badge/Window%20Manager-Hyprland-00C7B7?style=for-the-badge&logo=archlinux&logoColor=white)](https://hyprland.org/)
-[![Quickshell](https://img.shields.io/badge/Engine-Quickshell%20(Qt6%2FQML)-41CD52?style=for-the-badge&logo=qt&logoColor=white)](https://quickshell.outfoxxed.me/)
-[![Python](https://img.shields.io/badge/Audio%20%26%20Daemons-Python%203-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org/)
-[![Licencia](https://img.shields.io/badge/Licencia-MIT-green?style=for-the-badge)](LICENSE)
 
 <br/>
 
@@ -32,6 +38,13 @@
 ## 📸 Galería Visual
 
 <div align="center">
+
+### 🎬 Demostración en Vivo (Live Showcase)
+*Transición cinemática y física fluida: Isla Dinámica contraída → Expansión Musical con onda reactiva y SpicyLyrics → Centro de Control Unibody (`Super + Z`)*
+
+![Panacea_novZ Live Demo](screenshots/demo.gif)
+
+<br/>
 
 ### 1. Notch Dinámico & Barra de Estado (Modo Dark Unibody)
 *Notch dinámico e isla interactiva inspirada en la dinámica visual de la isla flotante (tipo iPhone), integrada al centro superior de la pantalla con onda acústica reactiva a la música en tiempo real.*
@@ -248,6 +261,22 @@ El script detectará los respaldos generados previamente durante la instalación
 - **Proyecto Original**: [Panacea](https://github.com/EnsixD/Panacea) desarrollado por [EnsixD](https://github.com/EnsixD).
 - **Modificación, vibecoding y perfeccionamiento**: NovZ ([@nov4z](https://github.com/nov4z)).
 - Distribuido bajo licencia **MIT** en estricto cumplimiento y honor a los términos del software libre original. Consulta el archivo [LICENSE](LICENSE) para más detalles.
+
+<br/>
+
+### Credits (Recursos & Upstream)
+
+No wallpaper here is mine — each belongs to its author, and they are bundled only so a fresh install has something to show. Author of one and want it gone? Open an issue.
+
+- [matteogini/dotfiles](https://github.com/matteogini/dotfiles) — `ember_stripes.jpg` and `misty_peaks.jpg`; the rice this setup grew out of.
+- [HyDE](https://github.com/HyDE-Project/HyDE) — `spring_bloom.jpg`, from its Graphite Mono theme; `hypr/palette.conf` is derived from it.
+- [ilyamiro/shell-wallpapers](https://github.com/ilyamiro/shell-wallpapers) — the wallpaper collection bundled in `wallpapers/`.
+
+Video wallpapers play through [mpvpaper](https://github.com/GhostNaN/mpvpaper); none are bundled. Drop `.mp4`, `.webm`, `.mkv` or `.mov` into `~/.config/hypr/wallpaper/live`, or take them from [DesktopHut](https://www.desktophut.com/), [Wallper](https://wallper.co/), [TuxPapers](https://tuxpapers.com/) or [Papyrus](https://papyrus.co/) — each on its own terms.
+
+Interface font: [JetBrains Mono Nerd Font](https://www.jetbrains.com/lp/mono/) (SIL OFL), with [Material Design Icons](https://materialdesignicons.com/) for every glyph. `assets/logo*.png` is drawn for this project, same licence as the code.
+
+Built on [Hyprland](https://hyprland.org/) · [Quickshell](https://quickshell.outfoxxed.me/) · [cava](https://github.com/karlstav/cava) · [cliphist](https://github.com/sentriz/cliphist) · [hyprpaper](https://github.com/hyprwm/hyprpaper) / [hyprsunset](https://github.com/hyprwm/hyprsunset) · [wf-recorder](https://github.com/ammen99/wf-recorder) · [fish](https://fishshell.com/)
 
 ---
 
