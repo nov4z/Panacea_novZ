@@ -12,9 +12,9 @@ from gi.repository import GLib
 DBusGMainLoop(set_as_default=True)
 
 _repo_root = Path(__file__).resolve().parent.parent
-_bw_cover = _repo_root / "screenshots" / "bw_cover.png"
+_bw_cover = _repo_root / "assets" / "bw_cover.png"
 if not _bw_cover.exists():
-    _bw_cover = Path(os.environ.get("XDG_CONFIG_HOME", os.path.expanduser("~/.config"))) / "panacea" / "screenshots" / "bw_cover.png"
+    _bw_cover = Path(os.environ.get("XDG_CONFIG_HOME", os.path.expanduser("~/.config"))) / "panacea" / "assets" / "bw_cover.png"
 _bw_cover_url = f"file://{_bw_cover.resolve()}"
 
 class MprisPlayer(dbus.service.Object):

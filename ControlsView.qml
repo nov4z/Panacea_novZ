@@ -2299,8 +2299,18 @@ Item {
                         id: trayBtn
                         required property var modelData
 
-                        Layout.preferredWidth: 36
-                        Layout.preferredHeight: 36
+                        readonly property bool isBlacklisted: {
+                            var bList = (view.sys && view.sys.cfg && view.sys.cfg.trayBlacklist) ? view.sys.cfg.trayBlacklist : [];
+                            var s = (String(trayBtn.modelData.id || "") + " " + String(trayBtn.modelData.iconName || "") + " " + String(trayBtn.modelData.title || "")).toLowerCase();
+                            for (var b = 0; b < bList.length; b++) {
+                                if (s.indexOf(String(bList[b]).toLowerCase()) !== -1) return true;
+                            }
+                            return false;
+                        }
+
+                        visible: !isBlacklisted
+                        Layout.preferredWidth: visible ? 36 : 0
+                        Layout.preferredHeight: visible ? 36 : 0
                         z: trayMa.containsMouse ? 10 : 0
                         radius: 12
                         color: trayMa.containsMouse ? Qt.rgba(1, 1, 1, 0.13) : Qt.rgba(1, 1, 1, 0.05)

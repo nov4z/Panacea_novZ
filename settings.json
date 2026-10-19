@@ -88,6 +88,7 @@
     "dockMagnify": true,
     "dockShowRunning": true,
     "dockZoom": 1.32,
+    "trayBlacklist": [],
     "expandedH": 670,
     "featAudio": true,
     "featBluetooth": true,
