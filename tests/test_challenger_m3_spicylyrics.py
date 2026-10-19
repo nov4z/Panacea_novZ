@@ -300,7 +300,8 @@ class TestLyricsEngineSpicyHydration(unittest.TestCase):
 
     def test_01_synced_track_hydration(self):
         """Cached Queen track hydrates into expected structure for SpicyLyricsView."""
-        res = fetch_lyrics("Queen", "Bohemian Rhapsody")
+        cache_dir = os.path.expanduser("~/.cache/panacea/lyrics")
+        res = fetch_lyrics("Queen", "Bohemian Rhapsody", cache_dir=cache_dir)
         self.assertEqual(res["status"], "ok")
         self.assertTrue(res["synced"])
         self.assertGreater(len(res["lines"]), 20)

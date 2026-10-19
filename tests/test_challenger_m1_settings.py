@@ -16,12 +16,11 @@ Empirically tests:
    - Verifies exact control properties, options, default expressions, and persistence hooks.
 3. Search Discoverability and Query Matching:
    - Replicates QML matches(s) search logic against parsed sections.
-   - Tests all required M1 keywords (antigravity, productividad, tareas, agentes, gemini, deepmind).
+   - Tests required keywords for customnotch (isla, dinamica, rayo, carga, aviso, padding).
    - Tests case insensitivity, partial prefix/infix substrings, search isolation,
      and empty/negative edge-cases.
 4. State Machine and Config Contracts:
-   - Tests synchronization contract between antigravityEnabled and antigravityMode.
-   - Verifies presence of corresponding sound assets for tone auditioning.
+   - Verifies presence of corresponding sound assets.
 """
 
 import os
@@ -273,36 +272,6 @@ class TestComponentHierarchyAndContracts(unittest.TestCase):
         self.assertIn("id: searchInput", content)
         self.assertIn("id: nav", content)
 
-    def test_set_custom_notch_antigravity_card(self):
-        """Verifies the dedicated 'Antigravity & Productividad' SetCard in SetCustomNotch.qml."""
-        content = (PROJECT_ROOT / "SetCustomNotch.qml").read_text(encoding="utf-8")
-
-        # Check section title
-        self.assertIn('text: page.sys.tr("Antigravity & Productividad")', content)
-
-        # Check controls
-        self.assertIn('label: page.sys.tr("Indicador de Antigravity en el notch")', content)
-        self.assertIn("page.sys.cfg.antigravityEnabled", content)
-        self.assertIn('label: page.sys.tr("Modo visual del logo")', content)
-        self.assertIn('{ id: "anim", text: page.sys.tr("Multicolor (5 fases)") }', content)
-        self.assertIn('{ id: "accent", text: page.sys.tr("Color de Acento") }', content)
-        self.assertIn('{ id: "off", text: page.sys.tr("Desactivado") }', content)
-
-        self.assertIn('label: page.sys.tr("Sonido de notificación de tareas")', content)
-        self.assertIn("page.sys.cfg.antigravitySound", content)
-        self.assertIn('label: page.sys.tr("Tono acústico de Antigravity")', content)
-        self.assertIn('{ id: "aero", text: page.sys.tr("Aero") }', content)
-        self.assertIn('{ id: "studio", text: page.sys.tr("Studio") }', content)
-        self.assertIn('{ id: "quantum", text: page.sys.tr("Quantum") }', content)
-        self.assertIn('{ id: "orbit", text: page.sys.tr("Orbit") }', content)
-
-        # Check persistence
-        self.assertGreaterEqual(content.count("page.sys.saveCfg()"), 5)
-
-        # Check sound audition logic
-        self.assertIn('page.sys.playSound("notif_antigravity_studio", "custom")', content)
-        self.assertIn('page.sys.playSound("notif_antigravity_" + tone)', content)
-
     def test_set_media_cover_and_ripple_card(self):
         """Verifies the dedicated 'Efectos Visuales de Portada & Ondas' SetCard in SetMedia.qml."""
         content = (PROJECT_ROOT / "SetMedia.qml").read_text(encoding="utf-8")
@@ -331,7 +300,7 @@ class TestComponentHierarchyAndContracts(unittest.TestCase):
         self.assertIn("page.sys.cfg.notchAudioRipple", content)
 
     def test_set_custom_notch_unibody_preview_fidelity(self):
-        """Verifies authentic unibody geometry, Antigravity, lyrics, and expanded island in SetCustomNotch.qml."""
+        """Verifies authentic unibody geometry, lyrics, and expanded island in SetCustomNotch.qml."""
         content = (PROJECT_ROOT / "SetCustomNotch.qml").read_text(encoding="utf-8")
 
         # Unibody geometry without border break
@@ -342,12 +311,6 @@ class TestComponentHierarchyAndContracts(unittest.TestCase):
         self.assertIn("page.sys.cfg.notchAmbientGlowRadius", content)
         self.assertIn("page.sys.cfg.notchAmbientGlowIntensity", content)
         self.assertIn("page.sys.cfg.notchAmbientGlowEnabled", content)
-
-        # Antigravity indicators in collapsed preview
-        self.assertIn("AntigravityLogo", content)
-        self.assertIn("page.sys.cfg.antigravityMargin !== undefined ? page.sys.cfg.antigravityMargin : 18", content)
-        self.assertIn("AntigravityWave", content)
-        self.assertIn("liveNotchSim.agExtraWidth", content)
 
         # Interactive lyrics and sub-selector in preview
         self.assertIn("subMusicViewBtn", content)
@@ -361,11 +324,6 @@ class TestComponentHierarchyAndContracts(unittest.TestCase):
     def test_set_custom_notch_new_customization_controls(self):
         """Verifies newly exposed sliders and selects in SetCustomNotch.qml."""
         content = (PROJECT_ROOT / "SetCustomNotch.qml").read_text(encoding="utf-8")
-
-        # Antigravity margin slider
-        self.assertIn('label: page.sys.tr("Separación del indicador Antigravity")', content)
-        self.assertIn("page.sys.cfg.antigravityMargin", content)
-        self.assertIn('from: 18; to: 48; step: 2', content)
 
         # Ambient glow toggle and sliders
         self.assertIn('label: page.sys.tr("Resplandor ambiental del notch (Ambient Glow)")', content)
@@ -386,25 +344,22 @@ class TestComponentHierarchyAndContracts(unittest.TestCase):
         """Verifies settings.json, shell.qml, and IslandMusicView.qml integration contracts."""
         cfg_path = PROJECT_ROOT / "settings.json"
         data = json.loads(cfg_path.read_text(encoding="utf-8"))
-        for key in ["antigravityMargin", "notchAmbientGlowEnabled", "notchAmbientGlowIntensity",
+        for key in ["notchAmbientGlowEnabled", "notchAmbientGlowIntensity",
                     "notchAmbientGlowRadius", "islandLyricsHeight", "islandLyricsBehavior"]:
             self.assertIn(key, data, f"Key {key} must exist in settings.json")
 
         shell_content = (PROJECT_ROOT / "shell.qml").read_text(encoding="utf-8")
-        for key in ["antigravityMargin: 18", "notchAmbientGlowEnabled: true", "notchAmbientGlowIntensity: 35",
+        for key in ["notchAmbientGlowEnabled: true", "notchAmbientGlowIntensity: 35",
                     "notchAmbientGlowRadius: 60", "islandLyricsHeight: 240", "islandLyricsBehavior: \"manual\""]:
             self.assertIn(key, shell_content, f"Default key {key} must be in shell.qml defaultCfg")
 
-        self.assertIn("id: agLogoMusic", shell_content)
-        self.assertIn("anchors.leftMargin: root.cfg.antigravityMargin", shell_content)
-        self.assertIn("root.cfg.antigravityMargin", shell_content)
         self.assertIn("root.cfg.islandLyricsHeight", shell_content)
 
         island_content = (PROJECT_ROOT / "IslandMusicView.qml").read_text(encoding="utf-8")
         self.assertIn("sys.cfg.islandLyricsHeight", island_content)
 
     def test_shell_qml_json_adapter_declares_all_new_m1_properties(self):
-        """Verifies that adapter: JsonAdapter in shell.qml explicitly declares all 6 new M1 properties so they survive writeAdapter() / saveCfg()."""
+        """Verifies that adapter: JsonAdapter in shell.qml explicitly declares all new M1 properties so they survive writeAdapter() / saveCfg()."""
         shell_content = (PROJECT_ROOT / "shell.qml").read_text(encoding="utf-8")
         adapter_match = re.search(
             r"FileView\s*\{\s*id:\s*cfgFile.*?adapter:\s*JsonAdapter\s*\{(.*?)\n\s*\}\s*\n\s*\}",
@@ -415,7 +370,6 @@ class TestComponentHierarchyAndContracts(unittest.TestCase):
         adapter_body = adapter_match.group(1)
 
         expected_properties = {
-            "antigravityMargin": r"property\s+int\s+antigravityMargin\s*:\s*18",
             "notchAmbientGlowEnabled": r"property\s+bool\s+notchAmbientGlowEnabled\s*:\s*true",
             "notchAmbientGlowIntensity": r"property\s+int\s+notchAmbientGlowIntensity\s*:\s*35",
             "notchAmbientGlowRadius": r"property\s+int\s+notchAmbientGlowRadius\s*:\s*60",
@@ -471,16 +425,16 @@ class TestSearchDiscoverability(unittest.TestCase):
         self.assertIn("media", ids)
 
     def test_customnotch_search_keywords_discoverability(self):
-        """Verifies that all required M1 keywords match the customnotch section."""
+        """Verifies that customnotch section keywords match."""
         target_sec = next(s for s in self.sections if s["id"] == "customnotch")
 
         required_keywords = [
-            "antigravity",
-            "productividad",
-            "tareas",
-            "agentes",
-            "gemini",
-            "deepmind",
+            "isla",
+            "dinamica",
+            "rayo",
+            "carga",
+            "aviso",
+            "padding",
         ]
 
         for kw in required_keywords:
@@ -494,15 +448,14 @@ class TestSearchDiscoverability(unittest.TestCase):
         target_sec = next(s for s in self.sections if s["id"] == "customnotch")
 
         variants = [
-            "Antigravity",
-            "ANTIGRAVITY",
-            "AnTiGrAvItY",
-            "Productividad",
-            "PRODUCTIVIDAD",
-            "Gemini",
-            "GEMINI",
-            "DeepMind",
-            "DEEPMIND",
+            "Isla",
+            "ISLA",
+            "Dinamica",
+            "DINAMICA",
+            "Rayo",
+            "RAYO",
+            "Carga",
+            "CARGA",
         ]
 
         for var in variants:
@@ -516,12 +469,10 @@ class TestSearchDiscoverability(unittest.TestCase):
         target_sec = next(s for s in self.sections if s["id"] == "customnotch")
 
         partial_queries = [
-            "anti",
-            "grav",
-            "prod",
-            "agen",
-            "gemi",
-            "deep",
+            "isl",
+            "dinam",
+            "carg",
+            "padd",
         ]
 
         for q in partial_queries:
@@ -531,10 +482,10 @@ class TestSearchDiscoverability(unittest.TestCase):
             )
 
     def test_search_isolation_and_selectivity(self):
-        """Verifies that specific AI/Productivity queries match only customnotch."""
-        ai_specific_queries = ["antigravity", "gemini", "deepmind", "productividad", "agentes"]
+        """Verifies that specific customnotch queries match only customnotch."""
+        specific_queries = ["rayo", "carga", "padding", "charging"]
 
-        for q in ai_specific_queries:
+        for q in specific_queries:
             matching_ids = [s["id"] for s in self.sections if self._matches(s, q)]
             self.assertEqual(
                 matching_ids,
@@ -554,75 +505,20 @@ class TestSearchDiscoverability(unittest.TestCase):
 
 
 class TestStateSynchronizationAndSoundAssets(unittest.TestCase):
-    """Empirically validates state machine logic and referenced sound assets."""
+    """Empirically validates referenced sound assets exist in sound packs."""
 
-    def test_antigravity_tone_sound_assets_exist(self):
-        """Verifies all tone option audio assets exist in sounds/."""
+    def test_core_sound_assets_exist(self):
+        """Verifies core sound assets exist across sound packs."""
         sound_dir = PROJECT_ROOT / "sounds"
+        packs = ["nothing", "material", "custom", "zen", "cyber", "retro", "bubble"]
+        core_sounds = ["notification.wav", "screenshot.wav", "lock.wav", "unlock.wav", "connect.wav", "disconnect.wav"]
 
-        # Studio is in custom/
-        studio_file = sound_dir / "custom" / "notif_antigravity_studio.wav"
-        self.assertTrue(studio_file.exists(), f"Studio sound {studio_file} must exist")
-
-        # Aero, Quantum, Orbit exist across soundpacks (e.g. nothing, material, custom)
-        for tone in ["aero", "quantum", "orbit"]:
-            found = False
-            for pack in ["nothing", "material", "custom", "zen", "cyber"]:
-                f = sound_dir / pack / f"notif_antigravity_{tone}.wav"
-                if f.exists():
-                    found = True
-                    break
-            self.assertTrue(found, f"Sound file for tone '{tone}' must exist in at least one soundpack")
-
-    def test_antigravity_mode_sync_matrix(self):
-        """Verifies state machine synchronization logic between antigravityEnabled and antigravityMode."""
-        # Rule 1: toggle enabled to false -> mode becomes 'off'
-        def toggle_enabled(v, curr_mode):
-            enabled = v
-            mode = curr_mode
-            if not v:
-                mode = "off"
-            elif mode == "off":
-                mode = "anim"
-            return enabled, mode
-
-        # Rule 2: pick mode -> if 'off' enabled=false, else enabled=true
-        def pick_mode(mode_id):
-            mode = mode_id
-            if mode_id == "off":
-                enabled = False
-            else:
-                enabled = True
-            return enabled, mode
-
-        # Test enable toggle OFF
-        e, m = toggle_enabled(False, "anim")
-        self.assertFalse(e)
-        self.assertEqual(m, "off")
-
-        e, m = toggle_enabled(False, "accent")
-        self.assertFalse(e)
-        self.assertEqual(m, "off")
-
-        # Test enable toggle ON from OFF
-        e, m = toggle_enabled(True, "off")
-        self.assertTrue(e)
-        self.assertEqual(m, "anim")
-
-        # Test pick mode OFF
-        e, m = pick_mode("off")
-        self.assertFalse(e)
-        self.assertEqual(m, "off")
-
-        # Test pick mode ACCENT
-        e, m = pick_mode("accent")
-        self.assertTrue(e)
-        self.assertEqual(m, "accent")
-
-        # Test pick mode ANIM
-        e, m = pick_mode("anim")
-        self.assertTrue(e)
-        self.assertEqual(m, "anim")
+        for pack in packs:
+            pack_dir = sound_dir / pack
+            self.assertTrue(pack_dir.exists(), f"Pack directory {pack_dir} must exist")
+            for sound in core_sounds:
+                f = pack_dir / sound
+                self.assertTrue(f.exists(), f"Core sound '{sound}' must exist in pack '{pack}'")
 
 
 def run_tests():

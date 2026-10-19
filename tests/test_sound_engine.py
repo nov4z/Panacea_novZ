@@ -14,7 +14,6 @@ Validates:
 4. Synthesis Styles and Components:
    - All oscillator styles (marimba, glass, fm, bit, bubble).
    - Tactile pop synthesis (synth_pop) and silence padding (make_silence).
-   - Antigravity AI acoustic signatures (aero, quantum, orbit).
 5. QML and Settings Contracts:
    - settings.json, shell.qml, and SetSounds.qml parameter bindings.
    - QML bracket and delimiter balance in SetSounds.qml.
@@ -45,7 +44,6 @@ from sound_engine import (
     synth_pop,
     save_wav,
     generate_pack,
-    generate_antigravity,
 )
 from tests.test_challenger_m1_settings import QmlLexerBracketParser
 
@@ -130,7 +128,7 @@ class TestSoundEngineCLI(unittest.TestCase):
             self.assertEqual(proc.returncode, 0, f"Generate failed: {proc.stderr}")
             self.assertTrue(pack_dir.exists(), "Pack directory was not created")
 
-            test_files = ["connect.wav", "island_pop.wav", "notif_antigravity_aero.wav"]
+            test_files = ["connect.wav", "island_pop.wav", "lock.wav"]
             for fname in test_files:
                 fpath = pack_dir / fname
                 self.assertTrue(fpath.exists(), f"Expected sound file {fname} not found")
@@ -213,7 +211,7 @@ class TestStereoDecouplingDSP(unittest.TestCase):
 
 
 class TestSynthesisStylesAndComponents(unittest.TestCase):
-    """Tests all oscillator styles, pop synthesis, and Antigravity signatures."""
+    """Tests all oscillator styles and pop synthesis."""
 
     def test_all_oscillator_styles(self):
         """Verify marimba, glass, fm, bit, bubble styles synthesize without error."""
@@ -238,27 +236,6 @@ class TestSynthesisStylesAndComponents(unittest.TestCase):
         expected_len = 2 * int(SAMPLE_RATE * (duration_ms / 1000.0))
         self.assertEqual(len(silence), expected_len)
         self.assertTrue(all(x == 0 for x in silence))
-
-    def test_generate_antigravity_files(self):
-        """Verify generate_antigravity creates aero, quantum, and orbit audio files."""
-        temp_dir = tempfile.mkdtemp()
-        try:
-            generate_antigravity(temp_dir, channels=2, spatial=0.5, reverb=0.2)
-            expected_files = [
-                "notif_antigravity_aero.wav",
-                "notif_antigravity.wav",
-                "notif_antigravity_studio.wav",
-                "notif_antigravity_quantum.wav",
-                "notif_antigravity_orbit.wav",
-            ]
-            for ef in expected_files:
-                fpath = os.path.join(temp_dir, ef)
-                self.assertTrue(os.path.exists(fpath), f"File {ef} was not generated")
-                with wave.open(fpath, "rb") as w:
-                    self.assertEqual(w.getnchannels(), 2)
-                    self.assertEqual(w.getframerate(), 48000)
-        finally:
-            shutil.rmtree(temp_dir)
 
 
 class TestQMLAndSettingsContracts(unittest.TestCase):
@@ -289,13 +266,13 @@ class TestQMLAndSettingsContracts(unittest.TestCase):
         self.assertIn("Cola de Reverb Acústica (Reflexiones de sala y caída)", content)
 
     def test_setsounds_qml_passes_spatial_and_reverb_cli_flags(self):
-        """runPreview, generateCustomPack, and compileAntigravitySound must pass --spatial and --reverb."""
+        """runPreview and generateCustomPack must pass --spatial and --reverb."""
         content = (PROJECT_ROOT / "SetSounds.qml").read_text(encoding="utf-8")
         # Ensure --spatial and --reverb appear in commands
         spatial_count = content.count('"--spatial", spatial.toFixed(2)')
         reverb_count = content.count('"--reverb", reverb.toFixed(2)')
-        self.assertGreaterEqual(spatial_count, 3, "Expected --spatial in runPreview, generate, and antigravity")
-        self.assertGreaterEqual(reverb_count, 3, "Expected --reverb in runPreview, generate, and antigravity")
+        self.assertGreaterEqual(spatial_count, 2, "Expected --spatial in runPreview and generate")
+        self.assertGreaterEqual(reverb_count, 2, "Expected --reverb in runPreview and generate")
 
     def test_setsounds_qml_bracket_balance(self):
         """SetSounds.qml must have 100% balanced brackets and quotes with 0 parser errors."""

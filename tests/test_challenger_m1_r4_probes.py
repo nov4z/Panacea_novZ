@@ -3,12 +3,11 @@
 Adversarial Stress Test Probes: Milestone M1 (Round 4).
 
 Empirically tests and verifies:
-1. Boundary values for antigravityMargin (18, 30, 48, out of bounds, step alignment, fallback).
-2. notchAmbientGlowIntensity (5, 35, 100, out of bounds) and notchAmbientGlowRadius (20, 60, 160, floor clamp).
-3. islandLyricsHeight (160, 240, 420) and islandLyricsBehavior (manual, auto, remember).
-4. State machine interaction between collapsed and expanded island preview states in SetCustomNotch.qml.
-5. Toggle behavior of the lyrics button (previewLyricsOpen) in preview.
-6. Lexical and delimiter balance across all touched QML components.
+1. notchAmbientGlowIntensity (5, 35, 100, out of bounds) and notchAmbientGlowRadius (20, 60, 160, floor clamp).
+2. islandLyricsHeight (160, 240, 420) and islandLyricsBehavior (manual, auto, remember).
+3. State machine interaction between collapsed and expanded island preview states in SetCustomNotch.qml.
+4. Toggle behavior of the lyrics button (previewLyricsOpen) in preview.
+5. Lexical and delimiter balance across all touched QML components.
 """
 
 import os
@@ -23,101 +22,6 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from tests.test_challenger_m1_settings import QmlLexerBracketParser
-
-
-class TestAntigravityMarginBoundaryAndStress(unittest.TestCase):
-    """Adversarial boundary and stress tests for antigravityMargin."""
-
-    @classmethod
-    def setUpClass(cls):
-        cls.notch_qml = (PROJECT_ROOT / "SetCustomNotch.qml").read_text(encoding="utf-8")
-        cls.shell_qml = (PROJECT_ROOT / "shell.qml").read_text(encoding="utf-8")
-        cls.settings = json.loads((PROJECT_ROOT / "settings.json").read_text(encoding="utf-8"))
-
-    def test_settings_json_antigravity_margin_default(self):
-        """Verify settings.json contains default antigravityMargin of 18."""
-        self.assertIn("antigravityMargin", self.settings)
-        self.assertEqual(self.settings["antigravityMargin"], 18)
-
-    def test_slider_boundary_specification(self):
-        """Verify slider strictly enforces bounds 18..48 with step 2."""
-        slider_match = re.search(
-            r'label:\s*page\.sys\.tr\("Separación del indicador Antigravity"\).*?'
-            r'from:\s*(\d+);\s*to:\s*(\d+);\s*step:\s*(\d+)',
-            self.notch_qml,
-            re.DOTALL
-        )
-        self.assertIsNotNone(slider_match, "antigravityMargin SetSlider definition not found")
-        from_val, to_val, step_val = map(int, slider_match.groups())
-        self.assertEqual(from_val, 18, "Lower bound must be exactly 18")
-        self.assertEqual(to_val, 48, "Upper bound must be exactly 48")
-        self.assertEqual(step_val, 2, "Step size must be 2")
-
-    def _simulate_slider_pick(self, from_val, to_val, step_val, width, px):
-        """Simulate SetSlider.qml pick(px) logic."""
-        span = max(1e-6, to_val - from_val)
-        f = max(0.0, min(1.0, px / max(1.0, width)))
-        raw = from_val + f * span
-        snapped = round(raw / step_val) * step_val
-        return max(from_val, min(to_val, snapped))
-
-    def test_slider_clamping_and_snapping_probes(self):
-        """Adversarially probe slider picking across extreme and boundary coordinates."""
-        from_v, to_v, step_v = 18, 48, 2
-        width = 300.0
-
-        # Boundary coordinate at 0px -> exactly lower bound (18)
-        self.assertEqual(self._simulate_slider_pick(from_v, to_v, step_v, width, 0.0), 18)
-
-        # Boundary coordinate at max width -> exactly upper bound (48)
-        self.assertEqual(self._simulate_slider_pick(from_v, to_v, step_v, width, width), 48)
-
-        # Midpoint coordinate at 50% -> (48 - 18) * 0.5 + 18 = 33 -> snapped to 34 or 32
-        mid = self._simulate_slider_pick(from_v, to_v, step_v, width, width * 0.5)
-        self.assertIn(mid, [32, 34])
-
-        # Coordinate matching exactly 30px margin: fraction = (30 - 18) / 30 = 0.4
-        self.assertEqual(self._simulate_slider_pick(from_v, to_v, step_v, width, width * 0.4), 30)
-
-        # Extreme negative coordinate (-500px) -> strictly clamped to 18
-        self.assertEqual(self._simulate_slider_pick(from_v, to_v, step_v, width, -500.0), 18)
-
-        # Extreme positive coordinate (+1500px) -> strictly clamped to 48
-        self.assertEqual(self._simulate_slider_pick(from_v, to_v, step_v, width, 1500.0), 48)
-
-    def _calc_ag_extra_width(self, margin, logo_width=18, wave_width=38):
-        """Simulate agExtraWidth calculation in SetCustomNotch.qml."""
-        effective_margin = margin if margin is not None else 18
-        return 18 + effective_margin + wave_width + 12
-
-    def test_ag_margin_geometry_at_discrete_boundaries(self):
-        """Test exact geometric layout at boundaries 18, 30, 48."""
-        logo_w = 18
-        wave_w = 38
-
-        # 1. Minimum bound: 18px
-        w_18 = self._calc_ag_extra_width(18, logo_w, wave_w)
-        self.assertEqual(w_18, 18 + 18 + 38 + 12)  # 86px
-
-        # 2. Nominal midpoint: 30px
-        w_30 = self._calc_ag_extra_width(30, logo_w, wave_w)
-        self.assertEqual(w_30, 18 + 30 + 38 + 12)  # 98px
-        self.assertEqual(w_30 - w_18, 12, "agExtraWidth must expand 1:1 with margin increase")
-
-        # 3. Maximum bound: 48px
-        w_48 = self._calc_ag_extra_width(48, logo_w, wave_w)
-        self.assertEqual(w_48, 18 + 48 + 38 + 12)  # 116px
-        self.assertEqual(w_48 - w_18, 30, "agExtraWidth must expand 1:1 with margin increase")
-
-        # 4. Fallback when undefined
-        w_none = self._calc_ag_extra_width(None, logo_w, wave_w)
-        self.assertEqual(w_none, w_18, "Undefined margin must cleanly fall back to 18")
-
-    def test_shell_qml_left_margin_and_extra_width_binding(self):
-        """Verify shell.qml uses dynamic root.cfg.antigravityMargin while preserving legacy token comments."""
-        self.assertIn("root.cfg.antigravityMargin !== undefined ? root.cfg.antigravityMargin : 18", self.shell_qml)
-        self.assertIn("// agLogoMusic.width + 18", self.shell_qml)
-        self.assertIn("// anchors.leftMargin: 18", self.shell_qml)
 
 
 class TestNotchAmbientGlowBoundaryAndStress(unittest.TestCase):

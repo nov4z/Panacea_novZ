@@ -431,52 +431,11 @@ def generate_pack(pack_name, style="marimba", depth=0.5, attack=0.5, decay=1.0, 
     s += make_silence(2)
     save_wav(base_dir, "vol_tick.wav", s)
 
-    # 21. notif_antigravity (Firma acústica Antigravity AI con estilo y DSP del estudio)
-    generate_antigravity(pack_name, **kw)
-
     print(f"Pack '{pack_name}' successfully generated in {base_dir}")
-
-def generate_antigravity(pack_name, **kw):
-    """Sintetiza la firma acústica de Antigravity AI adaptada a los parámetros acústicos y DSP del estudio."""
-    base_dir = pack_name if os.path.isabs(pack_name) else os.path.join(DEFAULT_SOUNDS_DIR, pack_name)
-    os.makedirs(base_dir, exist_ok=True)
-    channels = kw.get("channels", 2)
-
-    # 1. Antigravity Aero / Firma Estelar (D6 -> A6 -> E7 con brillo ascendente)
-    s_aero = make_silence(5, channels=channels)
-    s_aero += synth_tone(NOTES["D6"], 85.0, **kw)
-    s_aero += make_silence(8, channels=channels)
-    s_aero += synth_tone(NOTES["A6"], 105.0, **kw)
-    s_aero += make_silence(8, channels=channels)
-    s_aero += synth_tone(NOTES["E7"], 260.0, **kw)
-    s_aero += make_silence(20, channels=channels)
-    save_wav(base_dir, "notif_antigravity_aero.wav", s_aero, channels=channels)
-    save_wav(base_dir, "notif_antigravity.wav", s_aero, channels=channels)
-    save_wav(base_dir, "notif_antigravity_studio.wav", s_aero, channels=channels)
-
-    # 2. Antigravity Quantum (Campana Cuántica FM): E6 -> B6 -> G7
-    s_quantum = make_silence(5, channels=channels)
-    s_quantum += synth_tone(NOTES["E6"], 60.0, **kw)
-    s_quantum += make_silence(6, channels=channels)
-    s_quantum += synth_tone(NOTES["B6"], 85.0, **kw)
-    s_quantum += make_silence(6, channels=channels)
-    s_quantum += synth_tone(NOTES["G7"], 280.0, **kw)
-    s_quantum += make_silence(20, channels=channels)
-    save_wav(base_dir, "notif_antigravity_quantum.wav", s_quantum, channels=channels)
-
-    # 3. Antigravity Orbit (Resonancia Sub-Bass): F5 -> C7
-    s_orbit = make_silence(5, channels=channels)
-    s_orbit += synth_tone(NOTES["F5"], 120.0, **kw)
-    s_orbit += make_silence(10, channels=channels)
-    s_orbit += synth_tone(NOTES["C7"], 250.0, **kw)
-    s_orbit += make_silence(20, channels=channels)
-    save_wav(base_dir, "notif_antigravity_orbit.wav", s_orbit, channels=channels)
-
-    print(f"Antigravity sounds synthesized successfully in {base_dir}")
 
 def main():
     parser = argparse.ArgumentParser(description="Sound Engine for Panacea Shell")
-    parser.add_argument("action", choices=["preset", "generate", "list", "preview", "antigravity"], help="Accion a realizar")
+    parser.add_argument("action", choices=["preset", "generate", "list", "preview"], help="Accion a realizar")
     parser.add_argument("--pack", default="custom", help="Nombre del pack destino")
     parser.add_argument("--style", default="marimba", choices=["marimba", "glass", "fm", "bit", "bubble"])
     parser.add_argument("--depth", type=float, default=0.5, help="Profundidad de graves (0.0 a 1.0)")
@@ -513,10 +472,6 @@ def main():
         "gain": args.gain,
         "channels": 2
     }
-
-    if args.action == "antigravity":
-        generate_antigravity(args.pack, **kw)
-        return
 
     if args.action == "preview":
         s = make_silence(10, channels=2)

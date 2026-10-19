@@ -29,7 +29,7 @@ Item {
           keys: "notch island pill bar height width остров вырез капсула barra isla" },
         { id: "customnotch", title: "Notch & Isla Dinámica", g: 0xF0241, page: "SetCustomNotch.qml",
           sub: view.sys.tr("Ajustes personalizados del notch, avisos, animaciones y música."),
-          keys: "notch music bateria charging brave wave isla dinamica rayo carga aviso padding antigravity productividad tareas agentes gemini deepmind" },
+          keys: "notch music bateria charging brave wave isla dinamica rayo carga aviso padding" },
         { id: "media",   title: "Multimedia",     g: 0xF0387, page: "SetMedia.qml",
           sub: view.sys.tr("Reproductor, carátulas y visualización en el notch contraído."),
           keys: "player music cover звук плеер музыка обложка reproductor audio canciones" },

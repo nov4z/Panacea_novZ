@@ -290,9 +290,8 @@ print_summary() {
     echo -e "${BOLD}Versión instalada:${NC}   ${PURPLE}1.0.14-novz (V:NOVZ)${NC}"
 
     echo -e "\n${BOLD}${CYAN}Atajos de teclado recomendados (Hyprland):${NC}"
-    echo -e "  ${BOLD}SUPER + M${NC}          Cápsula Musical & Dynamic Island (Letras sincronizadas)"
+    echo -e "  ${BOLD}SUPER + M${NC}          Cápsula Musical & Notch Dinámico (Letras sincronizadas)"
     echo -e "  ${BOLD}SUPER + Z${NC}          Centro de Control Unibody (Volumen, Brillo, Toggles)"
-    echo -e "  ${BOLD}SUPER + O${NC}          Alternar indicador en vivo de Antigravity AI"
     echo -e "  ${BOLD}SUPER + I${NC}          Ajustes del Notch & Estudio de Sonido Acústico"
     echo -e "  ${BOLD}SUPER + Space${NC}      Lanzador de aplicaciones"
     echo -e "  ${BOLD}SUPER + SHIFT + W${NC}  Menú rápido de Wi-Fi"
@@ -300,7 +299,7 @@ print_summary() {
 
     echo -e "\n${BOLD}${CYAN}Control directo por terminal:${NC}"
     echo -e "  ${DIM}qs -c $INSTALL_DIR ipc call pill <comando>${NC}"
-    echo -e "  Ejemplos: ${DIM}music | controls | toggleLyrics | toggleAntigravity | wifi | bluetooth${NC}\n"
+    echo -e "  Ejemplos: ${DIM}music | controls | toggleLyrics | wifi | bluetooth${NC}\n"
 
     echo -e "${DIM}Para desinstalar o restaurar respaldos, ejecuta ./uninstall.sh${NC}\n"
 }

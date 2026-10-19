@@ -15,7 +15,7 @@ ColumnLayout {
     spacing: 12
 
     // Lista de apps por defecto si la configuración está vacía
-    readonly property string defaultAppsStr: "brave-origin.desktop,kitty.desktop,com.spotify.Client.desktop,antigravity.desktop"
+    readonly property string defaultAppsStr: "brave-origin.desktop,kitty.desktop,com.spotify.Client.desktop,thunar.desktop"
 
     // Parseo de la lista de apps fijadas
     readonly property var pinnedApps: {

@@ -487,8 +487,7 @@ ColumnLayout {
                 }
                 width: {
                     if (page.previewState === 1) {
-                        var agExtraIdle = (page.sys.cfg.antigravityEnabled !== false && page.sys.cfg.antigravityMode !== "off") ? 80 : 0;
-                        return Math.max(280 + agExtraIdle, (simNothingRow ? simNothingRow.implicitWidth + 36 + agExtraIdle : 310 + agExtraIdle));
+                        return Math.max(280, (simNothingRow ? simNothingRow.implicitWidth + 36 : 310));
                     }
                     if (page.previewState === 2) {
                         if (page.previewBattMode === 0) {
@@ -510,14 +509,10 @@ ColumnLayout {
                     else if (m === 2) baseW = Math.max(240, (prevMusicBoth ? prevMusicBoth.implicitWidth + 106 : 240));
                     else if (m === 3) baseW = Math.max(330, (prevMusicFull ? prevMusicFull.implicitWidth + 108 : 360));
                     else if (m === 4) baseW = 148;
-                    return baseW + liveNotchSim.agExtraWidth;
+                    return baseW;
                 }
                 Behavior on width { NumberAnimation { duration: 240; easing.type: Easing.OutCubic } }
                 Behavior on height { NumberAnimation { duration: 240; easing.type: Easing.OutCubic } }
-
-                property real agExtraWidth: (page.sys.cfg.antigravityEnabled !== false && page.sys.cfg.antigravityMode !== "off")
-                    ? (18 + (page.sys.cfg.antigravityMargin !== undefined ? page.sys.cfg.antigravityMargin : 18) + (prevAgWave ? prevAgWave.implicitWidth : 38) + 12)
-                    : 0
 
                 color: page.sys.currentNotchBg || page.sys.colBg || "#000000"
                 topLeftRadius: (page.sys.cfg.notchMode !== false) ? 0 : ((page.sys.cfg.islandRadius > 0) ? page.sys.cfg.islandRadius : ((page.previewState === 0 && page.previewIsExpanded) ? 26 : height / 2))
@@ -590,26 +585,6 @@ ColumnLayout {
                             cursorShape: Qt.PointingHandCursor
                             onClicked: {
                                 if (page.sys && page.sys.player) page.sys.player.togglePlaying();
-                            }
-                        }
-                    }
-
-                    AntigravityLogo {
-                        id: prevAgLogo
-                        visible: (page.sys.cfg.antigravityEnabled !== false) && (page.sys.cfg.antigravityMode !== "off")
-                        active: visible
-                        anchors.left: prevMusicArtBox.right
-                        anchors.leftMargin: page.sys.cfg.antigravityMargin !== undefined ? page.sys.cfg.antigravityMargin : 18
-                        anchors.verticalCenter: parent.verticalCenter
-                        size: 18
-                        colorMode: page.sys.cfg.antigravityMode || "anim"
-                        accentColor: page.effectiveWaveColor
-
-                        MouseArea {
-                            anchors.fill: parent
-                            cursorShape: Qt.PointingHandCursor
-                            onClicked: {
-                                if (page.sys && page.sys.toggleAntigravityMode) page.sys.toggleAntigravityMode();
                             }
                         }
                     }
@@ -868,17 +843,6 @@ ColumnLayout {
                         }
                     }
 
-                    // Indicador de ondas Antigravity
-                    AntigravityWave {
-                        id: prevAgWave
-                        visible: (page.sys.cfg.antigravityEnabled !== false) && (page.sys.cfg.antigravityMode !== "off")
-                        active: visible
-                        anchors.right: prevWaveBars.left
-                        anchors.rightMargin: 10
-                        anchors.verticalCenter: parent.verticalCenter
-                        waveColor: page.effectiveWaveColor
-                        subagentCount: (page.sys && page.sys.antigravitySubagents) ? page.sys.antigravitySubagents : 1
-                    }
 
                     // Derecha: Onda de audio animada
                     WaveBars {
@@ -1217,26 +1181,6 @@ ColumnLayout {
                     anchors.fill: parent
                     visible: page.previewState === 1
 
-                    AntigravityLogo {
-                        id: prevAgLogoIdle
-                        visible: (page.sys.cfg.antigravityEnabled !== false) && (page.sys.cfg.antigravityMode !== "off")
-                        active: visible
-                        anchors.left: parent.left
-                        anchors.leftMargin: 16
-                        anchors.verticalCenter: parent.verticalCenter
-                        size: 18
-                        colorMode: page.sys.cfg.antigravityMode || "anim"
-                        accentColor: page.sys.colOn || "#00e0ff"
-
-                        MouseArea {
-                            anchors.fill: parent
-                            cursorShape: Qt.PointingHandCursor
-                            onClicked: {
-                                if (page.sys && page.sys.toggleAntigravityMode) page.sys.toggleAntigravityMode();
-                            }
-                        }
-                    }
-
                     RowLayout {
                         id: simNothingRow
                         anchors.centerIn: parent
@@ -1384,17 +1328,6 @@ ColumnLayout {
                                 }
                             }
                         }
-                    }
-
-                    AntigravityWave {
-                        id: prevAgWaveIdle
-                        visible: (page.sys.cfg.antigravityEnabled !== false) && (page.sys.cfg.antigravityMode !== "off")
-                        active: visible
-                        anchors.right: parent.right
-                        anchors.rightMargin: 16
-                        anchors.verticalCenter: parent.verticalCenter
-                        waveColor: page.sys.colOn || "#00e0ff"
-                        subagentCount: (page.sys && page.sys.antigravitySubagents) ? page.sys.antigravitySubagents : 1
                     }
                 }
 
@@ -1971,100 +1904,6 @@ ColumnLayout {
             sub: page.sys.tr("El notch permanece visible en reposo mientras los paneles y páginas se abren en una tarjeta flotante inferior.")
             on: page.sys.cfg.pillKeepVisible
             onToggled: value => { page.sys.cfg.pillKeepVisible = value; page.sys.saveCfg(); }
-        }
-    }
-
-    // ============================================================= ANTIGRAVITY & PRODUCTIVIDAD
-    SetCard {
-        sys: page.sys
-
-        SetLabel { sys: page.sys; text: page.sys.tr("Antigravity & Productividad") }
-
-        Text {
-            Layout.fillWidth: true
-            text: page.sys.tr("Monitoreo en tiempo real del asistente de IA y agentes de desarrollo. Controla el indicador visual en el notch, efectos cromáticos y alertas acústicas:")
-            color: page.sys.colMuted
-            wrapMode: Text.WordWrap
-            font { family: page.sys.fontBody; pixelSize: page.sys.fontSize - 3 }
-        }
-
-        SetToggle {
-            sys: page.sys
-            label: page.sys.tr("Indicador de Antigravity en el notch")
-            sub: page.sys.tr("Monitoreo en tiempo real de tareas y agentes de desarrollo con logo animado y ondas reactivas.")
-            on: page.sys.cfg.antigravityEnabled !== false
-            onToggled: v => {
-                page.sys.cfg.antigravityEnabled = v;
-                if (!v) page.sys.cfg.antigravityMode = "off";
-                else if (page.sys.cfg.antigravityMode === "off") page.sys.cfg.antigravityMode = "anim";
-                page.sys.saveCfg();
-            }
-        }
-
-        SetSelect {
-            sys: page.sys
-            label: page.sys.tr("Modo visual del logo")
-            options: [
-                { id: "anim", text: page.sys.tr("Multicolor (5 fases)") },
-                { id: "accent", text: page.sys.tr("Color de Acento") },
-                { id: "off", text: page.sys.tr("Desactivado") }
-            ]
-            value: (!page.sys.cfg.antigravityEnabled || page.sys.cfg.antigravityMode === "off") ? "off" : (page.sys.cfg.antigravityMode || "anim")
-            onPicked: id => {
-                page.sys.cfg.antigravityMode = id;
-                if (id === "off") {
-                    page.sys.cfg.antigravityEnabled = false;
-                } else {
-                    page.sys.cfg.antigravityEnabled = true;
-                }
-                page.sys.saveCfg();
-            }
-        }
-
-        SetToggle {
-            sys: page.sys
-            label: page.sys.tr("Sonido de notificación de tareas")
-            sub: page.sys.tr("Emite un timbre acústico celestial al recibir avisos o completar tareas de Antigravity.")
-            on: page.sys.cfg.antigravitySound !== false
-            onToggled: v => {
-                page.sys.cfg.antigravitySound = v;
-                page.sys.saveCfg();
-                if (v) {
-                    var tone = page.sys.cfg.antigravityTone || "aero";
-                    if (tone === "studio") page.sys.playSound("notif_antigravity_studio", "custom");
-                    else page.sys.playSound("notif_antigravity_" + tone);
-                }
-            }
-        }
-
-        SetSelect {
-            sys: page.sys
-            enabled: page.sys.cfg.antigravitySound !== false
-            opacity: enabled ? 1.0 : 0.4
-            label: page.sys.tr("Tono acústico de Antigravity")
-            options: [
-                { id: "aero", text: page.sys.tr("Aero") },
-                { id: "studio", text: page.sys.tr("Studio") },
-                { id: "quantum", text: page.sys.tr("Quantum") },
-                { id: "orbit", text: page.sys.tr("Orbit") }
-            ]
-            value: page.sys.cfg.antigravityTone || "aero"
-            onPicked: id => {
-                page.sys.cfg.antigravityTone = id;
-                page.sys.saveCfg();
-                if (id === "studio") page.sys.playSound("notif_antigravity_studio", "custom");
-                else page.sys.playSound("notif_antigravity_" + id);
-            }
-        }
-
-        SetSlider {
-            sys: page.sys
-            label: page.sys.tr("Separación del indicador Antigravity")
-            sub: page.sys.tr("Distancia horizontal en píxeles entre la carátula del álbum y el logo de Antigravity.")
-            from: 18; to: 48; step: 2
-            value: page.sys.cfg.antigravityMargin !== undefined ? page.sys.cfg.antigravityMargin : 18
-            suffix: "px"
-            onMoved: v => { page.sys.cfg.antigravityMargin = Math.round(v); page.sys.saveCfg(); }
         }
     }
 

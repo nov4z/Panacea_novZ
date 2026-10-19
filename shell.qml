@@ -183,14 +183,9 @@ PanelWindow {
             property real   soundCustomVibrato: 0.0   // 0.0 a 1.0 modulación
             property real   soundCustomCutoff: 1.0    // 0.2 a 1.0 filtro paso bajo
             property real   soundCustomGain: 1.0      // 0.5 a 1.5 ganancia de salida
-            property bool   antigravityEnabled: true
-            property string antigravityMode: "anim"
-            property bool   antigravitySound: true
-            property string antigravityTone: "aero"
             property bool   notchClipboardFlash: true
             property bool   notchAudioRipple: true
             property bool   notchActiveWindowHover: true
-            property int    antigravityMargin: 18
             property bool   notchAmbientGlowEnabled: true
             property int    notchAmbientGlowIntensity: 35
             property int    notchAmbientGlowRadius: 60
@@ -290,7 +285,7 @@ PanelWindow {
             property bool   dockShowRunning: true
             property int    dockIconSize: 34
             property real   dockZoom: 1.22
-            property string dockApps: "brave-origin.desktop,kitty.desktop,com.spotify.Client.desktop,antigravity.desktop,thunar.desktop,panacea:settings"
+            property string dockApps: "brave-origin.desktop,kitty.desktop,com.spotify.Client.desktop,thunar.desktop,panacea:settings"
 
             // ---------------------------------------------- Weather & Widgets
             // Ключ и город пусты по умолчанию: без них виджет погоды просто
@@ -354,7 +349,6 @@ PanelWindow {
             property string bind_pillRotateCenter: "SUPER + SHIFT + H"
             property string bind_pillToggleNotch: "SUPER + N"
             property string bind_pillMusic: "SUPER + M"
-            property string bind_antigravityToggle: "SUPER + O"
         }
     }
     // Заводские сочетания. Держим одним списком, чтобы «Сбросить»
@@ -396,7 +390,6 @@ PanelWindow {
         pillRotateCenter: "SUPER + SHIFT + H",
         pillToggleNotch: "SUPER + N",
         pillMusic: "SUPER + M",
-        antigravityToggle: "SUPER + O",
         powerCycle: "SUPER + ALT + P"
     })
 
@@ -454,7 +447,6 @@ PanelWindow {
         soundPackForNothing: "nothing", soundPackForMaterial: "material", soundPackForDefault: "nothing",
         soundCustomDepth: 0.6, soundCustomAttack: 0.5, soundCustomDecay: 1.0, soundCustomBright: 0.5, soundCustomStyle: "marimba",
         soundCustomPitch: 0.0, soundCustomWarmth: 0.2, soundCustomSpatialWidth: 0.50, soundCustomReverb: 0.15, soundCustomVibrato: 0.0, soundCustomCutoff: 1.0, soundCustomGain: 1.0,
-        antigravityEnabled: true, antigravityMargin: 18, antigravityMode: "anim", antigravitySound: true, antigravityTone: "aero",
         notchClipboardFlash: true, notchAudioRipple: true, notchActiveWindowHover: true,
         notchAmbientGlowEnabled: true, notchAmbientGlowIntensity: 35, notchAmbientGlowRadius: 60,
         islandLyricsHeight: 240, islandLyricsBehavior: "manual"
@@ -1811,7 +1803,7 @@ PanelWindow {
     function activeWindowGlyph(cls) {
         var c = (cls || "").toLowerCase();
         if (c.indexOf("brave") >= 0 || c.indexOf("chrom") >= 0 || c.indexOf("firefox") >= 0) return "󰖟";
-        if (c.indexOf("antigravity") >= 0 || c.indexOf("gemini") >= 0) return "󰚩";
+        if (c.indexOf("ai") >= 0 || c.indexOf("chat") >= 0) return "󰚩";
         if (c.indexOf("kitty") >= 0 || c.indexOf("foot") >= 0 || c.indexOf("term") >= 0) return "󰆍";
         if (c.indexOf("code") >= 0 || c.indexOf("cursor") >= 0) return "󰨞";
         if (c.indexOf("spotify") >= 0) return "󰓇";
@@ -3449,21 +3441,7 @@ PanelWindow {
         var n = item.notif;
         root.notifCurrent = n;
         if (root.cfg.uiSounds !== false && root.cfg.notifSound !== false) {
-            var appText = ((n.appName || "") + " " + (n.summary || "")).toLowerCase();
-            if (root.cfg.antigravitySound !== false && (appText.indexOf("antigravity") >= 0 || appText.indexOf("gemini") >= 0 || appText.indexOf("deepmind") >= 0)) {
-                var tone = root.cfg.antigravityTone || "aero";
-                if (tone === "custom" && root.cfg.antigravityToneCustomPath) {
-                    pSound.command = ["sh", "-c", "if command -v pw-play >/dev/null 2>&1; then pw-play \"$1\" & elif command -v paplay >/dev/null 2>&1; then paplay \"$1\" & fi", "_", root.cfg.antigravityToneCustomPath];
-                    pSound.running = false;
-                    pSound.running = true;
-                } else if (tone === "studio") {
-                    root.playSound("notif_antigravity_studio", "custom");
-                } else {
-                    root.playSound("notif_antigravity_" + (tone === "custom" ? "aero" : tone));
-                }
-            } else {
-                root.playSound("notification");
-            }
+            root.playSound("notification");
         }
         // Своё время приложения уважаем, но верхнюю и нижнюю границу задаёт
         // человек: важные с нулевым сроком висят до ответа.
@@ -4078,48 +4056,6 @@ PanelWindow {
         }
     }
 
-    // --------------------------------------------- Antigravity activity indicator
-    property bool antigravityActive: false
-    property int antigravitySubagents: 0
-    property bool antigravityEnabled: cfg.antigravityEnabled !== undefined ? cfg.antigravityEnabled : true
-    property string antigravityMode: cfg.antigravityMode !== undefined ? cfg.antigravityMode : "anim"
-    readonly property bool effectiveAntigravityVisible: antigravityActive && antigravityEnabled
-
-    Timer {
-        id: agRestartTimer
-        interval: 1000
-        repeat: false
-        onTriggered: pAntigravityWatch.running = true
-    }
-
-    Process { id: pAgToast }
-    function showAntigravityToast(msg) {
-        pAgToast.command = ["notify-send", "-a", "Panacea", "-t", "1800", "Antigravity", msg];
-        pAgToast.running = false;
-        pAgToast.running = true;
-    }
-
-    Process {
-        id: pAntigravityWatch
-        command: ["python3", Quickshell.env("HOME") + "/.config/panacea/scripts/watch_antigravity.py"]
-        running: true
-        onExited: (code, status) => {
-            agRestartTimer.start();
-        }
-        stdout: SplitParser {
-            onRead: line => {
-                var s = line.trim();
-                if (!s.length) return;
-                try {
-                    var data = JSON.parse(s);
-                    if (data && typeof data.active === "boolean") {
-                        root.antigravityActive = data.active;
-                        root.antigravitySubagents = (typeof data.subagents === "number") ? data.subagents : 0;
-                    }
-                } catch (e) {}
-            }
-        }
-    }
     // Режим питания меняется человеком и почти всегда через саму панель,
     // поэтому в закрытом виде его достаточно сверять раз в полминуты.
     Timer {
@@ -5123,35 +5059,6 @@ PanelWindow {
         function setMusicCenterMode(m: int): void { root.setMusicCenterMode(m); }
         function toggleMusicNotch(): void { root.toggleMusicNotch(); }
         function toggleNotchMode(): void { root.toggleMusicNotch(); }
-        function toggleAntigravity(): void {
-            if (!root.antigravityEnabled) {
-                root.antigravityEnabled = !root.antigravityEnabled;
-                root.antigravityMode = "anim";
-            } else if (root.antigravityMode === "anim") {
-                root.antigravityMode = "accent";
-            } else {
-                root.antigravityEnabled = !root.antigravityEnabled;
-                root.antigravityMode = "off";
-            }
-            if (root.cfg) {
-                root.cfg.antigravityEnabled = root.antigravityEnabled;
-                root.cfg.antigravityMode = root.antigravityMode;
-                root.saveCfg();
-            }
-            var msg = !root.antigravityEnabled ? "Desactivado" : (root.antigravityMode === "accent" ? "Color de Acento (Ondas)" : "Modo Animación");
-            root.showAntigravityToast(msg);
-        }
-        function toggleAntigravityMode(): void {
-            root.antigravityMode = (root.antigravityMode === "accent") ? "anim" : "accent";
-            root.antigravityEnabled = true;
-            if (root.cfg) {
-                root.cfg.antigravityEnabled = true;
-                root.cfg.antigravityMode = root.antigravityMode;
-                root.saveCfg();
-            }
-            var msg = root.antigravityMode === "accent" ? "Color de Acento (Ondas)" : "Modo Animación";
-            root.showAntigravityToast(msg);
-        }
         function testLowBattery(pct: int): void { root.showLowBattToast(pct > 0 ? pct : 20); }
         function testChargeToast(): void { root.showAcToast(); }
         function testFullBattery(pct: int): void { root.showFullBattToast(pct > 0 ? pct : 100); }
@@ -8146,22 +8053,6 @@ PanelWindow {
                 anchors.centerIn: parent
                 spacing: root.themeNothing ? 14 : 16
 
-                AntigravityLogo {
-                    id: agLogoModern
-                    visible: root.effectiveAntigravityVisible
-                    active: root.effectiveAntigravityVisible
-                    Layout.alignment: Qt.AlignVCenter
-                    size: 18
-                    colorMode: root.antigravityMode
-                    accentColor: root.colOn
-
-                    MouseArea {
-                        anchors.fill: parent
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: root.toggleAntigravityMode()
-                    }
-                }
-
                 // ------------------------------------------- слева/izquierda: запись, столы/escritorios, погода/clima
                 RowLayout {
                     id: modernLeft
@@ -8500,14 +8391,6 @@ PanelWindow {
                     }
                 }
 
-                AntigravityWave {
-                    id: agWaveModern
-                    visible: root.effectiveAntigravityVisible
-                    active: root.effectiveAntigravityVisible
-                    Layout.alignment: Qt.AlignVCenter
-                    waveColor: root.colOn
-                    subagentCount: root.antigravitySubagents
-                }
             }
         }
 
@@ -8521,15 +8404,9 @@ PanelWindow {
                      && !root.anyToastActive
             opacity: root.pillSide ? 0 : (visible ? 1 : 0)
             Behavior on opacity { NumberAnimation { duration: root.animFast } }
-            property real agExtraWidth: root.effectiveAntigravityVisible
-                ? (agLogoMusic.width + (root.cfg.antigravityMargin !== undefined ? root.cfg.antigravityMargin : 18) + agWaveMusic.implicitWidth + 12) // agLogoMusic.width + 18
-                : 0
-            Behavior on agExtraWidth {
-                NumberAnimation { duration: 240; easing.type: Easing.OutCubic }
-            }
             implicitWidth: (root.musicCenterMode === 4 ? 148
                           : root.musicCenterMode === 3 ? (mfnRow.implicitWidth + 116)
-                          : (musicCenterBox.width + 96)) + agExtraWidth
+                          : (musicCenterBox.width + 96))
 
             // Обложка трека слева (3D поворот зеркала при смене трека + отсутствие мигания ноты)
             FlipArt {
@@ -8566,23 +8443,6 @@ PanelWindow {
                 }
             }
 
-            AntigravityLogo {
-                id: agLogoMusic
-                visible: root.effectiveAntigravityVisible
-                active: root.effectiveAntigravityVisible
-                anchors.left: musicArtBox.right
-                anchors.leftMargin: root.cfg.antigravityMargin !== undefined ? root.cfg.antigravityMargin : 18 // anchors.leftMargin: 18
-                anchors.verticalCenter: parent.verticalCenter
-                size: 18
-                colorMode: root.antigravityMode
-                accentColor: root.effectiveWaveColor
-
-                MouseArea {
-                    anchors.fill: parent
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: root.toggleAntigravityMode()
-                }
-            }
 
             // Центральный блок с плавной анимацией fade-in / fade-out:
             // 0 = часы Nothing, 1 = уровень батареи Nothing, 2 = часы + батарея, 3 = всё вместе (через musicFullNormalBox), 4 = ничего (Dynamic Island classic)
@@ -8985,16 +8845,6 @@ PanelWindow {
             }
         }
 
-            AntigravityWave {
-                id: agWaveMusic
-                visible: root.effectiveAntigravityVisible
-                active: root.effectiveAntigravityVisible
-                anchors.right: musicWave.left
-                anchors.rightMargin: 10
-                anchors.verticalCenter: parent.verticalCenter
-                waveColor: root.effectiveWaveColor
-                subagentCount: root.antigravitySubagents
-            }
 
             // Полосы эквалайзера справа (5 полос, окрашенных цветом обложки или выбранным режимом)
             WaveBars {

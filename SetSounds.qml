@@ -37,7 +37,6 @@ ColumnLayout {
         { id: "settings_open",     label: "Ajustes (Super+I)",       icon: "󰅀" },
         { id: "settings_close",    label: "Ajustes (Cerrar)",        icon: "󰅖" },
         { id: "notification",      label: "Notificación Entrante",   icon: "󰂚" },
-        { id: "notif_antigravity",  label: "Antigravity AI",          icon: "󰚩" },
         { id: "screenshot",        label: "Captura de Pantalla",     icon: "󰄀" }
     ]
 
@@ -111,23 +110,6 @@ ColumnLayout {
         }
     }
 
-    // Proceso para compilar el tono de Antigravity AI con los parámetros del estudio
-    Process {
-        id: pCompileAntigravity
-        command: []
-        onExited: code => {
-            page.isCompiling = false;
-            if (code === 0) {
-                page.compileStatus = page.sys.isEn ? "Antigravity sound synthesized & active!" : "¡Sonido Antigravity sintetizado y activo!";
-                page.sys.cfg.antigravityTone = "studio";
-                page.sys.saveCfg();
-                page.sys.playSound("notif_antigravity_studio", "custom");
-            } else {
-                page.compileStatus = page.sys.isEn ? "Error synthesizing tone." : "Error al sintetizar tono.";
-            }
-            clearStatusTimer.restart();
-        }
-    }
 
     // Proceso para previsualizar sonido en tiempo real
     Process {
@@ -217,43 +199,6 @@ ColumnLayout {
         pCompile.running = true;
     }
 
-    function compileAntigravitySound() {
-        if (page.isCompiling) return;
-        page.isCompiling = true;
-        page.compileStatus = page.sys.isEn ? "Synthesizing Antigravity AI tone..." : "Sintetizando tono de Antigravity AI...";
-
-        var style = page.sys.cfg.soundCustomStyle || "marimba";
-        var depth = page.sys.cfg.soundCustomDepth !== undefined ? page.sys.cfg.soundCustomDepth : 0.6;
-        var att = page.sys.cfg.soundCustomAttack !== undefined ? page.sys.cfg.soundCustomAttack : 0.5;
-        var dec = page.sys.cfg.soundCustomDecay !== undefined ? page.sys.cfg.soundCustomDecay : 1.0;
-        var bri = page.sys.cfg.soundCustomBright !== undefined ? page.sys.cfg.soundCustomBright : 0.5;
-        var pitch = page.sys.cfg.soundCustomPitch !== undefined ? page.sys.cfg.soundCustomPitch : 0.0;
-        var warmth = page.sys.cfg.soundCustomWarmth !== undefined ? page.sys.cfg.soundCustomWarmth : 0.2;
-        var spatial = page.sys.cfg.soundCustomSpatialWidth !== undefined ? page.sys.cfg.soundCustomSpatialWidth : 0.50;
-        var reverb = page.sys.cfg.soundCustomReverb !== undefined ? page.sys.cfg.soundCustomReverb : 0.15;
-        var vib = page.sys.cfg.soundCustomVibrato !== undefined ? page.sys.cfg.soundCustomVibrato : 0.0;
-        var cut = page.sys.cfg.soundCustomCutoff !== undefined ? page.sys.cfg.soundCustomCutoff : 1.0;
-        var gain = page.sys.cfg.soundCustomGain !== undefined ? page.sys.cfg.soundCustomGain : 1.0;
-
-        pCompileAntigravity.command = [
-            "python3", Quickshell.env("HOME") + "/.config/panacea/sound_engine.py", "antigravity",
-            "--pack", "custom",
-            "--style", style,
-            "--depth", depth.toFixed(2),
-            "--attack", att.toFixed(2),
-            "--decay", dec.toFixed(2),
-            "--brightness", bri.toFixed(2),
-            "--pitch", pitch.toFixed(1),
-            "--warmth", warmth.toFixed(2),
-            "--spatial", spatial.toFixed(2),
-            "--reverb", reverb.toFixed(2),
-            "--vibrato", vib.toFixed(2),
-            "--cutoff", cut.toFixed(2),
-            "--gain", gain.toFixed(2)
-        ];
-        pCompileAntigravity.running = false;
-        pCompileAntigravity.running = true;
-    }
 
     Layout.fillWidth: true
     spacing: 16
@@ -366,195 +311,6 @@ ColumnLayout {
         }
     }
 
-    // ---------------------------------------------------------- 1.1 SONIDO EXCLUSIVO ANTIGRAVITY AI
-    SetCard {
-        sys: page.sys
-
-        RowLayout {
-            Layout.fillWidth: true
-            spacing: 12
-
-            Rectangle {
-                Layout.preferredWidth: 38
-                Layout.preferredHeight: 38
-                radius: 19
-                color: Qt.rgba(page.sys.colOn.r, page.sys.colOn.g, page.sys.colOn.b, 0.20)
-                border.color: page.sys.colOn
-                border.width: 1
-
-                Text {
-                    anchors.centerIn: parent
-                    text: "󰚩"
-                    color: page.sys.colOn
-                    font { family: page.sys.fontFam; pixelSize: 18 }
-                }
-            }
-
-            ColumnLayout {
-                Layout.fillWidth: true
-                spacing: 2
-                Text {
-                    text: page.sys.isEn ? "Antigravity AI Exclusive Sound" : "Sonido Exclusivo: Antigravity AI"
-                    color: page.sys.colFg
-                    font { family: page.sys.fontBody; pixelSize: page.sys.fontSize - 1; bold: true }
-                }
-                Text {
-                    text: page.sys.isEn
-                        ? "Signature acoustic chime synthesized exclusively for Antigravity AI events and responses."
-                        : "Firma acústica sintética exclusiva para respuestas, eventos y notificaciones de Antigravity AI."
-                    color: page.sys.colMuted
-                    wrapMode: Text.WordWrap
-                    font { family: page.sys.fontBody; pixelSize: page.sys.fontSize - 4 }
-                }
-            }
-
-            // Botón probar sonido
-            Rectangle {
-                Layout.preferredHeight: 28
-                Layout.preferredWidth: agTestRow.implicitWidth + 20
-                radius: 14
-                color: agTestMa.containsMouse ? Qt.rgba(page.sys.colOn.r, page.sys.colOn.g, page.sys.colOn.b, 0.25) : Qt.rgba(1, 1, 1, 0.08)
-                border.color: page.sys.colOn
-                border.width: 1
-
-                RowLayout {
-                    id: agTestRow
-                    anchors.centerIn: parent
-                    spacing: 6
-                    Text { text: "󰐊"; color: page.sys.colOn; font { family: page.sys.fontFam; pixelSize: 11 } }
-                    Text {
-                        text: page.sys.isEn ? "Audition Tone" : "Escuchar Tono"
-                        color: page.sys.colFg
-                        font { family: page.sys.fontBody; pixelSize: page.sys.fontSize - 4; bold: true }
-                    }
-                }
-
-                MouseArea {
-                    id: agTestMa
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: {
-                        var tone = page.sys.cfg.antigravityTone || "aero";
-                        if (tone === "studio") {
-                            page.sys.playSound("notif_antigravity_studio", "custom");
-                        } else if (tone === "custom" && page.sys.cfg.antigravityToneCustomPath) {
-                            page.sys.playSound(page.sys.cfg.antigravityToneCustomPath);
-                        } else if (tone !== "custom") {
-                            page.sys.playSound("notif_antigravity_" + tone, page.auditionPack);
-                        }
-                    }
-                }
-            }
-        }
-
-        SetToggle {
-            sys: page.sys
-            label: page.sys.isEn ? "Dedicated Sound for Antigravity" : "Habilitar sonido exclusivo para Antigravity AI"
-            sub: page.sys.isEn
-                ? "Plays a dedicated signature chime whenever an Antigravity notification arrives."
-                : "Reproduce un timbre celestial dedicado en cada notificación o aviso de Antigravity."
-            on: page.sys.cfg.antigravitySound !== false
-            onToggled: v => {
-                page.sys.cfg.antigravitySound = v;
-                page.sys.saveCfg();
-                if (v) {
-                    var tone = page.sys.cfg.antigravityTone || "aero";
-                    if (tone === "studio") {
-                        page.sys.playSound("notif_antigravity_studio", "custom");
-                    } else if (tone === "custom" && page.sys.cfg.antigravityToneCustomPath) {
-                        page.sys.playSound(page.sys.cfg.antigravityToneCustomPath);
-                    } else if (tone !== "custom") {
-                        page.sys.playSound("notif_antigravity_" + tone, page.auditionPack);
-                    }
-                }
-            }
-        }
-
-        SetPick {
-            sys: page.sys
-            visible: page.sys.cfg.antigravitySound !== false
-            label: page.sys.isEn ? "Acoustic Tone Signature" : "Timbre Acústico de Antigravity"
-            options: [
-                { id: "aero",    text: page.sys.isEn ? "Aero Chime (Celestial Zero-G)" : "Aero Chime (Celestial Zero-G)" },
-                { id: "quantum", text: page.sys.isEn ? "Quantum Spark (Bright FM)"     : "Quantum Spark (Brillante FM)" },
-                { id: "orbit",   text: page.sys.isEn ? "Deep Orbit (Sub-Bass Resonance)": "Deep Orbit (Resonancia Sub-Bass)" },
-                { id: "studio",  text: page.sys.isEn ? "Sound Studio Synthesis (DSP Custom)" : "Sintetizado en Estudio (DSP Custom)" },
-                { id: "custom",  text: page.sys.isEn ? "Custom Audio File"              : "Archivo de Audio Personalizado" }
-            ]
-            value: page.sys.cfg.antigravityTone || "aero"
-            onPicked: id => {
-                page.sys.cfg.antigravityTone = id;
-                page.sys.saveCfg();
-                if (id === "studio") {
-                    page.sys.playSound("notif_antigravity_studio", "custom");
-                } else if (id === "custom" && page.sys.cfg.antigravityToneCustomPath) {
-                    page.sys.playSound(page.sys.cfg.antigravityToneCustomPath);
-                } else if (id !== "custom") {
-                    page.sys.playSound("notif_antigravity_" + id, page.auditionPack);
-                }
-            }
-        }
-
-        // Botón para compilar directamente el sonido de Antigravity con los parámetros del estudio
-        Rectangle {
-            visible: page.sys.cfg.antigravitySound !== false
-            Layout.fillWidth: true
-            Layout.preferredHeight: 38
-            radius: 12
-            color: agCompileMa.containsMouse
-                   ? Qt.rgba(page.sys.colOn.r, page.sys.colOn.g, page.sys.colOn.b, 0.22)
-                   : Qt.rgba(page.sys.colOn.r, page.sys.colOn.g, page.sys.colOn.b, 0.10)
-            border.color: page.sys.colOn
-            border.width: 1
-            Behavior on color { ColorAnimation { duration: 140 } }
-            scale: agCompileMa.pressed ? 0.98 : (agCompileMa.containsMouse ? 1.01 : 1.0)
-            Behavior on scale { NumberAnimation { duration: 130; easing.type: Easing.OutCubic } }
-
-            RowLayout {
-                anchors.centerIn: parent
-                spacing: 8
-                Text {
-                    text: page.isCompiling ? "󰑮" : "󰚩"
-                    color: page.sys.colOn
-                    font { family: page.sys.fontFam; pixelSize: 15 }
-                    RotationAnimation on rotation {
-                        running: page.isCompiling
-                        loops: Animation.Infinite
-                        from: 0; to: 360; duration: 800
-                    }
-                }
-                Text {
-                    text: page.isCompiling
-                          ? (page.sys.isEn ? "Synthesizing tone..." : "Sintetizando tono con el Estudio...")
-                          : (page.sys.isEn ? "Compile Antigravity Sound with Studio DSP" : "Compilar Sonido de Antigravity con el Estudio")
-                    color: page.sys.colFg
-                    font { family: page.sys.fontBody; pixelSize: page.sys.fontSize - 3; bold: true }
-                }
-            }
-
-            MouseArea {
-                id: agCompileMa
-                anchors.fill: parent
-                hoverEnabled: true
-                cursorShape: Qt.PointingHandCursor
-                onClicked: page.compileAntigravitySound()
-            }
-        }
-
-        SetTextInput {
-            sys: page.sys
-            visible: page.sys.cfg.antigravitySound !== false && page.sys.cfg.antigravityTone === "custom"
-            label: page.sys.isEn ? "Custom Sound File Path" : "Ruta del Archivo de Sonido Personalizado"
-            sub: page.sys.isEn ? "Absolute path to a .wav, .mp3, or .ogg file." : "Ruta absoluta a un archivo .wav, .mp3 o .ogg."
-            value: page.sys.cfg.antigravityToneCustomPath || ""
-            placeholder: "/home/user/Downloads/sound.wav"
-            onAccepted: text => {
-                page.sys.cfg.antigravityToneCustomPath = text;
-                page.sys.saveCfg();
-            }
-        }
-    }
 
     // ---------------------------------------------------------- 2. ASIGNACIÓN POR APARIENCIA (SEPARADO)
     SetCard {
@@ -1294,7 +1050,7 @@ ColumnLayout {
                                 Text {
                                     text: page.isCompiling
                                         ? (page.sys.isEn ? "Synthesizing suite..." : "Sintetizando colección...")
-                                        : (page.sys.isEn ? "Compile 'Custom' Pack (21 Sounds + Antigravity)" : "Compilar Pack 'Custom' (21 Sonidos + Antigravity)")
+                                        : (page.sys.isEn ? "Compile 'Custom' Pack (20 Studio Sounds)" : "Compilar Pack 'Custom' (20 Sonidos de Estudio)")
                                     color: Qt.color("#000000")
                                     font { family: page.sys.fontBody; pixelSize: page.sys.fontSize - 3; bold: true }
                                 }

@@ -16,7 +16,7 @@ Item {
 
     property var sys
 
-    readonly property string defaultAppsStr: "brave-origin.desktop,kitty.desktop,com.spotify.Client.desktop,antigravity.desktop"
+    readonly property string defaultAppsStr: "brave-origin.desktop,kitty.desktop,com.spotify.Client.desktop,thunar.desktop"
     readonly property int iconSize: (dock.sys && dock.sys.cfg && dock.sys.cfg.dockIconSize) || 34
     readonly property real zoomMax: (dock.sys && dock.sys.cfg && dock.sys.cfg.dockZoom) || 1.20
     readonly property bool magnifyEnabled: !(dock.sys && dock.sys.cfg && dock.sys.cfg.dockMagnify === false)

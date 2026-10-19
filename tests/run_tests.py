@@ -1,18 +1,5 @@
 #!/usr/bin/env python3
-"""Master Test Runner for panacea-antigravity-notch E2E Test Suite.
-
-Supports:
-  --tier {1,2,3,4,all}: Select specific test tier(s)
-  -v, --verbose: Detailed verbose test reporting
-  --json: Output JSON formatted summary to stdout
-  -k, --filter: Filter test methods by substring
-  --report FILE: Write JSON report to file
-
-Exit Codes:
-  0: All executed tests passed or skipped
-  1: One or more test failures or errors occurred
-  2: Invalid command-line arguments
-"""
+"""Master Test Runner for Panacea_novZ Test Suite."""
 
 import sys
 import os
@@ -27,12 +14,16 @@ PROJECT_ROOT = Path(os.environ.get("PANACEA_DIR", Path(__file__).resolve().paren
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-
 TIER_MODULE_MAP = {
-    1: "tests.test_tier1_feature",
-    2: "tests.test_tier2_boundary",
-    3: "tests.test_tier3_combinations",
-    4: "tests.test_tier4_scenarios",
+    1: "tests.test_sound_engine",
+    2: "tests.test_challenger_m2_sound_adversarial",
+    3: "tests.test_lyrics",
+    4: "tests.test_challenger_m3_spicylyrics",
+    5: "tests.test_challenger_m1_settings",
+    6: "tests.test_challenger_m1_r4_probes",
+    7: "tests.test_challenger_m2_controls_dark_unibody",
+    8: "tests.test_challenger_m2_lyrics",
+    9: "tests.test_challenger_m3_radiant_bw",
 }
 
 
@@ -109,14 +100,14 @@ def filter_suite(suite: unittest.TestSuite, filter_str: str) -> unittest.TestSui
 
 def run_tests():
     parser = argparse.ArgumentParser(
-        description="E2E Test Runner for panacea-antigravity-notch",
+        description="Comprehensive Test Runner for Panacea_novZ",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
         "--tier",
         type=str,
         default="all",
-        choices=["1", "2", "3", "4", "all"],
+        choices=[str(i) for i in range(1, len(TIER_MODULE_MAP) + 1)] + ["all"],
         help="Select which tier of tests to execute",
     )
     parser.add_argument(
@@ -146,7 +137,7 @@ def run_tests():
 
     # Determine which tiers to run
     if args.tier == "all":
-        tiers_to_run = [1, 2, 3, 4]
+        tiers_to_run = list(TIER_MODULE_MAP.keys())
     else:
         tiers_to_run = [int(args.tier)]
 
@@ -170,7 +161,7 @@ def run_tests():
 
     if not args.json:
         print("======================================================================")
-        print(" panacea-antigravity-notch E2E Test Suite Runner")
+        print(" Panacea_novZ Comprehensive Test Suite Runner")
         print("======================================================================")
         print(f"Target: Tiers {tiers_to_run}")
         for tier_name, count in tier_counts.items():
@@ -242,7 +233,7 @@ def run_tests():
 def load_tests(loader, standard_tests, pattern):
     """Standard unittest load_tests protocol hook for unittest discovery."""
     suite = unittest.TestSuite()
-    for t in [1, 2, 3, 4]:
+    for t in TIER_MODULE_MAP.keys():
         mod_name = TIER_MODULE_MAP[t]
         suite.addTest(loader.loadTestsFromName(mod_name))
     return suite
