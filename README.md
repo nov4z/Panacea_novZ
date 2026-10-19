@@ -54,7 +54,7 @@
 <br/>
 
 ### 2. Cápsula Musical Expandida & SpicyLyrics (`Super + M`)
-*Despliegue a 60 FPS con sincronización temporal (~120 ms de anticipación) y predicción acústica de márgenes para que ninguna palabra se quiebre de renglón al agrandarse la fuente en tiempo real.*
+*Despliegue a 60 FPS con sincronización temporal (~50 ms de anticipación) y predicción acústica de márgenes para que ninguna palabra se quiebre de renglón al agrandarse la fuente en tiempo real.*
 
 ![SpicyLyrics Sincronizado](screenshots/spicylyrics_sync.png)
 
@@ -97,7 +97,7 @@ A continuación se detalla punto por punto el compendio de novedades, refactoriz
 
 ### 2. 🎤 SpicyLyrics: Motor de Letras Sincronizadas en Tiempo Real
 - **Eliminación Total del "Efecto Punto Seguido"**: En implementaciones estándar de letras sincronizadas, al expandir tipográficamente la frase que está sonando, la última palabra salta de renglón de manera tosca. En `Panacea_novZ`, el motor precalcula márgenes y saltos de línea con predicción elástica, logrando que el texto fluya de forma 100% natural.
-- **Anticipación Acústica Milimétrica (~120 ms)**: Adelanto de fotograma acústico calibrado para que el resplandor de la frase coincida exactamente con el golpe de voz del cantante.
+- **Anticipación Acústica Milimétrica (~50 ms)**: Adelanto de fotograma acústico calibrado para que el resplandor de la frase coincida exactamente con el golpe de voz del cantante.
 - **Backend LRCLIB Robusto**: Estrategia de búsqueda de 4 niveles (coincidencia estricta, limpieza de remasters/feat, búsqueda difusa y fallback para piezas puramente instrumentales).
 - **Caché Local Persistente y Atómico**: Almacenamiento local en `~/.cache/panacea/lyrics/` con hashes SHA-256 de alta velocidad, permitiendo lectura instantánea sin latencia de red.
 - **Desvanecimiento de Canvas**: Las ondas acústicas de fondo atenúan suavemente su opacidad al abrirse la vista de letras para garantizar contraste y legibilidad absoluta.

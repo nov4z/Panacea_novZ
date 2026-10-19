@@ -247,6 +247,13 @@ class TestSpicyLyricsComponentContracts(unittest.TestCase):
         """SpicyLyricsView.qml invalidates stale lyrics when track changes while inactive and on activation."""
         self.assertIn("targetKey !== root.currentKey", self.lyrics_qml)
 
+    def test_21_spicy_lyrics_calibrated_acoustic_lead_timing(self):
+        """SpicyLyricsView.qml configures calibrated 50ms (0.050s) acoustic lead anticipation."""
+        self.assertIn("readonly property real acousticLeadSec: 0.050", self.lyrics_qml)
+        self.assertNotIn("acousticLeadSec: 0.120", self.lyrics_qml)
+        self.assertIn("var pos = ((root.smoothPos > 0) ? root.smoothPos : root.currentPosition) + root.acousticLeadSec;", self.lyrics_qml)
+        self.assertIn("var leadPos = pos + root.acousticLeadSec;", self.lyrics_qml)
+
 
 class TestSpicyLyricsSynchronizationLogic(unittest.TestCase):
     """Validates the mathematical time-synchronization logic implemented in updateActiveIndex."""
@@ -294,6 +301,19 @@ class TestSpicyLyricsSynchronizationLogic(unittest.TestCase):
     def test_03_empty_lines_list(self):
         """When lines list is empty, index returns -1."""
         self.assertEqual(self.simulate_update_active_index([], 10.0), -1)
+
+    def test_04_calibrated_50ms_anticipation_model(self):
+        """Acoustic lead of 50ms (0.050s) activates the line exactly 50ms before vocal onset."""
+        lines = [
+            {"time_sec": 5.0, "text": "Line 1"},
+            {"time_sec": 10.0, "text": "Line 2"},
+            {"time_sec": 20.0, "text": "Line 3"},
+        ]
+        acoustic_lead = 0.050
+        # At position 9.94s: pos + lead = 9.99s < 10.0s -> still Line 1 (index 0)
+        self.assertEqual(self.simulate_update_active_index(lines, 9.94 + acoustic_lead), 0)
+        # At position 9.95s: pos + lead = 10.00s >= 10.0s -> transitions to Line 2 (index 1) exactly 50ms before vocal onset
+        self.assertEqual(self.simulate_update_active_index(lines, 9.95 + acoustic_lead), 1)
 
 
 class TestLyricsEngineSpicyHydration(unittest.TestCase):

@@ -40,8 +40,8 @@ Item {
         return Qt.hsla(h, s, l, 1.0);
     }
 
-    // Anticipación acústica centralizada (~120 ms)
-    readonly property real acousticLeadSec: 0.120
+    // Anticipación acústica centralizada (~50 ms)
+    readonly property real acousticLeadSec: 0.050
 
     // Datos del reproductor
     readonly property string trackTitle: player ? String(player.trackTitle || "").trim() : ""
