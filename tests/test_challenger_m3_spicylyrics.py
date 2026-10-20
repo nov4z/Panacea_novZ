@@ -289,6 +289,20 @@ class TestSpicyLyricsComponentContracts(unittest.TestCase):
         self.assertIn('(view.sys.isEs ? "En batería" : view.sys.tr("От батареи"))', self.controls_qml)
         self.assertIn('view.sys.profileLabel ? (" · " + view.sys.profileLabel) : ""', self.controls_qml)
 
+    def test_27_battery_desktop_fallback_and_minitile_spanish_localization(self):
+        """ControlsView.qml MiniTile properly separates desktop profile fallback from battery status."""
+        self.assertIn('view.sys.batteryPresent', self.controls_qml)
+        self.assertIn('(view.sys.isEs ? "Perfil de energía" : view.sys.tr("Режим питания"))', self.controls_qml)
+
+    def test_28_tempo_button_consistency_and_right_click_toggle(self):
+        """Tempo icons are consistent across components and MediaBtn supports rightAct toggle."""
+        self.assertIn('"󰐼"', self.lyrics_qml)
+        self.assertIn('"󰐼"', self.island_qml)
+        self.assertIn('"󰐼"', self.controls_qml)
+        self.assertIn('signal rightAct()', self.controls_qml)
+        self.assertIn('onRightAct:', self.controls_qml)
+
+
 
 
 class TestSpicyLyricsSynchronizationLogic(unittest.TestCase):

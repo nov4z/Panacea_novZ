@@ -694,6 +694,7 @@ Item {
         property bool primary: false
         property bool enabledAction: true
         signal act()
+        signal rightAct()
 
         implicitWidth: primary ? 42 : 34
         implicitHeight: primary ? 42 : 34
@@ -725,7 +726,11 @@ Item {
             hoverEnabled: true
             enabled: parent.enabledAction
             cursorShape: Qt.PointingHandCursor
-            onClicked: parent.act()
+            acceptedButtons: Qt.LeftButton | Qt.RightButton
+            onClicked: mouse => {
+                if (mouse.button === Qt.RightButton) parent.rightAct();
+                else parent.act();
+            }
         }
     }
 
@@ -1932,6 +1937,10 @@ Item {
                                 }
                                 spicyLyrics.detectTempo();
                             }
+                            onRightAct: {
+                                spicyLyrics.tempoAlignEnabled = !spicyLyrics.tempoAlignEnabled;
+                                spicyLyrics.updateActiveIndex();
+                            }
                         }
                     }
 
@@ -2179,12 +2188,13 @@ Item {
                     hasSubpage: true
                     icon: view.sys.batteryPresent ? view.sys.batteryLevelIcon
                                                   : String.fromCodePoint(0xF0241)
-                    label: view.sys.batteryPresent ? (view.sys.batteryPct + "%") : view.sys.profileLabel
-                    sub: (view.sys.batteryCharging ? (view.sys.isEs ? "Cargando" : view.sys.tr("Заряжается"))
-                         : (view.sys.acOnline ? (view.sys.isEs ? "Conectado" : view.sys.tr("От сети"))
-                         : ""))
-                         + ((view.sys.batteryCharging || view.sys.acOnline) && view.sys.profileLabel ? " · " : "")
-                         + view.sys.profileLabel
+                    label: view.sys.batteryPresent ? (view.sys.batteryPct + "%") : (view.sys.profileLabel || (view.sys.isEs ? "Energía" : "Power"))
+                    sub: view.sys.batteryPresent
+                         ? ((view.sys.batteryCharging ? (view.sys.isEs ? "Cargando" : view.sys.tr("Заряжается"))
+                            : (view.sys.acOnline ? (view.sys.isEs ? "Conectado" : view.sys.tr("От сети"))
+                            : (view.sys.isEs ? "En batería" : view.sys.tr("От батареи"))))
+                            + (view.sys.profileLabel ? (" · " + view.sys.profileLabel) : ""))
+                         : (view.sys.isEs ? "Perfil de energía" : view.sys.tr("Режим питания"))
                     on: true
                     wave: true
                     waveLevel: view.sys.batteryPct > 0 ? (view.sys.batteryPct / 100) : 0.5

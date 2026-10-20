@@ -895,7 +895,7 @@ Item {
                 spacing: 5
 
                 Text {
-                    text: root.isDetectingTempo ? "󰑐" : (root.tempoAlignEnabled ? "⚡" : "󰎆")
+                    text: root.isDetectingTempo ? "󰑐" : (root.tempoAlignEnabled ? "⚡" : "󰐼")
                     font.family: root.fontFam
                     font.pixelSize: 10
                     font.bold: true
@@ -937,11 +937,7 @@ Item {
                         root.tempoAlignEnabled = !root.tempoAlignEnabled;
                         root.updateActiveIndex();
                     } else {
-                        if (!root.tempoAlignEnabled || root.detectedBpm === 0) {
-                            root.detectTempo();
-                        } else {
-                            root.detectTempo();
-                        }
+                        root.detectTempo();
                     }
                 }
             }
