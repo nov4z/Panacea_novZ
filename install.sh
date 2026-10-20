@@ -23,7 +23,8 @@ INSTALL_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/panacea"
 BACKUP_BASE="${XDG_CONFIG_HOME:-$HOME/.config}/panacea.backup"
 SCRIPT_SRC_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PIPEWIRE_CONF_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/pipewire/pipewire-pulse.conf.d"
-HYPR_CONF="${XDG_CONFIG_HOME:-$HOME/.config}/hypr/hyprland.conf"
+HYPR_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/hypr"
+HYPR_CONF="$HYPR_DIR/hyprland.conf"
 
 UNATTENDED=false
 SKIP_DEPS=false
@@ -85,7 +86,7 @@ confirm() {
 
 # --- 1. Verificación de Entorno ---
 check_environment() {
-    log_step "1/6" "Comprobando entorno de ejecución..."
+    log_step "1/7" "Comprobando entorno de ejecución..."
 
     if [ "$EUID" -eq 0 ]; then
         log_warn "Se recomienda ejecutar este script como usuario normal (no root)."
@@ -95,8 +96,8 @@ check_environment() {
     fi
 
     # Verificar si estamos en sesión Wayland
-    if [ -n "$WAYLAND_DISPLAY" ] || [ "$XDG_SESSION_TYPE" = "wayland" ]; then
-        log_success "Sesión Wayland detectada ($WAYLAND_DISPLAY)."
+    if [ -n "$WAYLAND_DISPLAY" ] || [ "${XDG_SESSION_TYPE:-}" = "wayland" ]; then
+        log_success "Sesión Wayland detectada (${WAYLAND_DISPLAY:-wayland})."
     else
         log_warn "No se detectó sesión Wayland activa. Panacea Shell está optimizado para Wayland/Hyprland."
     fi
@@ -109,18 +110,15 @@ install_dependencies() {
         return 0
     fi
 
-    log_step "2/6" "Verificando dependencias del sistema..."
+    log_step "2/7" "Verificando dependencias del sistema..."
 
     local arch_deps=(
         "quickshell"
         "qt6-declarative"
         "qt6-multimedia"
         "qt6-svg"
-        "qt6-5compat"
         "qt6-wayland"
         "python"
-        "python-scipy"
-        "python-numpy"
         "playerctl"
         "pipewire"
         "wireplumber"
@@ -157,11 +155,11 @@ install_dependencies() {
             log_warn "Paquetes faltantes detectados: ${missing_pkgs[*]}"
             if confirm "¿Deseas instalar los paquetes faltantes ahora?" "Y"; then
                 if [ -n "$AUR_HELPER" ]; then
-                    $AUR_HELPER -S --needed "${missing_pkgs[@]}"
+                    $AUR_HELPER -S --needed "${missing_pkgs[@]}" || log_warn "Advertencia al instalar paquetes mediante $AUR_HELPER."
                 else
-                    sudo pacman -S --needed "${missing_pkgs[@]}"
+                    sudo pacman -S --needed "${missing_pkgs[@]}" || log_warn "Advertencia al instalar paquetes mediante pacman."
                 fi
-                log_success "Dependencias instaladas correctamente."
+                log_success "Dependencias verificadas."
             else
                 log_warn "Continuando sin instalar paquetes del sistema."
             fi
@@ -173,7 +171,7 @@ install_dependencies() {
 
 # --- 3. Respaldo de Configuración Previa ---
 backup_existing() {
-    log_step "3/6" "Preparando directorio de destino..."
+    log_step "3/7" "Preparando directorio de destino..."
 
     if [ -d "$INSTALL_DIR" ]; then
         local timestamp
@@ -181,7 +179,7 @@ backup_existing() {
         local target_backup="${BACKUP_BASE}_${timestamp}"
         log_warn "Se detectó una instalación existente en $INSTALL_DIR"
         log_info "Creando respaldo de seguridad en: $target_backup"
-        cp -r "$INSTALL_DIR" "$target_backup"
+        cp -a "$INSTALL_DIR" "$target_backup" 2>/dev/null || true
         log_success "Respaldo completado con éxito."
     fi
 
@@ -190,15 +188,13 @@ backup_existing() {
 
 # --- 4. Instalación de Archivos y Permisos ---
 deploy_files() {
-    log_step "4/6" "Instalando Panacea Shell V:NOVZ..."
+    log_step "4/7" "Instalando Panacea Shell V:NOVZ..."
 
     log_info "Copiando componentes de interfaz, scripts, sonidos y temas..."
     
-    # Copiar recursivamente ignorando metadatos git o backups
+    # Copiar recursivamente ignorando metadatos git, caches o backups
     rsync -a --exclude='.git' \
              --exclude='.gitignore' \
-             --exclude='install.sh' \
-             --exclude='uninstall.sh' \
              --exclude='.agents' \
              --exclude='backups' \
              --exclude='__pycache__' \
@@ -214,6 +210,16 @@ deploy_files() {
         fi
     fi
 
+    # Asegurar idioma de teclado en español latinoamericano (latam)
+    if [ -f "$INSTALL_DIR/settings.json" ] && command -v jq >/dev/null 2>&1; then
+        local cur_layout
+        cur_layout=$(jq -r '.keyboardLayouts // ""' "$INSTALL_DIR/settings.json" 2>/dev/null || echo "")
+        if [ "$cur_layout" = "us,ru" ] || [ -z "$cur_layout" ]; then
+            jq '.keyboardLayouts = "latam" | .keyboardVariants = "" | .keyboardOptions = ""' "$INSTALL_DIR/settings.json" > "$INSTALL_DIR/settings.json.tmp" && mv "$INSTALL_DIR/settings.json.tmp" "$INSTALL_DIR/settings.json"
+            log_success "Idioma de teclado calibrado a Español Latinoamericano (latam)."
+        fi
+    fi
+
     log_info "Configurando permisos de ejecución..."
     chmod +x "$INSTALL_DIR"/scripts/*.sh 2>/dev/null || true
     chmod +x "$INSTALL_DIR"/scripts/*.py 2>/dev/null || true
@@ -224,7 +230,7 @@ deploy_files() {
     if [ -d "$INSTALL_DIR/qml" ]; then
         log_info "Vinculando componentes QML para compatibilidad de arranque..."
         for f in "$INSTALL_DIR/qml/"*.qml "$INSTALL_DIR/qml/Themes.js"; do
-            [ -f "$f" ] && ln -sf "qml/$(basename "$f")" "$INSTALL_DIR/$(basename "$f")"
+            [ -f "$f" ] && ln -sfn "qml/$(basename "$f")" "$INSTALL_DIR/$(basename "$f")"
         done
         ln -sfn ../assets "$INSTALL_DIR/qml/assets" 2>/dev/null || true
         ln -sfn ../scripts "$INSTALL_DIR/qml/scripts" 2>/dev/null || true
@@ -238,9 +244,31 @@ deploy_files() {
     log_success "Archivos desplegados y permisos configurados en $INSTALL_DIR"
 }
 
-# --- 5. Optimización Acústica PipeWire (Spotify Fix) ---
+# --- 5. Lanzador e Integración de Spotify ---
+setup_spotify_shim() {
+    log_step "5/7" "Verificando lanzador e integración de Spotify..."
+
+    mkdir -p "$HOME/.local/bin"
+    if ! command -v spotify >/dev/null 2>&1 || [ ! -x "$HOME/.local/bin/spotify" ]; then
+        if command -v flatpak >/dev/null 2>&1 && flatpak list 2>/dev/null | grep -q "com.spotify.Client"; then
+            log_info "Spotify (Flatpak) detectado. Creando puente ejecutable en ~/.local/bin/spotify..."
+            cat << 'SPEOF' > "$HOME/.local/bin/spotify"
+#!/bin/sh
+exec flatpak run com.spotify.Client "$@"
+SPEOF
+            chmod +x "$HOME/.local/bin/spotify"
+            log_success "Puente de Spotify creado exitosamente en ~/.local/bin/spotify."
+        else
+            log_info "Spotify no detectado vía Flatpak. Se utilizará el lanzador del sistema si está instalado."
+        fi
+    else
+        log_success "Lanzador de Spotify verificado en $(which spotify)."
+    fi
+}
+
+# --- 6. Optimización Acústica PipeWire ---
 setup_pipewire_fix() {
-    log_step "5/6" "Configuración acústica y fix de volumen PipeWire..."
+    log_step "6/7" "Configuración acústica y fix de volumen PipeWire..."
 
     local conf_file="$PIPEWIRE_CONF_DIR/10-no-stream-restore.conf"
     if [ -f "$conf_file" ]; then
@@ -257,31 +285,125 @@ pulse.properties = {
 PWEOF
             log_success "Configuración guardada en $conf_file."
             if systemctl --user is-active --quiet pipewire-pulse.service 2>/dev/null; then
-                systemctl --user restart pipewire-pulse.service
+                systemctl --user restart pipewire-pulse.service 2>/dev/null || true
                 log_success "Servicio pipewire-pulse reiniciado exitosamente."
             fi
         fi
     fi
 }
 
-# --- 6. Integración con Hyprland ---
+# --- 7. Integración con Hyprland y Atajos de Teclado ---
 setup_hyprland() {
-    log_step "6/6" "Integración con Hyprland..."
+    log_step "7/7" "Integración con Hyprland y atajos de teclado..."
 
-    if [ -f "$HYPR_CONF" ]; then
-        if grep -q "panacea" "$HYPR_CONF" || grep -q "qs -c .*panacea" "$HYPR_CONF"; then
-            log_success "Hyprland ya contiene referencias a Panacea Shell."
-        else
-            log_info "Para autoiniciar Panacea Shell con tu sesión de Hyprland, añade:"
-            echo -e "${YELLOW}  exec-once = qs -c $INSTALL_DIR${NC}"
-            if confirm "¿Deseas que este script añada la línea de autoinicio a tu hyprland.conf?" "Y"; then
+    if [ -d "$HYPR_DIR" ]; then
+        mkdir -p "$HYPR_DIR/custom"
+
+        # 1. Configurar custom/keybindings.lua para proteger los binds de cualquier actualización futura
+        cat << 'LUAEOF' > "$HYPR_DIR/custom/keybindings.lua"
+-- Custom Keybindings & Shortcuts (Lua)
+-- Maintained for Panacea_novZ custom keybinds (immune to updates)
+local mainMod = "SUPER"
+local QS = "qs -c " .. os.getenv("HOME") .. "/.config/panacea ipc call pill "
+local HOME = os.getenv("HOME")
+
+-- Pill Navigation & Music
+hl.bind(mainMod .. " + A",             hl.dsp.exec_cmd(QS .. "dock"))
+hl.bind(mainMod .. " + Space",         hl.dsp.exec_cmd(QS .. "launcher"))
+hl.bind(mainMod .. " + M",             hl.dsp.exec_cmd(QS .. "music"))
+hl.bind(mainMod .. " + H",             hl.dsp.exec_cmd(QS .. "toggleHide"))
+hl.bind(mainMod .. " + SHIFT + H",     hl.dsp.exec_cmd(QS .. "rotateMusicCenter"))
+hl.bind(mainMod .. " + N",             hl.dsp.exec_cmd(QS .. "toggleMusicNotch"))
+hl.bind(mainMod .. " + O",             hl.dsp.exec_cmd(QS .. "toggleAntigravity"))
+hl.bind(mainMod .. " + apostrophe",    hl.dsp.exec_cmd(QS .. "shortcuts"))
+hl.bind(mainMod .. " + F",             hl.dsp.window.fullscreen())
+
+-- Lenovo LOQ / Legion Fn+Q Performance Modes
+local PCYCLE = HOME .. "/.config/panacea/scripts/power_cycle.sh"
+hl.bind("XF86Launch1",   hl.dsp.exec_cmd(PCYCLE), { locked = true })
+hl.bind("XF86Launch2",   hl.dsp.exec_cmd(PCYCLE), { locked = true })
+hl.bind("XF86Launch3",   hl.dsp.exec_cmd(PCYCLE), { locked = true })
+hl.bind("XF86Launch4",   hl.dsp.exec_cmd(PCYCLE), { locked = true })
+hl.bind("XF86Tools",     hl.dsp.exec_cmd(PCYCLE), { locked = true })
+hl.bind("XF86Favorites", hl.dsp.exec_cmd(PCYCLE), { locked = true })
+hl.bind("XF86Battery",   hl.dsp.exec_cmd(PCYCLE), { locked = true })
+hl.bind("XF86Launch5",   hl.dsp.exec_cmd(PCYCLE), { locked = true })
+hl.bind("XF86Launch6",   hl.dsp.exec_cmd(PCYCLE), { locked = true })
+hl.bind("XF86Launch7",   hl.dsp.exec_cmd(PCYCLE), { locked = true })
+hl.bind("XF86Launch8",   hl.dsp.exec_cmd(PCYCLE), { locked = true })
+hl.bind("XF86Launch9",   hl.dsp.exec_cmd(PCYCLE), { locked = true })
+hl.bind("XF86Game",      hl.dsp.exec_cmd(PCYCLE), { locked = true })
+hl.bind("XF86Keyboard",  hl.dsp.exec_cmd(PCYCLE), { locked = true })
+hl.bind(mainMod .. " + ALT + P", hl.dsp.exec_cmd(PCYCLE))
+LUAEOF
+
+        # 2. Configurar custom/custom.conf para respaldo directo
+        cat << 'CONFEOF' > "$HYPR_DIR/custom/custom.conf"
+# ==============================================================================
+# Custom User Configurations (Hyprland Conf)
+# Maintained for Panacea_novZ custom keybinds (immune to updates)
+# ==============================================================================
+
+$terminal = kitty
+$pill = qs -c $HOME/.config/panacea ipc call pill
+
+bind = SUPER, A, exec, $pill dock
+bind = SUPER, Space, exec, $pill launcher
+bind = SUPER, M, exec, $pill music
+bind = SUPER, H, exec, $pill toggleHide
+bind = SUPER SHIFT, H, exec, $pill rotateMusicCenter
+bind = SUPER, N, exec, $pill toggleMusicNotch
+bind = SUPER, O, exec, $pill toggleAntigravity
+bind = SUPER, apostrophe, exec, $pill shortcuts
+bind = SUPER, code:20, exec, $pill shortcuts
+bind = SUPER, F, fullscreen
+
+# Lenovo LOQ / Legion Fn+Q
+bind = , XF86Launch1, exec, $HOME/.config/panacea/scripts/power_cycle.sh
+bind = , XF86Launch2, exec, $HOME/.config/panacea/scripts/power_cycle.sh
+bind = , XF86Launch3, exec, $HOME/.config/panacea/scripts/power_cycle.sh
+bind = , XF86Launch4, exec, $HOME/.config/panacea/scripts/power_cycle.sh
+bind = , XF86Tools, exec, $HOME/.config/panacea/scripts/power_cycle.sh
+bind = , XF86Favorites, exec, $HOME/.config/panacea/scripts/power_cycle.sh
+bind = , XF86Battery, exec, $HOME/.config/panacea/scripts/power_cycle.sh
+bind = , XF86Launch5, exec, $HOME/.config/panacea/scripts/power_cycle.sh
+bind = , XF86Launch6, exec, $HOME/.config/panacea/scripts/power_cycle.sh
+bind = , XF86Launch7, exec, $HOME/.config/panacea/scripts/power_cycle.sh
+bind = , XF86Launch8, exec, $HOME/.config/panacea/scripts/power_cycle.sh
+bind = , XF86Launch9, exec, $HOME/.config/panacea/scripts/power_cycle.sh
+bind = , XF86Game, exec, $HOME/.config/panacea/scripts/power_cycle.sh
+bind = , XF86Keyboard, exec, $HOME/.config/panacea/scripts/power_cycle.sh
+bind = SUPER ALT, P, exec, $HOME/.config/panacea/scripts/power_cycle.sh
+CONFEOF
+
+        # 3. Asegurar programas predeterminados (kitty, zen-browser)
+        if [ -f "$HYPR_DIR/lua/programs.lua" ]; then
+            sed -i 's/programs.terminal = "footclient"/programs.terminal = "kitty"/g' "$HYPR_DIR/lua/programs.lua"
+            sed -i 's/programs.fileManagerTui = "footclient yazi"/programs.fileManagerTui = "kitty yazi"/g' "$HYPR_DIR/lua/programs.lua"
+            sed -i 's/programs.browser = "firefox"/programs.browser = "zen-browser"/g' "$HYPR_DIR/lua/programs.lua"
+        fi
+
+        # 4. Asegurar keybindings.lua contiene los atajos de la cápsula
+        if [ -f "$HYPR_DIR/lua/keybindings.lua" ]; then
+            if ! grep -q 'pillMusic' "$HYPR_DIR/lua/keybindings.lua"; then
+                sed -i 's/B("pillVault",    mainMod .. " + SHIFT + P",     hl.dsp.exec_cmd(QS .. "passwords"))/B("pillVault",    mainMod .. " + SHIFT + P",     hl.dsp.exec_cmd(QS .. "passwords"))\nB("pillMusic",    mainMod .. " + M",             hl.dsp.exec_cmd(QS .. "music"))\nB("pillHide",     mainMod .. " + H",             hl.dsp.exec_cmd(QS .. "toggleHide"))\nB("pillRotateCenter", mainMod .. " + SHIFT + H", hl.dsp.exec_cmd(QS .. "rotateMusicCenter"))\nB("pillToggleNotch",  mainMod .. " + N",         hl.dsp.exec_cmd(QS .. "toggleMusicNotch"))\nB("antigravityToggle", mainMod .. " + O",        hl.dsp.exec_cmd(QS .. "toggleAntigravity"))/g' "$HYPR_DIR/lua/keybindings.lua"
+            fi
+            sed -i 's/B("pillLauncher", mainMod .. " + A",/B("pillDock",     mainMod .. " + A",/g' "$HYPR_DIR/lua/keybindings.lua"
+        fi
+
+        # 5. Asegurar autostart en hyprland.conf
+        if [ -f "$HYPR_CONF" ]; then
+            if ! grep -q "panacea" "$HYPR_CONF" && ! grep -q "qs -c .*panacea" "$HYPR_CONF"; then
                 echo -e "\n# Panacea Shell V:NOVZ Autostart\nexec-once = qs -c $INSTALL_DIR" >> "$HYPR_CONF"
                 log_success "Añadido exec-once a $HYPR_CONF."
             fi
         fi
-    else
-        log_info "No se encontró $HYPR_CONF. Puedes iniciarlo manualmente con:"
-        echo -e "${YELLOW}  qs -c $INSTALL_DIR &${NC}"
+
+        # Recargar Hyprland
+        if command -v hyprctl >/dev/null 2>&1 && [ -n "${HYPRLAND_INSTANCE_SIGNATURE:-}" ]; then
+            hyprctl reload >/dev/null 2>&1 || true
+            log_success "Configuración de Hyprland recargada con éxito."
+        fi
     fi
 
     # Verificar si Quickshell está corriendo actualmente para recargar
@@ -290,9 +412,9 @@ setup_hyprland() {
             if systemctl --user is-active --quiet quickshell.service 2>/dev/null; then
                 systemctl --user restart quickshell.service
             else
-                pkill -x qs || true
+                pkill -x qs 2>/dev/null || true
                 sleep 1
-                nohup qs -c "$INSTALL_DIR" >/dev/null 2>&1 &
+                setsid env QSG_RENDER_LOOP=threaded qs -c "$INSTALL_DIR" >/dev/null 2>&1 &
             fi
             log_success "Quickshell recargado con Panacea Shell V:NOVZ."
         fi
@@ -308,17 +430,21 @@ print_summary() {
     echo -e "${BOLD}Ruta de instalación:${NC} ${CYAN}$INSTALL_DIR${NC}"
     echo -e "${BOLD}Versión instalada:${NC}   ${PURPLE}1.0.14-novz (V:NOVZ)${NC}"
 
-    echo -e "\n${BOLD}${CYAN}Atajos de teclado recomendados (Hyprland):${NC}"
+    echo -e "\n${BOLD}${CYAN}Atajos de teclado configurados (Hyprland):${NC}"
     echo -e "  ${BOLD}SUPER + M${NC}          Cápsula Musical & Notch Dinámico (Letras sincronizadas)"
-    echo -e "  ${BOLD}SUPER + Z${NC}          Centro de Control Unibody (Volumen, Brillo, Toggles)"
-    echo -e "  ${BOLD}SUPER + I${NC}          Ajustes del Notch & Estudio de Sonido Acústico"
     echo -e "  ${BOLD}SUPER + Space${NC}      Lanzador de aplicaciones"
-    echo -e "  ${BOLD}SUPER + SHIFT + W${NC}  Menú rápido de Wi-Fi"
-    echo -e "  ${BOLD}SUPER + SHIFT + B${NC}  Menú rápido de Bluetooth"
+    echo -e "  ${BOLD}SUPER + A${NC}          Dock de aplicaciones (con Spotify y favoritos)"
+    echo -e "  ${BOLD}SUPER + Z${NC}          Centro de Control Unibody (Volumen, Brillo, Toggles)"
+    echo -e "  ${BOLD}SUPER + I${NC}          Ajustes del Notch & Estudio Acústico"
+    echo -e "  ${BOLD}SUPER + H${NC}          Ocultar/Mostrar barra y Notch"
+    echo -e "  ${BOLD}SUPER + SHIFT + H${NC}  Rotar modo de isla musical"
+    echo -e "  ${BOLD}SUPER + N${NC}          Alternar modo notch de música"
+    echo -e "  ${BOLD}SUPER + O${NC}          Panel de agentes Antigravity"
+    echo -e "  ${BOLD}Fn + Q / Super+Alt+P${NC} Modos de Rendimiento Lenovo LOQ (Silencioso/Balance/Rendimiento)"
 
     echo -e "\n${BOLD}${CYAN}Control directo por terminal:${NC}"
     echo -e "  ${DIM}qs -c $INSTALL_DIR ipc call pill <comando>${NC}"
-    echo -e "  Ejemplos: ${DIM}music | controls | toggleLyrics | wifi | bluetooth${NC}\n"
+    echo -e "  Ejemplos: ${DIM}music | controls | toggleLyrics | wifi | bluetooth | dock${NC}\n"
 
     echo -e "${DIM}Para desinstalar o restaurar respaldos, ejecuta ./uninstall.sh${NC}\n"
 }
@@ -329,6 +455,7 @@ main() {
     install_dependencies
     backup_existing
     deploy_files
+    setup_spotify_shim
     setup_pipewire_fix
     setup_hyprland
     print_summary

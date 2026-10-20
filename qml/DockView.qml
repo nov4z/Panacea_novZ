@@ -323,7 +323,8 @@ Item {
             item.entry.execute();
         } else {
             var cmd = cls;
-            if (cls.indexOf("spotify") >= 0) cmd = "spotify";
+            if (cls.indexOf("spotify") >= 0) cmd = "command -v spotify >/dev/null 2>&1 && spotify || flatpak run com.spotify.Client";
+            else if (cls.indexOf("zen") >= 0) cmd = "zen-browser";
             else if (cls.indexOf("kitty") >= 0 || cls.indexOf("foot") >= 0 || cls.indexOf("terminal") >= 0) cmd = "kitty";
             else if (cls.indexOf("brave") >= 0) cmd = "brave";
             Hyprland.dispatch("exec " + cmd);
