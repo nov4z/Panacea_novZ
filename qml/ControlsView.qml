@@ -2713,6 +2713,18 @@ Item {
 
             // ввод пароля для выбранной сети
             property string passwordFor: ""
+            property string passwordSecurity: "psk"
+
+            TextField {
+                id: userField
+                Layout.fillWidth: true
+                visible: wifiPage.passwordFor.length > 0 && wifiPage.passwordSecurity === "eap"
+                placeholderText: view.sys.tr("Имя пользователя")
+                color: view.sys.colFg
+                placeholderTextColor: view.sys.colMuted
+                font { family: view.sys.fontFam; pixelSize: 12 }
+                onAccepted: pwField.forceActiveFocus()
+            }
 
             Rectangle {
                 Layout.fillWidth: true
@@ -2750,15 +2762,17 @@ Item {
                     Rectangle {
                         id: connectBtn
                         function go() {
-                            if (!pwField.text.length) return;
-                            view.sys.connectWifi(wifiPage.passwordFor, pwField.text);
+                            if (!pwField.text.length || (wifiPage.passwordSecurity === "eap" && !userField.text.length)) return;
+                            view.sys.connectWifi(wifiPage.passwordFor, pwField.text, userField.text, wifiPage.passwordSecurity);
                             wifiPage.passwordFor = "";
                             pwField.text = "";
+                            userField.text = "";
                             view.sys.holdOpen = false;
                         }
                         Layout.preferredWidth: 34; Layout.preferredHeight: 34
                         radius: 10
-                        color: pwField.text.length ? view.sys.colOn : Qt.rgba(1, 1, 1, 0.08)
+                        color: pwField.text.length && (wifiPage.passwordSecurity !== "eap" || userField.text.length)
+                               ? view.sys.colOn : Qt.rgba(1, 1, 1, 0.08)
                         Behavior on color { ColorAnimation { duration: 150 } }
                         scale: connectMa.pressed ? 0.94 : (connectMa.containsMouse ? 1.05 : 1.0)
                         Behavior on scale { NumberAnimation { duration: 140; easing.type: Easing.OutCubic } }
@@ -2799,7 +2813,7 @@ Item {
                         accentColor: view.sys.colWifi
                         icon: model.quality > 66 ? "󰤨" : model.quality > 33 ? "󰤥" : "󰤟"
                         title: model.ssid
-                        sub: (model.security === "open" ? view.sys.tr("Открытая") : view.sys.tr("Защищённая"))
+                        sub: (model.security === "open" ? view.sys.tr("Открытая") : model.security === "eap" ? view.sys.tr("Корпоративная") : view.sys.tr("Защищённая"))
                              + " · " + model.quality + "%"
                              + (model.known ? view.sys.tr(" · сохранена") : "")
                         highlight: model.connected
@@ -2810,6 +2824,7 @@ Item {
                                 view.sys.connectWifi(model.ssid, "");
                             } else {
                                 wifiPage.passwordFor = model.ssid;
+                                wifiPage.passwordSecurity = model.security;
                                 view.sys.holdOpen = true;
                                 pwFocus.restart();
                             }
@@ -2836,7 +2851,7 @@ Item {
                 font { family: view.sys.fontFam; pixelSize: 11 }
             }
 
-            Timer { id: pwFocus; interval: 80; onTriggered: pwField.forceActiveFocus() }
+            Timer { id: pwFocus; interval: 80; onTriggered: (wifiPage.passwordSecurity === "eap" ? userField : pwField).forceActiveFocus() }
 
         }
 

@@ -12,6 +12,8 @@ Item {
     implicitWidth: 680
     implicitHeight: 560
 
+    readonly property bool isEn: view.sys ? (view.sys.languageCode ? view.sys.languageCode !== "ru" : view.sys.isEn) : true
+
     function dayName(dateStr, idx) {
         if (idx === 0) return view.sys.tr("Сегодня");
         if (idx === 1) return view.sys.tr("Завтра");
@@ -25,8 +27,8 @@ Item {
         var monthsRu = ["янв", "фев", "мар", "апр", "мая", "июн", "июл", "авг", "сен", "окт", "ноя", "дек"];
         var monthsEn = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
         var monthsEs = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
-        var dayArr = view.sys.isEs ? daysEs : (view.sys.isEn ? daysEn : daysRu);
-        var monArr = view.sys.isEs ? monthsEs : (view.sys.isEn ? monthsEn : monthsRu);
+        var dayArr = view.sys.isEs ? daysEs : (view.isEn ? daysEn : daysRu);
+        var monArr = view.sys.isEs ? monthsEs : (view.isEn ? monthsEn : monthsRu);
         return dayArr[d.getDay()] + ", " + d.getDate() + " " + monArr[d.getMonth()];
     }
 

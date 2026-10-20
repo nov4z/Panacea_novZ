@@ -253,6 +253,9 @@ PanelWindow {
             // и то же расстояние по экрану. То, ради чего в играх выключают
             // «повышенную точность установки указателя».
             property bool   mouseRaw: false
+            property string keyboardLayouts: "us,ru"
+            property string keyboardVariants: ","
+            property string keyboardOptions: "grp:alt_shift_toggle"
 
             // Включённые функции. При установке дотфайлов целиком доступно всё
             // (по умолчанию true); установщик острова выключает то, что человек
@@ -302,6 +305,9 @@ PanelWindow {
             // поверх обоев и меняют вид рабочего стола, а такое включают
             // сами, а не обнаруживают после обновления.
             property bool   featWidgets: false
+            property bool   systemLoadOnIsland: false
+            // JSON string: {"Turkish":"TR","Russian":"RU"}
+            property string keyboardLayoutMap: ""
             // ---------------------------------------------- Material You Colors
             property string m3ColorMode: "wallpaper"   // "wallpaper" | "music" | "manual"
             property string m3ManualColor: "#e08096"
@@ -345,6 +351,59 @@ PanelWindow {
             property string bind_packWorkspaces: "SUPER + SHIFT + A"
             property string bind_emptyWorkspace: "SUPER + Space"
             property string bind_specialWorkspace: "SUPER + S"
+            property string bind_workspace1: "SUPER + 1"
+            property string bind_workspace2: "SUPER + 2"
+            property string bind_workspace3: "SUPER + 3"
+            property string bind_workspace4: "SUPER + 4"
+            property string bind_workspace5: "SUPER + 5"
+            property string bind_workspace6: "SUPER + 6"
+            property string bind_workspace7: "SUPER + 7"
+            property string bind_workspace8: "SUPER + 8"
+            property string bind_workspace9: "SUPER + 9"
+            property string bind_workspace10: "SUPER + 0"
+            property string bind_moveWorkspace1: "SUPER + SHIFT + 1"
+            property string bind_moveWorkspace2: "SUPER + SHIFT + 2"
+            property string bind_moveWorkspace3: "SUPER + SHIFT + 3"
+            property string bind_moveWorkspace4: "SUPER + SHIFT + 4"
+            property string bind_moveWorkspace5: "SUPER + SHIFT + 5"
+            property string bind_moveWorkspace6: "SUPER + SHIFT + 6"
+            property string bind_moveWorkspace7: "SUPER + SHIFT + 7"
+            property string bind_moveWorkspace8: "SUPER + SHIFT + 8"
+            property string bind_moveWorkspace9: "SUPER + SHIFT + 9"
+            property string bind_moveWorkspace10: "SUPER + SHIFT + 0"
+            property string bind_lockScreen: "SUPER + L"
+            property string bind_closeMouse: "mouse:277"
+            property string bind_focusLeft: "SUPER + left"
+            property string bind_focusRight: "SUPER + right"
+            property string bind_focusUp: "SUPER + up"
+            property string bind_focusDown: "SUPER + down"
+            property string bind_moveLeft: "SUPER + SHIFT + left"
+            property string bind_moveRight: "SUPER + SHIFT + right"
+            property string bind_moveUp: "SUPER + SHIFT + up"
+            property string bind_moveDown: "SUPER + SHIFT + down"
+            property string bind_resizeRight: "ALT + right"
+            property string bind_resizeLeft: "ALT + left"
+            property string bind_resizeUp: "ALT + up"
+            property string bind_resizeDown: "ALT + down"
+            property string bind_workspaceNext: "SUPER + mouse_down"
+            property string bind_workspacePrevious: "SUPER + mouse_up"
+            property string bind_dragWindow: "SUPER + mouse:272"
+            property string bind_resizeWindowMouse: "SUPER + mouse:273"
+            property string bind_micMute: "XF86AudioMicMute"
+            property string bind_volumeUp: "XF86AudioRaiseVolume"
+            property string bind_volumeDown: "XF86AudioLowerVolume"
+            property string bind_volumeMute: "XF86AudioMute"
+            property string bind_brightnessUp: "XF86MonBrightnessUp"
+            property string bind_brightnessDown: "XF86MonBrightnessDown"
+            property string bind_mediaNextAlt: "SUPER + XF86AudioRaiseVolume"
+            property string bind_mediaPreviousAlt: "SUPER + XF86AudioLowerVolume"
+            property string bind_mediaNext: "XF86AudioNext"
+            property string bind_mediaPause: "XF86AudioPause"
+            property string bind_mediaPlay: "XF86AudioPlay"
+            property string bind_mediaPrevious: "XF86AudioPrev"
+            property string bind_lidOn: "switch:on:Lid Switch"
+            property string bind_lidOff: "switch:off:Lid Switch"
+            property string bind_powerCycle: "SUPER + ALT + P"
             property string bind_pillHide: "SUPER + H"
             property string bind_pillRotateCenter: "SUPER + SHIFT + H"
             property string bind_pillToggleNotch: "SUPER + N"
@@ -386,6 +445,58 @@ PanelWindow {
         packWorkspaces: "SUPER + SHIFT + A",
         emptyWorkspace: "SUPER + Space",
         specialWorkspace: "SUPER + S",
+        lockScreen:     "SUPER + L",
+        workspace1: "SUPER + 1",
+        workspace2: "SUPER + 2",
+        workspace3: "SUPER + 3",
+        workspace4: "SUPER + 4",
+        workspace5: "SUPER + 5",
+        workspace6: "SUPER + 6",
+        workspace7: "SUPER + 7",
+        workspace8: "SUPER + 8",
+        workspace9: "SUPER + 9",
+        workspace10: "SUPER + 0",
+        moveWorkspace1: "SUPER + SHIFT + 1",
+        moveWorkspace2: "SUPER + SHIFT + 2",
+        moveWorkspace3: "SUPER + SHIFT + 3",
+        moveWorkspace4: "SUPER + SHIFT + 4",
+        moveWorkspace5: "SUPER + SHIFT + 5",
+        moveWorkspace6: "SUPER + SHIFT + 6",
+        moveWorkspace7: "SUPER + SHIFT + 7",
+        moveWorkspace8: "SUPER + SHIFT + 8",
+        moveWorkspace9: "SUPER + SHIFT + 9",
+        moveWorkspace10: "SUPER + SHIFT + 0",
+        closeMouse: "mouse:277",
+        focusLeft: "SUPER + left",
+        focusRight: "SUPER + right",
+        focusUp: "SUPER + up",
+        focusDown: "SUPER + down",
+        moveLeft: "SUPER + SHIFT + left",
+        moveRight: "SUPER + SHIFT + right",
+        moveUp: "SUPER + SHIFT + up",
+        moveDown: "SUPER + SHIFT + down",
+        resizeRight: "ALT + right",
+        resizeLeft: "ALT + left",
+        resizeUp: "ALT + up",
+        resizeDown: "ALT + down",
+        workspaceNext: "SUPER + mouse_down",
+        workspacePrevious: "SUPER + mouse_up",
+        dragWindow: "SUPER + mouse:272",
+        resizeWindowMouse: "SUPER + mouse:273",
+        micMute: "XF86AudioMicMute",
+        volumeUp: "XF86AudioRaiseVolume",
+        volumeDown: "XF86AudioLowerVolume",
+        volumeMute: "XF86AudioMute",
+        brightnessUp: "XF86MonBrightnessUp",
+        brightnessDown: "XF86MonBrightnessDown",
+        mediaNextAlt: "SUPER + XF86AudioRaiseVolume",
+        mediaPreviousAlt: "SUPER + XF86AudioLowerVolume",
+        mediaNext: "XF86AudioNext",
+        mediaPause: "XF86AudioPause",
+        mediaPlay: "XF86AudioPlay",
+        mediaPrevious: "XF86AudioPrev",
+        lidOn: "switch:on:Lid Switch",
+        lidOff: "switch:off:Lid Switch",
         pillHide: "SUPER + H",
         pillRotateCenter: "SUPER + SHIFT + H",
         pillToggleNotch: "SUPER + N",
@@ -394,6 +505,7 @@ PanelWindow {
     })
 
     readonly property var cfg: cfgFile.adapter
+    Binding { target: Compositor; property: "keyboardLayoutMap"; value: root.cfg.keyboardLayoutMap }
     function saveCfgNow() { cfgFile.writeAdapter(); }
 
     // Заводские значения всего, что правится в окне настроек. Сочетания
@@ -422,9 +534,10 @@ PanelWindow {
         ccGlowSliders: true, ccShowBatteryWave: true,
         vaultCapture: true,
         vibrance: 50, mouseSens: 0, mouseRaw: false,
+        keyboardLayouts: "us,ru", keyboardVariants: ",", keyboardOptions: "grp:alt_shift_toggle",
         recFps: 60, recDir: "~/Videos", recSysAudio: false, recMic: false, recMicDevice: "",
         weatherKey: "", weatherCity: "", weatherUnits: "metric",
-        weatherOnIsland: true, featWidgets: false, termAlpha: 0.90,
+        weatherOnIsland: true, systemLoadOnIsland: false, keyboardLayoutMap: "", featWidgets: false, termAlpha: 0.90,
         braveReturnDelay: 1000, notchSectionGap: 10, notchBatteryGap: 8, notchClockPad: 0,
         musicArtSize: 26, musicWaveSens: 100, musicCoverRadius: 7,
         musicCoverBounce: true, musicCoverRipple: true, musicCoverRippleShape: 0,
@@ -577,6 +690,41 @@ PanelWindow {
     // Через hyprctl eval по той же причине, что и настройки мониторов:
     // keyword не-legacy парсер молча отвергает, выходя с нулевым кодом.
     Process { id: pInput; property string args: ""; command: ["sh", "-c", pInput.args] }
+    Process {
+        id: pGenInput
+        command: [root.scriptDir + "/geninput.sh"]
+        stderr: StdioCollector {
+            onStreamFinished: {
+                var message = String(text).trim();
+                if (message.length) root.keyboardInputError = message;
+            }
+        }
+    }
+    property bool keyboardInputPending: false
+    property string keyboardInputError: ""
+    function applyKeyboardLayouts(layouts, variants, options) {
+        var l = String(layouts).replace(/\s+/g, "");
+        var v = String(variants).replace(/\s+/g, "");
+        var o = String(options).replace(/\s+/g, "");
+        if (!/^[A-Za-z0-9_,+-]+$/.test(l) || l[0] === "," || l[l.length - 1] === "," || l.indexOf(",,") >= 0
+                || !/^[A-Za-z0-9_,+-]*$/.test(v) || !/^[A-Za-z0-9_,:+-]*$/.test(o)) {
+            root.keyboardInputError = root.tr("Некорректные коды раскладок или параметры переключения");
+            return false;
+        }
+        var count = l.split(",").length;
+        if (/^,*$/.test(v)) v = Array(count).join(",");
+        if (v.split(",").length !== count) {
+            root.keyboardInputError = root.tr("Число вариантов должно совпадать с числом раскладок");
+            return false;
+        }
+        root.keyboardInputError = "";
+        root.cfg.keyboardLayouts = l;
+        root.cfg.keyboardVariants = v;
+        root.cfg.keyboardOptions = o;
+        root.keyboardInputPending = true;
+        root.saveCfg();
+        return true;
+    }
     function applyInput() {
         var lua = "hl.config({ input = { sensitivity = "
                 + Number(root.cfg.mouseSens).toFixed(3)
@@ -668,15 +816,18 @@ PanelWindow {
         }
     }
 
-    // Перевод. Ключ — русский текст, поэтому исходники остаются читаемыми,
-    // а словарь нужен только для английского; сами строки — в Translations.qml.
+    // Russian is the source text. English and Turkish are bundled in Translations.qml;
+    // all other system locales fall back to English until a translation is added.
     readonly property Translations i18n: Translations {}
 
-    readonly property bool isEn: cfg.lang === "en"
-    readonly property bool isEs: cfg.lang === "es" || (!isEn && cfg.lang !== "ru")
+    readonly property string localeId: String(cfg.lang || "en")
+    readonly property string languageCode: localeId.split(/[_-]/)[0].toLowerCase()
+    readonly property bool isEn: languageCode === "en"
+    readonly property bool isEs: languageCode === "es" || (!isEn && languageCode !== "ru" && languageCode !== "tr")
     function tr(k) {
-        if (cfg.lang === "ru") return k;
-        if (i18n.es && i18n.es[k] !== undefined) return i18n.es[k];
+        if (root.languageCode === "ru") return k;
+        if ((root.languageCode === "es" || root.isEs) && i18n.es && i18n.es[k] !== undefined) return i18n.es[k];
+        if (root.languageCode === "tr" && i18n.tr && i18n.tr[k] !== undefined) return i18n.tr[k];
         if (i18n.en && i18n.en[k] !== undefined) return i18n.en[k];
         return k;
     }
@@ -854,6 +1005,14 @@ PanelWindow {
     // отдельная переменная, и скрипт её не трогает.
     property string sysLang: "en"
     property bool   sysLangPending: false
+    function canonicalLocale(value) {
+        if (value === "en") return "en_US";
+        if (value === "ru") return "ru_RU";
+        if (value === "tr") return "tr_TR";
+        if (value === "es") return "es_ES";
+        return String(value || "");
+    }
+    readonly property bool systemLocaleMatches: canonicalLocale(root.sysLang) === canonicalLocale(root.cfg.lang)
 
     Process {
         id: pLocaleGet
@@ -862,7 +1021,7 @@ PanelWindow {
         stdout: StdioCollector {
             onStreamFinished: {
                 var s = text.trim().split("\n").pop().trim();
-                if (s === "ru" || s === "en") root.sysLang = s;
+                if (s.length) root.sysLang = s;
             }
         }
     }
@@ -877,14 +1036,14 @@ PanelWindow {
     }
 
     function setLang(code) {
+        if (root.cfg.lang === code) return;
         // Оболочка переключается сразу, не дожидаясь пароля: её словарь
         // системного языка не касается, и ждать здесь нечего.
         root.cfg.lang = code;
         root.saveCfg();
 
         root.sysLangPending = true;
-        pLocaleSet.command = ["sh", "-c",
-            "pkexec " + Quickshell.env("HOME") + "/.config/panacea/scripts/locale.sh set " + code];
+        pLocaleSet.command = ["pkexec", Quickshell.env("HOME") + "/.config/panacea/scripts/locale.sh", "set", code];
         pLocaleSet.running = false;
         pLocaleSet.running = true;
     }
@@ -915,6 +1074,10 @@ PanelWindow {
     // уже переведённым — язык передаётся в запросе. Свои подписи оболочка
     // переключает сразу, а это одно осталось бы на прежнем языке до
     // следующего опроса, то есть до четверти часа.
+    onLocaleIdChanged: {
+        root.syncGreeterLocale();
+        if (root.cfg.featWidgets || root.cfg.weatherOnIsland) root.refreshWeather();
+    }
     onIsEnChanged: {
         root.syncGreeterLocale();
         if (root.cfg.featWidgets || root.cfg.weatherOnIsland) root.refreshWeather();
@@ -1006,7 +1169,7 @@ PanelWindow {
 
     // Номер версии оболочки: его правит автор при выпуске, а хеш коммита
     // рядом говорит, из какого состояния репозитория собрана сборка.
-    readonly property string version: "1.0.12"
+    readonly property string version: "1.0.14-novz"
 
     // ------------------------------------------------------------ обновление
     // Установленную версию помечает установщик (~/.config/panacea/.version),
@@ -1369,7 +1532,14 @@ PanelWindow {
     }
     Connections {
         target: cfgFile
-        function onSaved() { root.runGenBinds(); }
+        function onSaved() {
+            root.runGenBinds();
+            if (root.keyboardInputPending) {
+                root.keyboardInputPending = false;
+                pGenInput.running = false;
+                pGenInput.running = true;
+            }
+        }
     }
 
     // ---------------------------------------------------------------- палитра
@@ -2872,8 +3042,8 @@ PanelWindow {
     // Единица скорости ветра — она же подпись под числом в кружке, поэтому
     // переводится здесь, а не остаётся латиницей на русском интерфейсе.
     readonly property string weatherWindUnit:
-        root.cfg.weatherUnits === "imperial" ? ((root.isEn || root.isEs) ? "mph" : "миль/ч")
-                                             : ((root.isEn || root.isEs) ? "m/s" : "м/с")
+        root.cfg.weatherUnits === "imperial" ? (root.languageCode === "ru" ? "миль/ч" : "mph")
+                                             : (root.languageCode === "ru" ? "м/с" : root.languageCode === "tr" ? "m/sn" : "m/s")
 
     // Значок погоды знаком шрифта — для тем, где точечных значков нет.
     // Разбор кода тот же, что в DotIcon: первые две цифры — сама погода.
@@ -2935,7 +3105,7 @@ PanelWindow {
         pWeather.command = ["sh", "-c",
             root.scriptDir + "/weather.sh \"$1\" \"$2\" \"$3\" \"$4\"", "_",
             String(root.cfg.weatherKey), String(root.cfg.weatherCity),
-            String(root.cfg.weatherUnits), root.isEn ? "en" : "ru"];
+            String(root.cfg.weatherUnits), ["ru", "tr"].indexOf(root.languageCode) >= 0 ? root.languageCode : "en"];
         pWeather.running = false;
         pWeather.running = true;
     }
@@ -2980,7 +3150,7 @@ PanelWindow {
         pWeatherForecast.command = ["sh", "-c",
             root.scriptDir + "/weather_forecast.sh \"$1\" \"$2\" \"$3\" \"$4\"", "_",
             String(root.cfg.weatherKey), String(root.cfg.weatherCity),
-            String(root.cfg.weatherUnits), root.isEn ? "en" : "ru"];
+            String(root.cfg.weatherUnits), ["ru", "tr"].indexOf(root.languageCode) >= 0 ? root.languageCode : "en"];
         pWeatherForecast.running = false;
         pWeatherForecast.running = true;
     }
@@ -2995,16 +3165,26 @@ PanelWindow {
     property int loadGpu:  -1
     property int loadTempCpu: -1
     property int loadTempGpu: -1
+    property int loadDisk: -1
 
-    // Опрашиваем только пока панель раскрыта и только на той теме, где эта
-    // сводка есть. Постоянный процесс раз в две секунды ради чисел, которых
-    // никто не видит, — плата ни за что: скрипт будит nvidia-smi, а тот
-    // просыпается заметно дольше, чем читается файл.
-    readonly property bool loadWanted: root.expanded
+    // Опрашиваем пока панель раскрыта или включены настольные виджеты.
+    // На рабочем столе скрипт вызывается с флагом --fast без задержки сна
+    // и nvidia-smi, снимая только RAM и Disk за несколько миллисекунд.
+    readonly property bool loadWanted: root.expanded || root.cfg.featWidgets || root.cfg.systemLoadOnIsland
+
+    Connections {
+        target: root
+        function onExpandedChanged() {
+            if (root.expanded && root.loadWanted) {
+                pLoad.running = false;
+                pLoad.running = true;
+            }
+        }
+    }
 
     Process {
         id: pLoad
-        command: ["sh", "-c", Quickshell.env("HOME") + "/.config/panacea/scripts/sysload.sh"]
+        command: ["sh", "-c", Quickshell.env("HOME") + "/.config/panacea/scripts/sysload.sh" + ((root.expanded || root.cfg.systemLoadOnIsland) ? "" : " --fast")]
         stdout: StdioCollector {
             onStreamFinished: {
                 // Сборщик копит вывод всех запусков подряд, поэтому берём
@@ -3016,11 +3196,17 @@ PanelWindow {
                     s = String(s || "").trim();
                     return s.length ? (+s) : -1;
                 }
-                root.loadCpu = num(a[0]);
-                root.loadMem = num(a[1]);
-                root.loadGpu = num(a[2]);
-                root.loadTempCpu = num(a[3]);
-                root.loadTempGpu = num(a[4]);
+                if (root.expanded || root.cfg.systemLoadOnIsland) {
+                    root.loadCpu = num(a[0]);
+                    root.loadMem = num(a[1]);
+                    root.loadGpu = num(a[2]);
+                    root.loadTempCpu = num(a[3]);
+                    root.loadTempGpu = num(a[4]);
+                    root.loadDisk = num(a[5]);
+                } else {
+                    root.loadMem = num(a[1]);
+                    root.loadDisk = num(a[5]);
+                }
             }
         }
     }
@@ -4129,7 +4315,7 @@ PanelWindow {
     }
 
     // -------------------------------------------------- раскладка клавиатуры
-    property string kbLayout: Compositor.isNiri ? Compositor.keyboardLayout : "US"
+    property string kbLayout: Compositor.keyboardLayout
     Process {
         id: pKbLayout
         command: ["sh", "-c",
@@ -4139,7 +4325,7 @@ PanelWindow {
             onRead: line => {
                 var s = line.trim();
                 if (!s.length) return;
-                root.kbLayout = /rus/i.test(s) ? "RU" : "US";
+                Compositor.keyboardLayoutName = s;
             }
         }
     }
@@ -4181,30 +4367,13 @@ PanelWindow {
                 ? Qt.formatDateTime(d, "h:mm" + sec + " AP")
                 : Qt.formatDateTime(d, "HH:mm" + sec);
             root.secText = Qt.formatDateTime(d, "ss");
-            // формат даты и день недели перед ней — тоже из настроек
-            var esDays = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
-            var esMonths = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio",
-                            "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
-            var esMonthsShort = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
-            var wDay = root.cfg.clockWeekday ? (esDays[d.getDay()] + ", ") : "";
-            var isShortMonth = !root.cfg.clockDateFmt || root.cfg.clockDateFmt.indexOf("MMMM") === -1;
-            var mStr = isShortMonth ? (esMonthsShort[d.getMonth()] + ".") : esMonths[d.getMonth()];
-            root.dateLong = wDay + d.getDate() + " de " + mStr + " de " + d.getFullYear();
-            root.dayText = (root.cfg.lang === "es")
-                ? ["dom.","lun.","mar.","mié.","jue.","vie.","sáb."][d.getDay()]
-                : root.isEn
-                ? ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][d.getDay()]
-                : ["Вс","Пн","Вт","Ср","Чт","Пт","Сб"][d.getDay()];
+            var dateLocale = Qt.locale(root.cfg.lang === "en" ? "en_US" : root.cfg.lang === "ru" ? "ru_RU" : root.cfg.lang === "tr" ? "tr_TR" : root.cfg.lang === "es" ? "es_ES" : root.cfg.lang);
+            root.dateLong = (root.cfg.clockWeekday ? d.toLocaleDateString(dateLocale, "dddd") + ", " : "")
+                + d.toLocaleDateString(dateLocale, root.cfg.clockDateFmt || "d MMMM");
+            root.dayText = dateLocale.dayName(d.getDay(), Locale.ShortFormat);
             root.dayNum = String(d.getDate());
             root.weekend = d.getDay() === 0 || d.getDay() === 6;
-            root.monthText = (root.cfg.lang === "es")
-                ? ["enero","febrero","marzo","abril","mayo","junio","julio",
-                   "agosto","septiembre","octubre","noviembre","diciembre"][d.getMonth()]
-                : root.isEn
-                ? ["January","February","March","April","May","June","July",
-                   "August","September","October","November","December"]
-                : ["Январь","Февраль","Март","Апрель","Май","Июнь","Июль",
-                   "Август","Сентябрь","Октябрь","Ноябрь","Декабрь"][d.getMonth()];
+            root.monthText = dateLocale.monthName(d.getMonth(), Locale.LongFormat);
         }
     }
 
@@ -4275,13 +4444,20 @@ PanelWindow {
         command: ["sh", "-c", root.wifiScript + " toggle"]
         onRunningChanged: if (!running) pWifiStatus.running = true
     }
+    property string wifiConnectingSsid: ""
     Process {
         id: pWifiConnect
         onRunningChanged: {
             if (running) return;
             root.wifiBusy = false;
-            if (exitCode !== 0) root.wifiError = root.tr("Не удалось подключиться");
-            else { root.wifiError = ""; root.page = "main"; }
+            if (exitCode !== 0) {
+                root.wifiError = root.tr("Не удалось подключиться");
+                root.wifiConnectingSsid = "";
+            } else {
+                root.wifiError = "";
+                if (root.wifiConnectingSsid.length > 0) root.wifiSsid = root.wifiConnectingSsid;
+                root.page = "main";
+            }
             root.refreshWifiStatus();
             // iwctl возвращается раньше, чем соединение поднялось: сразу после
             // него `iw dev link` ещё пуст, и панель показывала подключённую
@@ -4304,6 +4480,7 @@ PanelWindow {
         onTriggered: {
             root.refreshWifiStatus();
             if (root.wifiSsid.length || ++wifiSettleTimer.tries > 6) {
+                if (root.wifiSsid.length > 0) root.wifiConnectingSsid = "";
                 wifiSettleTimer.tries = 0;
                 wifiSettleTimer.stop();
             }
@@ -4345,10 +4522,13 @@ PanelWindow {
     }
     Timer { id: wifiRescanTimer; interval: 2600; onTriggered: root.refreshWifiList() }
 
-    function connectWifi(ssid, password) {
+    function connectWifi(ssid, password, username, security) {
+        root.wifiConnectingSsid = ssid;
         root.wifiBusy = true;
         root.wifiError = "";
-        pWifiConnect.command = password && password.length
+        pWifiConnect.command = security === "eap"
+            ? ["sh", "-c", root.wifiScript + " connect \"$1\" \"$2\" \"$3\" eap", "_", ssid, password, username]
+            : password && password.length
             ? ["sh", "-c", root.wifiScript + " connect \"$1\" \"$2\"", "_", ssid, password]
             : ["sh", "-c", root.wifiScript + " connect \"$1\"", "_", ssid];
         pWifiConnect.running = true;
@@ -7996,7 +8176,7 @@ PanelWindow {
             // текущая раскладка: перелистывается при Alt+Shift
             FlipText {
                 value: root.kbLayout
-                textColor: root.kbLayout === "RU" ? root.tint("#7FB3FF") : root.colMuted
+                textColor: root.colFg
                 fontFam: root.fontFam
                 pixelSize: root.fontSize - 2
                 Layout.alignment: Qt.AlignVCenter
@@ -8250,6 +8430,14 @@ PanelWindow {
                     id: modernRight
                     Layout.alignment: Qt.AlignVCenter
                     spacing: 14
+
+                    Text {
+                        visible: root.cfg.systemLoadOnIsland && (root.loadCpu >= 0 || root.loadGpu >= 0)
+                        text: (root.loadCpu >= 0 ? "CPU " + root.loadCpu + "%" + (root.loadTempCpu >= 0 ? " " + root.loadTempCpu + "°" : "") : "")
+                            + (root.loadGpu >= 0 ? "  GPU " + root.loadGpu + "%" + (root.loadTempGpu >= 0 ? " " + root.loadTempGpu + "°" : "") : "")
+                        color: root.colFg
+                        font { family: root.fontFam; pixelSize: root.fontSize - 5 }
+                    }
 
                     // 1. Red / Сеть (кабель или Wi-Fi)
                     Item {
@@ -8753,6 +8941,14 @@ PanelWindow {
                     Layout.alignment: Qt.AlignVCenter
                     spacing: 14
 
+                    Text {
+                        visible: root.cfg.systemLoadOnIsland && (root.loadCpu >= 0 || root.loadGpu >= 0)
+                        text: (root.loadCpu >= 0 ? "CPU " + root.loadCpu + "%" + (root.loadTempCpu >= 0 ? " " + root.loadTempCpu + "°" : "") : "")
+                            + (root.loadGpu >= 0 ? "  GPU " + root.loadGpu + "%" + (root.loadTempGpu >= 0 ? " " + root.loadTempGpu + "°" : "") : "")
+                        color: root.colFg
+                        font { family: root.fontFam; pixelSize: root.fontSize - 5 }
+                    }
+
                     // 1. Сеть (кабель или Wi-Fi) с +padding
                     Item {
                         Layout.alignment: Qt.AlignVCenter
@@ -9081,8 +9277,16 @@ PanelWindow {
                 Text {
                     Layout.alignment: Qt.AlignHCenter
                     text: root.kbLayout
-                    color: root.kbLayout === "RU" ? root.tint("#7FB3FF") : root.colMuted
+                    color: root.colFg
                     font { family: root.fontFam; pixelSize: root.fontSize - 4; bold: true }
+                }
+                Text {
+                    Layout.alignment: Qt.AlignHCenter
+                    visible: root.cfg.systemLoadOnIsland && (root.loadCpu >= 0 || root.loadGpu >= 0)
+                    text: (root.loadCpu >= 0 ? "C" + root.loadCpu + "%" + (root.loadTempCpu >= 0 ? "/" + root.loadTempCpu + "°" : "") : "")
+                          + (root.loadGpu >= 0 ? " G" + root.loadGpu + "%" + (root.loadTempGpu >= 0 ? "/" + root.loadTempGpu + "°" : "") : "")
+                    color: root.colFg
+                    font { family: root.fontFam; pixelSize: root.fontSize - 5 }
                 }
                 ChargeBolt {
                     Layout.alignment: Qt.AlignHCenter

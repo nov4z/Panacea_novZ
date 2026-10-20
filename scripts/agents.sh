@@ -174,6 +174,7 @@ add() {
 add "$(claude_json || true)"
 add "$(other_agent codex        "Codex CLI"     "$(codex_plan)" || true)"
 add "$(other_agent gemini       "Gemini CLI"    || true)"
+add "$(other_agent antigravity  "Antigravity"   || true)"
 add "$(other_agent opencode     "OpenCode"      || true)"
 add "$(other_agent cursor-agent "Cursor Agent"  || true)"
 add "$(other_agent windsurf     "Windsurf"      || true)"

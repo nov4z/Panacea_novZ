@@ -24,6 +24,7 @@ TIER_MODULE_MAP = {
     7: "tests.test_challenger_m2_controls_dark_unibody",
     8: "tests.test_challenger_m2_lyrics",
     9: "tests.test_challenger_m3_radiant_bw",
+    10: "tests.test_challenger_m1_upstream_packaging",
 }
 
 

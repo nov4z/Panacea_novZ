@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
+import Quickshell.Io
 
 // Appearance. Тема задаёт палитру всей оболочки и ни от чего больше не
 // зависит: обои меняются сами по себе, цвет — сам по себе. Тема «Default»
@@ -9,6 +10,26 @@ ColumnLayout {
     id: page
 
     property var sys
+    property var localeOptions: [{ id: "es", text: "Español" }, { id: "en", text: "English" }, { id: "ru", text: "Русский" }, { id: "tr", text: "Türkçe" }]
+
+    Process {
+        command: [page.sys.scriptDir + "/locale.sh", "list"]
+        running: true
+        stdout: StdioCollector {
+            onStreamFinished: {
+                var options = [];
+                var lines = String(text).trim().split("\n");
+                for (var i = 0; i < lines.length; i++) {
+                    var parts = lines[i].split("|");
+                    if (parts.length !== 2 || !parts[0].length) continue;
+                    var locale = Qt.locale(parts[0]);
+                    var nativeName = locale && locale.name !== "C" ? locale.nativeLanguageName : "";
+                    options.push({ id: parts[0], text: nativeName ? nativeName + " · " + parts[0] : parts[1] });
+                }
+                if (options.length) page.localeOptions = options;
+            }
+        }
+    }
 
     Layout.fillWidth: true
     spacing: 12
@@ -60,14 +81,11 @@ ColumnLayout {
 
         SetLabel { sys: page.sys; text: page.sys.tr("Язык") }
 
-        SetSelect {
+        SetPick {
             sys: page.sys
             label: page.sys.tr("Язык системы")
-            options: [
-                { id: "es", text: "Español" },
-                { id: "en", text: "English" },
-                { id: "ru", text: "Русский" }
-            ]
+            options: page.localeOptions
+            searchable: true
             value: page.sys.cfg.lang
             onPicked: id => page.sys.setLang(id)
         }
@@ -76,9 +94,17 @@ ColumnLayout {
             Layout.fillWidth: true
             text: page.sys.sysLangPending
                   ? page.sys.tr("Меняем язык системы…")
-                  : (page.sys.sysLang !== page.sys.cfg.lang
+                  : (!page.sys.systemLocaleMatches
                      ? page.sys.tr("Оболочка уже на новом языке. Приложения и меню читают язык при входе — они переключатся после перезахода.")
                      : page.sys.tr("Оболочка переключается сразу. Приложения и меню — после перезахода: язык они читают при входе."))
+            color: page.sys.colMuted
+            wrapMode: Text.WordWrap
+            font { family: page.sys.fontBody; pixelSize: page.sys.fontSize - 4 }
+        }
+        Text {
+            Layout.fillWidth: true
+            visible: ["en", "ru", "tr", "es"].indexOf(page.sys.languageCode) < 0
+            text: page.sys.tr("Для этого языка нет перевода интерфейса Panacea. Пока используется английский; запросите перевод через issue на GitHub.")
             color: page.sys.colMuted
             wrapMode: Text.WordWrap
             font { family: page.sys.fontBody; pixelSize: page.sys.fontSize - 4 }

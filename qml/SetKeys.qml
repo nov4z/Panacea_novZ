@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
+import QtQuick.Controls
 import Quickshell.Io
 
 // Быстрые клавиши. Открывается отдельным окном по Super + /, а не разделом
@@ -26,11 +27,13 @@ ColumnLayout {
     function bindCombo(id) {
         bindRev;                     // зависимость для пересчёта
         var raw = page.bindDraft[id] !== undefined
-                  ? String(page.bindDraft[id])
-                  : (page.sys.cfg["bind_" + id] !== undefined
-                     ? String(page.sys.cfg["bind_" + id])
-                     : String(page.sys.defaultBinds[id] || ""));
+                  ? String(page.bindDraft[id]) : String(page.sys.cfg["bind_" + id] || "");
         return page.prettyCombo(raw);
+    }
+    function bindRaw(id) {
+        bindRev;
+        return page.bindDraft[id] !== undefined
+               ? String(page.bindDraft[id]) : String(page.sys.cfg["bind_" + id] || "");
     }
 
     // Hyprland знает клавиши по именам (slash, comma, period…), а человеку
@@ -262,22 +265,19 @@ ColumnLayout {
         id: brow
         property string bindId: ""
         property string label: ""
+        property bool manual: false
         readonly property bool capturing: page.capturingKey === brow.bindId
         readonly property string combo: page.bindCombo(brow.bindId)
         readonly property bool edited: page.bindChanged(brow.bindId)
 
-        // Строки делят высоту колонки между собой: карточка занимает почти
-        // весь экран, и без растяжения список сбивался бы к верхнему краю,
-        // оставляя под собой пустое поле. Потолок нужен, чтобы на высоком
-        // экране строки не разъезжались в разрежённый список.
+        // Keep each shortcut at a consistent height in the scrollable list.
         Layout.fillWidth: true
-        Layout.fillHeight: true
-        Layout.maximumHeight: 56
+        Layout.preferredHeight: 36
         spacing: 14
 
         Rectangle {
             id: box
-            Layout.preferredWidth: 176
+            Layout.preferredWidth: brow.manual ? 220 : 176
             Layout.preferredHeight: 32
             Layout.alignment: Qt.AlignVCenter
             radius: 9
@@ -298,14 +298,35 @@ ColumnLayout {
             }
 
             Text {
+                visible: !brow.manual
                 anchors.centerIn: parent
                 // во время захвата показываем то, что уже нажато
                 text: brow.capturing
                       ? (page.capturePreview.length ? page.capturePreview
-                                                    : page.sys.tr("Presione una combinación…"))
+                                                    : page.sys.tr("Нажмите сочетание…"))
                       : (brow.combo.length ? brow.combo : "—")
                 color: brow.combo.length || brow.capturing ? page.sys.colFg : page.sys.colMuted
                 font { family: page.sys.fontFam; pixelSize: page.sys.fontSize - 4; bold: true }
+            }
+
+            TextField {
+                id: manualCombo
+                visible: brow.manual
+                anchors.fill: parent
+                anchors.leftMargin: 8
+                anchors.rightMargin: 8
+                verticalAlignment: TextInput.AlignVCenter
+                text: page.bindRaw(brow.bindId)
+                color: page.sys.colFg
+                selectByMouse: true
+                background: null
+                font { family: page.sys.fontFam; pixelSize: page.sys.fontSize - 4 }
+                onEditingFinished: if (text.trim() !== page.bindRaw(brow.bindId)) page.setBind(brow.bindId, text.trim())
+            }
+
+            Connections {
+                target: page
+                function onBindRevChanged() { if (brow.manual) manualCombo.text = page.bindRaw(brow.bindId); }
             }
 
             // точка-отметка: сочетание изменено, но ещё не применено
@@ -321,6 +342,7 @@ ColumnLayout {
             MouseArea {
                 id: bMa
                 anchors.fill: parent
+                enabled: !brow.manual
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
                 onClicked: page.startCapture(brow.bindId)
@@ -370,45 +392,59 @@ ColumnLayout {
     // (столы по цифрам, фокус стрелками, мышь) отсюда убраны — в окне, где
     // каждая строка кликается, нечего показывать строки, которые не кликаются.
     //
-    // Прокрутки нет: две колонки по пятнадцать строк помещаются целиком, и
-    // строки растягиваются по высоте карточки, а не жмутся к верхнему краю.
     Layout.fillWidth: true
     spacing: 10
 
     Text {
         Layout.fillWidth: true
-        text: page.sys.tr("Haz clic en cualquier combinación para modificarla. × desactiva el atajo.")
-        color: Qt.rgba(1, 1, 1, 0.38)
+        text: page.sys.tr("Нажмите на сочетание, чтобы изменить. × убирает клавишу.")
+        color: Qt.rgba(1, 1, 1, 0.32)
         font { family: page.sys.fontBody; pixelSize: page.sys.fontSize - 4 }
     }
 
-    RowLayout {
+    Flickable {
+        id: bindScroll
         Layout.fillWidth: true
         Layout.fillHeight: true
+        clip: true
+        contentWidth: width
+        contentHeight: bindColumns.implicitHeight
+        boundsBehavior: Flickable.StopAtBounds
+        ScrollBar.vertical: SetScroll { sys: page.sys }
+
+        WheelHandler {
+            acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
+            onWheel: event => {
+                var max = Math.max(0, bindScroll.contentHeight - bindScroll.height);
+                bindScroll.contentY = Math.max(0, Math.min(max, bindScroll.contentY - event.angleDelta.y));
+            }
+        }
+
+    RowLayout {
+        id: bindColumns
+        width: bindScroll.width - 12
         spacing: 26
 
         ColumnLayout {
             Layout.fillWidth: true
-            Layout.fillHeight: true
             Layout.preferredWidth: 1     // делим поровну, а не по содержимому
             spacing: 9
 
-            Head { text: page.sys.tr("Isla Dinámica") }
-            BindRow { bindId: "pillDock";      label: page.sys.tr("Dock de aplicaciones") }
-            BindRow { bindId: "pillLauncher";  label: page.sys.tr("Lanzador de aplicaciones") }
-            BindRow { bindId: "overview";      label: page.sys.tr("Vista general de escritorios") }
-            BindRow { bindId: "pillControls";  label: page.sys.tr("Centro de control (Wi-Fi, BT, volumen)") }
-            BindRow { bindId: "pillSettings";  label: page.sys.tr("Ajustes del sistema (Super+I)") }
-            BindRow { bindId: "pillShortcuts"; label: page.sys.tr("Atajos de teclado (Super+')") }
-            BindRow { bindId: "pillWifi";      label: page.sys.tr("Redes Wi-Fi disponibles") }
-            BindRow { bindId: "pillBt";        label: page.sys.tr("Dispositivos Bluetooth") }
-            BindRow { bindId: "pillClip";      label: page.sys.tr("Historial del portapapeles") }
-            BindRow { bindId: "pillPower";     label: page.sys.tr("Menú de apagado y sesión") }
-            BindRow { bindId: "pillRecord";    label: page.sys.tr("Grabación de pantalla") }
-            BindRow { bindId: "voxDictate";    label: page.sys.tr("Dictado de voz a texto (Voxtype)") }
-            BindRow { bindId: "pillNotif";     label: page.sys.tr("Historial de notificaciones") }
-            BindRow { bindId: "fileManager";   label: page.sys.tr("Explorador de archivos (Panacea)") }
-            BindRow { bindId: "pillVault";     label: page.sys.tr("Gestor de contraseñas (Vault)") }
+            Head { text: page.sys.tr("Пилюля") }
+            BindRow { bindId: "pillLauncher";  label: page.sys.tr("Лаунчер приложений") }
+            BindRow { bindId: "overview";      label: page.sys.tr("Обзор столов") }
+            BindRow { bindId: "pillControls";  label: page.sys.tr("Wi-Fi, Bluetooth, питание") }
+            BindRow { bindId: "pillSettings";  label: page.sys.tr("Эти настройки") }
+            BindRow { bindId: "pillShortcuts"; label: page.sys.tr("Быстрые клавиши") }
+            BindRow { bindId: "pillWifi";      label: page.sys.tr("Список сетей") }
+            BindRow { bindId: "pillBt";        label: page.sys.tr("Устройства Bluetooth") }
+            BindRow { bindId: "pillClip";      label: page.sys.tr("Буфер обмена") }
+            BindRow { bindId: "pillPower";     label: page.sys.tr("Меню питания") }
+            BindRow { bindId: "pillRecord";    label: page.sys.tr("Запись экрана") }
+            BindRow { bindId: "voxDictate";    label: page.sys.tr("Голос в текст"); manual: true }
+            BindRow { bindId: "pillNotif";     label: page.sys.tr("Уведомления") }
+            BindRow { bindId: "fileManager";   label: page.sys.tr("Проводник") }
+            BindRow { bindId: "pillVault";     label: page.sys.tr("Менеджер паролей") }
 
             Head { text: page.sys.tr("Notch y Rendimiento") }
             BindRow { bindId: "pillHide";         label: page.sys.tr("Ocultar / mostrar notch") }
@@ -416,39 +452,93 @@ ColumnLayout {
             BindRow { bindId: "pillRotateCenter"; label: page.sys.tr("Rotar información del centro") }
             BindRow { bindId: "pillMusic";        label: page.sys.tr("Menú extendido de música") }
             BindRow { bindId: "powerCycle";       label: page.sys.tr("Perfil de Rendimiento (Lenovo Fn+Q)") }
+
+            Head { text: page.sys.tr("Система") }
+            BindRow { bindId: "lockScreen"; label: page.sys.tr("Заблокировать экран") }
+            BindRow { bindId: "screenOff";  label: page.sys.tr("Погасить экран") }
+            BindRow { bindId: "exitHypr";   label: page.sys.tr("Выйти из Hyprland") }
+            BindRow { bindId: "themeSwitch"; label: page.sys.tr("Смена темы") }
+
+            Head { text: page.sys.tr("Рабочие столы") }
+            Repeater {
+                model: 10
+                BindRow {
+                    bindId: "workspace" + (index + 1)
+                    label: page.sys.tr("Перейти на стол") + " " + (index + 1)
+                }
+            }
+            BindRow { bindId: "workspaceNext"; label: page.sys.tr("Следующий рабочий стол"); manual: true }
+            BindRow { bindId: "workspacePrevious"; label: page.sys.tr("Предыдущий рабочий стол"); manual: true }
+
+            Head { text: page.sys.tr("Мультимедиа-клавиши") }
+            BindRow { bindId: "volumeUp"; label: page.sys.tr("Увеличить громкость"); manual: true }
+            BindRow { bindId: "volumeDown"; label: page.sys.tr("Уменьшить громкость"); manual: true }
+            BindRow { bindId: "volumeMute"; label: page.sys.tr("Выключить звук"); manual: true }
+            BindRow { bindId: "micMute"; label: page.sys.tr("Выключить микрофон"); manual: true }
+            BindRow { bindId: "brightnessUp"; label: page.sys.tr("Увеличить яркость"); manual: true }
+            BindRow { bindId: "brightnessDown"; label: page.sys.tr("Уменьшить яркость"); manual: true }
+            BindRow { bindId: "mediaNext"; label: page.sys.tr("Следующий трек"); manual: true }
+            BindRow { bindId: "mediaPrevious"; label: page.sys.tr("Предыдущий трек"); manual: true }
+            BindRow { bindId: "mediaPlay"; label: page.sys.tr("Воспроизвести"); manual: true }
+            BindRow { bindId: "mediaPause"; label: page.sys.tr("Пауза"); manual: true }
+            BindRow { bindId: "mediaNextAlt"; label: page.sys.tr("Следующий трек (запасная)"); manual: true }
+            BindRow { bindId: "mediaPreviousAlt"; label: page.sys.tr("Предыдущий трек (запасная)"); manual: true }
+
+            Head { text: page.sys.tr("Крышка ноутбука") }
+            BindRow { bindId: "lidOn"; label: page.sys.tr("Закрытие крышки"); manual: true }
+            BindRow { bindId: "lidOff"; label: page.sys.tr("Открытие крышки"); manual: true }
         }
 
         ColumnLayout {
             Layout.fillWidth: true
-            Layout.fillHeight: true
             Layout.preferredWidth: 1
             spacing: 9
 
-            Head { text: page.sys.tr("Aplicaciones") }
-            BindRow { bindId: "terminal";       label: page.sys.tr("Terminal principal (Kitty)") }
-            BindRow { bindId: "terminalAlt";    label: page.sys.tr("Terminal secundaria (Super+Enter)") }
-            BindRow { bindId: "browser";        label: page.sys.tr("Navegador web (Brave)") }
-            BindRow { bindId: "fileManagerTui"; label: page.sys.tr("Explorador TUI en terminal (Yazi)") }
-            BindRow { bindId: "notes";          label: page.sys.tr("Bloc de notas") }
-            BindRow { bindId: "screenshot";     label: page.sys.tr("Captura de pantalla de área") }
-            BindRow { bindId: "themeSwitch";    label: page.sys.tr("Conmutar tema visual") }
+            Head { text: page.sys.tr("Приложения") }
+            BindRow { bindId: "terminal";       label: page.sys.tr("Терминал") }
+            BindRow { bindId: "terminalAlt";    label: page.sys.tr("Терминал (запасная)") }
+            BindRow { bindId: "browser";        label: page.sys.tr("Браузер") }
+            BindRow { bindId: "fileManagerTui"; label: page.sys.tr("Файлы в терминале") }
+            BindRow { bindId: "notes";          label: page.sys.tr("Заметки") }
+            BindRow { bindId: "screenshot";     label: page.sys.tr("Скриншот области") }
 
-            Head { text: page.sys.tr("Ventanas y Navegación") }
-            BindRow { bindId: "closeWindow"; label: page.sys.tr("Cerrar ventana activa (Smart close)") }
-            BindRow { bindId: "fullscreen";  label: page.sys.tr("Alternar pantalla completa") }
-            BindRow { bindId: "floatToggle"; label: page.sys.tr("Alternar ventana flotante") }
-            BindRow { bindId: "floatCenter"; label: page.sys.tr("Centrar ventana flotante") }
-            BindRow { bindId: "toggleSplit"; label: page.sys.tr("Cambiar orientación de división") }
+            Head { text: page.sys.tr("Окна") }
+            BindRow { bindId: "closeWindow"; label: page.sys.tr("Закрыть окно") }
+            BindRow { bindId: "fullscreen";  label: page.sys.tr("Во весь экран") }
+            BindRow { bindId: "floatToggle"; label: page.sys.tr("Плавающее окно") }
+            BindRow { bindId: "floatCenter"; label: page.sys.tr("Плавающее по центру") }
+            BindRow { bindId: "toggleSplit"; label: page.sys.tr("Сменить направление сплита") }
+            BindRow { bindId: "closeMouse"; label: page.sys.tr("Закрыть средней кнопкой"); manual: true }
+            BindRow { bindId: "dragWindow"; label: page.sys.tr("Перетащить окно"); manual: true }
+            BindRow { bindId: "resizeWindowMouse"; label: page.sys.tr("Размер окна мышью"); manual: true }
 
-            Head { text: page.sys.tr("Espacios de Trabajo") }
-            BindRow { bindId: "emptyWorkspace";   label: page.sys.tr("Ir a espacio de trabajo vacío") }
-            BindRow { bindId: "specialWorkspace"; label: page.sys.tr("Espacio especial (Magic)") }
-            BindRow { bindId: "packWorkspaces";   label: page.sys.tr("Reorganizar espacios consecutivos") }
+            Head { text: page.sys.tr("Навигация по окнам") }
+            BindRow { bindId: "focusLeft"; label: page.sys.tr("Фокус влево") }
+            BindRow { bindId: "focusRight"; label: page.sys.tr("Фокус вправо") }
+            BindRow { bindId: "focusUp"; label: page.sys.tr("Фокус вверх") }
+            BindRow { bindId: "focusDown"; label: page.sys.tr("Фокус вниз") }
+            BindRow { bindId: "moveLeft"; label: page.sys.tr("Переместить окно влево") }
+            BindRow { bindId: "moveRight"; label: page.sys.tr("Переместить окно вправо") }
+            BindRow { bindId: "moveUp"; label: page.sys.tr("Переместить окно вверх") }
+            BindRow { bindId: "moveDown"; label: page.sys.tr("Переместить окно вниз") }
+            BindRow { bindId: "resizeLeft"; label: page.sys.tr("Уменьшить ширину") }
+            BindRow { bindId: "resizeRight"; label: page.sys.tr("Увеличить ширину") }
+            BindRow { bindId: "resizeUp"; label: page.sys.tr("Уменьшить высоту") }
+            BindRow { bindId: "resizeDown"; label: page.sys.tr("Увеличить высоту") }
 
-            Head { text: page.sys.tr("Sistema y Hardware") }
-            BindRow { bindId: "screenOff"; label: page.sys.tr("Apagar pantalla (Super+Shift+F12)") }
-            BindRow { bindId: "exitHypr";  label: page.sys.tr("Cerrar sesión de Hyprland") }
+            Head { text: page.sys.tr("Рабочие столы") }
+            BindRow { bindId: "emptyWorkspace";   label: page.sys.tr("На пустой стол") }
+            Repeater {
+                model: 10
+                BindRow {
+                    bindId: "moveWorkspace" + (index + 1)
+                    label: page.sys.tr("Перенести окно на стол") + " " + (index + 1)
+                }
+            }
+            BindRow { bindId: "specialWorkspace"; label: page.sys.tr("Спецстол") }
+            BindRow { bindId: "packWorkspaces";   label: page.sys.tr("Собрать столы подряд") }
         }
+    }
     }
 
     // Nota informativa de hardware
@@ -490,13 +580,13 @@ ColumnLayout {
 
         SetButton {
             sys: page.sys
-            text: page.sys.tr("Restablecer")
+            text: page.sys.tr("Сбросить")
             onClicked: page.resetBinds()
         }
 
         SetButton {
             sys: page.sys
-            text: page.sys.tr("Aplicar")
+            text: page.sys.tr("Применить")
             primary: true
             enabled: page.dirty
             onClicked: page.applyBinds()

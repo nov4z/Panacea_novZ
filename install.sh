@@ -226,9 +226,13 @@ deploy_files() {
         for f in "$INSTALL_DIR/qml/"*.qml "$INSTALL_DIR/qml/Themes.js"; do
             [ -f "$f" ] && ln -sf "qml/$(basename "$f")" "$INSTALL_DIR/$(basename "$f")"
         done
-        ln -sf ../assets "$INSTALL_DIR/qml/assets" 2>/dev/null || true
-        ln -sf ../scripts "$INSTALL_DIR/qml/scripts" 2>/dev/null || true
-        ln -sf ../sounds "$INSTALL_DIR/qml/sounds" 2>/dev/null || true
+        ln -sfn ../assets "$INSTALL_DIR/qml/assets" 2>/dev/null || true
+        ln -sfn ../scripts "$INSTALL_DIR/qml/scripts" 2>/dev/null || true
+        ln -sfn ../sounds "$INSTALL_DIR/qml/sounds" 2>/dev/null || true
+    fi
+
+    if [ -x "$INSTALL_DIR/scripts/geninput.sh" ]; then
+        "$INSTALL_DIR/scripts/geninput.sh" >/dev/null 2>&1 || true
     fi
 
     log_success "Archivos desplegados y permisos configurados en $INSTALL_DIR"
@@ -281,11 +285,15 @@ setup_hyprland() {
     fi
 
     # Verificar si Quickshell está corriendo actualmente para recargar
-    if pgrep -x qs >/dev/null 2>&1; then
+    if pgrep -x qs >/dev/null 2>&1 || systemctl --user is-active --quiet quickshell.service 2>/dev/null; then
         if confirm "¿Deseas reiniciar Quickshell ahora para cargar la nueva versión?" "Y"; then
-            pkill -x qs || true
-            sleep 1
-            qs -c "$INSTALL_DIR" >/dev/null 2>&1 &
+            if systemctl --user is-active --quiet quickshell.service 2>/dev/null; then
+                systemctl --user restart quickshell.service
+            else
+                pkill -x qs || true
+                sleep 1
+                nohup qs -c "$INSTALL_DIR" >/dev/null 2>&1 &
+            fi
             log_success "Quickshell recargado con Panacea Shell V:NOVZ."
         fi
     fi

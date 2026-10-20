@@ -21,17 +21,19 @@ want_locale() {
         en) code=en_US ;;
         ru) code=ru_RU ;;
         tr) code=tr_TR ;;
+        es) code=es_ES ;;
+        *) code="${code%%.*}" ;;
     esac
     [[ "$code" =~ ^[a-z]{2,3}_[A-Z]{2}$ ]] || return 1
     loc="${code}.UTF-8"
-    if [ -r "$GEN" ] && ! grep -Fqx "$loc UTF-8" "$GEN" && ! grep -Fqx "# $loc UTF-8" "$GEN"; then
+    if [ -r "$GEN" ] && ! grep -Fqx "$loc UTF-8" "$GEN" && ! grep -Fqx "# $loc UTF-8" "$GEN" && ! grep -Eq "^#?\s*${loc}\s+UTF-8" "$GEN"; then
         return 1
     fi
     printf '%s\n' "$loc"
 }
 
 cmd_list() {
-    printf 'en|English\nru|Русский\ntr|Türkçe\n'
+    printf 'en|English\nru|Русский\ntr|Türkçe\nes|Español\n'
     if [ -r "$GEN" ]; then
         awk '$1 ~ /^#?[a-z]{2,3}_[A-Z]{2}\.UTF-8$/ && $2 == "UTF-8" {
             sub(/^#/, "", $1); sub(/\.UTF-8$/, "", $1); print $1 "|" $1
@@ -50,6 +52,7 @@ cmd_get() {
         en_US) echo en ;;
         ru_RU) echo ru ;;
         tr_TR) echo tr ;;
+        es_ES) echo es ;;
         *) printf '%s\n' "$cur" ;;
     esac
 }
