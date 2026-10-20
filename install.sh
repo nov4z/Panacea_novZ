@@ -381,9 +381,13 @@ CLEANCONF
         fi
     fi
 
-    # Verificar si Quickshell está corriendo actualmente para recargar
-    if pgrep -x qs >/dev/null 2>&1 || systemctl --user is-active --quiet quickshell.service 2>/dev/null; then
-        if confirm "¿Deseas reiniciar Quickshell ahora para cargar la nueva versión?" "Y"; then
+    # Iniciar o recargar Quickshell
+    if [ -n "$WAYLAND_DISPLAY" ] || [ "${XDG_SESSION_TYPE:-}" = "wayland" ]; then
+        local qs_action="iniciar"
+        if pgrep -x qs >/dev/null 2>&1 || systemctl --user is-active --quiet quickshell.service 2>/dev/null; then
+            qs_action="reiniciar"
+        fi
+        if confirm "¿Deseas $qs_action Quickshell ahora para cargar Panacea Shell V:NOVZ?" "Y"; then
             if systemctl --user is-active --quiet quickshell.service 2>/dev/null; then
                 systemctl --user restart quickshell.service
             else
@@ -391,7 +395,7 @@ CLEANCONF
                 sleep 1
                 setsid env QSG_RENDER_LOOP=threaded qs -c "$INSTALL_DIR" >/dev/null 2>&1 &
             fi
-            log_success "Quickshell recargado con Panacea Shell V:NOVZ."
+            log_success "Quickshell ejecutando Panacea Shell V:NOVZ."
         fi
     fi
 }

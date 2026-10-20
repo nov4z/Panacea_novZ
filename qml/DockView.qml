@@ -544,9 +544,10 @@ Item {
                         sourceSize.height: Math.round(height * 2)
                         source: {
                             if (!slot.modelData.icon) return "";
-                            if (slot.modelData.icon.indexOf("/") === 0) return "file://" + slot.modelData.icon;
-                            if (slot.modelData.icon.indexOf("file://") === 0) return slot.modelData.icon;
-                            return Quickshell.iconPath(slot.modelData.icon, true);
+                            var iconStr = String(slot.modelData.icon);
+                            if (iconStr.indexOf("/") === 0) return "file://" + iconStr;
+                            if (iconStr.indexOf("file://") === 0) return iconStr;
+                            return Quickshell.iconPath(iconStr, true);
                         }
                         fillMode: Image.PreserveAspectFit
                         asynchronous: true
