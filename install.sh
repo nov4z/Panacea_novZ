@@ -393,7 +393,7 @@ CLEANCONF
             else
                 pkill -x qs 2>/dev/null || true
                 sleep 1
-                setsid env QSG_RENDER_LOOP=threaded qs -c "$INSTALL_DIR" >/dev/null 2>&1 &
+                nohup env QSG_RENDER_LOOP=threaded qs -c "$INSTALL_DIR" </dev/null >/dev/null 2>&1 & disown
             fi
             log_success "Quickshell ejecutando Panacea Shell V:NOVZ."
         fi

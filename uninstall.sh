@@ -42,7 +42,7 @@ fi
 # Buscar respaldos disponibles
 backups=($(find "$CONFIG_BASE" -maxdepth 1 -type d -name "panacea.backup*" | sort -r))
 
-if [ ${#backups[@]} -gt 0 ]; then
+if [ ${#backups[@]} -gt 0 ] && [ "$UNATTENDED" != true ]; then
     echo -e "\n${CYAN}Se encontraron respaldos previos:${NC}"
     for i in "${!backups[@]}"; do
         echo "  [$i] ${backups[$i]}"
