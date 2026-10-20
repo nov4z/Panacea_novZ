@@ -212,7 +212,7 @@ FocusScope {
         RowLayout {
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignHCenter
-            spacing: 22
+            spacing: 16
 
             Item { Layout.fillWidth: true }
 
@@ -361,6 +361,71 @@ FocusScope {
                             view.sys.toggleMediaLyrics();
                         } else {
                             view.lyricsOpen = !view.lyricsOpen;
+                        }
+                    }
+                }
+            }
+
+            // Botón interactivo de detección de tempo y alineación BPM (⚡)
+            Rectangle {
+                id: islandTempoBtn
+                readonly property bool isM3: !!(sys && sys.themeMaterial)
+                readonly property bool active: spicyLyrics.tempoAlignEnabled
+                Layout.preferredWidth: 38
+                Layout.preferredHeight: 38
+                radius: 19
+                color: active
+                       ? (view.isMonochromeArt
+                          ? (tempoMa.containsMouse ? Qt.rgba(1, 1, 1, 0.35) : Qt.rgba(1, 1, 1, 0.25))
+                          : (isM3 ? sys.colOn : Qt.rgba(view.col1.r, view.col1.g, view.col1.b, 0.35)))
+                       : (tempoMa.containsMouse
+                          ? (view.isMonochromeArt ? Qt.rgba(1, 1, 1, 0.20) : (isM3 ? Qt.rgba(sys.colOn.r, sys.colOn.g, sys.colOn.b, 0.22) : Qt.rgba(1, 1, 1, 0.18)))
+                          : (view.isMonochromeArt ? Qt.rgba(1, 1, 1, 0.08) : (isM3 ? Qt.rgba(sys.colFg.r, sys.colFg.g, sys.colFg.b, 0.08) : Qt.rgba(1, 1, 1, 0.06))))
+                border.color: active
+                              ? (view.isMonochromeArt ? "#ffffff" : (isM3 ? sys.colOn : Qt.rgba(view.col1.r, view.col1.g, view.col1.b, 0.60)))
+                              : (view.isMonochromeArt ? Qt.rgba(1, 1, 1, 0.15) : (isM3 ? Qt.rgba(sys.colOn.r, sys.colOn.g, sys.colOn.b, 0.15) : Qt.rgba(1, 1, 1, 0.12)))
+                border.width: 1
+                scale: tempoMa.pressed ? 0.94 : (tempoMa.containsMouse ? 1.05 : 1.0)
+                Behavior on scale { NumberAnimation { duration: 140; easing.type: Easing.OutCubic } }
+                Behavior on color { ColorAnimation { duration: 160 } }
+                Behavior on border.color { ColorAnimation { duration: 160 } }
+
+                Text {
+                    anchors.centerIn: parent
+                    text: spicyLyrics.isDetectingTempo ? "󰑐" : (spicyLyrics.tempoAlignEnabled ? "⚡" : "󰐼")
+                    color: islandTempoBtn.active
+                           ? (view.isMonochromeArt
+                              ? "#ffffff"
+                              : (islandTempoBtn.isM3 ? (sys.colM3OnPrimary || "#ffffff") : "#ffffff"))
+                           : (view.isMonochromeArt ? (tempoMa.containsMouse ? "#ffffff" : Qt.rgba(1, 1, 1, 0.88)) : (tempoMa.containsMouse ? "#ffffff" : Qt.rgba(1, 1, 1, 0.82)))
+                    font { family: sys.fontFam; pixelSize: 18 }
+
+                    SequentialAnimation on rotation {
+                        running: spicyLyrics.isDetectingTempo
+                        loops: Animation.Infinite
+                        NumberAnimation { from: 0; to: 360; duration: 800 }
+                    }
+                }
+
+                MouseArea {
+                    id: tempoMa
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    acceptedButtons: Qt.LeftButton | Qt.RightButton
+                    onClicked: mouse => {
+                        if (!view.lyricsOpen) {
+                            if (view.sys && view.sys.toggleMediaLyrics) {
+                                view.sys.toggleMediaLyrics();
+                            } else {
+                                view.lyricsOpen = true;
+                            }
+                        }
+                        if (mouse.button === Qt.RightButton) {
+                            spicyLyrics.tempoAlignEnabled = !spicyLyrics.tempoAlignEnabled;
+                            spicyLyrics.updateActiveIndex();
+                        } else {
+                            spicyLyrics.detectTempo();
                         }
                     }
                 }

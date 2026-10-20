@@ -81,6 +81,7 @@ class TestSpicyLyricsComponentContracts(unittest.TestCase):
         cls.controls_qml = (QML_DIR / "ControlsView.qml").read_text(encoding="utf-8")
         cls.island_qml = (QML_DIR / "IslandMusicView.qml").read_text(encoding="utf-8")
         cls.shell_qml = (QML_DIR / "shell.qml").read_text(encoding="utf-8")
+        cls.translations_qml = (QML_DIR / "Translations.qml").read_text(encoding="utf-8")
 
     def test_01_spicy_lyrics_view_imports(self):
         """SpicyLyricsView.qml imports QtQuick, QtQuick.Layouts, QtQuick.Effects, Quickshell, Quickshell.Io."""
@@ -264,6 +265,30 @@ class TestSpicyLyricsComponentContracts(unittest.TestCase):
         self.assertIn("Detectar Tempo", self.lyrics_qml)
         self.assertIn("if (root.tempoAlignEnabled) pos += root.tempoOffsetSec;", self.lyrics_qml)
         self.assertIn("if (root.tempoAlignEnabled) leadPos += root.tempoOffsetSec;", self.lyrics_qml)
+
+    def test_23_spicy_lyrics_tempo_bar_root_visibility(self):
+        """tempoBar is elevated to root level in SpicyLyricsView.qml, ensuring it is visible across states."""
+        self.assertIn('visible: root.active && (root.trackTitle.length > 0 || root.status === "ok")', self.lyrics_qml)
+        self.assertIn("z: 30", self.lyrics_qml)
+
+    def test_24_island_music_view_tempo_button_accessibility(self):
+        """IslandMusicView.qml features dedicated islandTempoBtn connected to spicyLyrics.detectTempo."""
+        self.assertIn("id: islandTempoBtn", self.island_qml)
+        self.assertIn("spicyLyrics.tempoAlignEnabled", self.island_qml)
+        self.assertIn("spicyLyrics.detectTempo()", self.island_qml)
+
+    def test_25_controls_view_tempo_button_accessibility(self):
+        """ControlsView.qml features MediaBtn for BPM sync connected to spicyLyrics.detectTempo."""
+        self.assertIn("spicyLyrics.detectTempo()", self.controls_qml)
+        self.assertIn("primary: spicyLyrics.tempoAlignEnabled", self.controls_qml)
+
+    def test_26_battery_spanish_localization_and_clean_separator(self):
+        """Translations.qml and ControlsView.qml ensure battery status is cleanly localized without Russian text or missing spaces."""
+        self.assertIn('"От батареи": "En batería"', self.translations_qml)
+        self.assertIn('"Питание от сети": "Alimentación de red"', self.translations_qml)
+        self.assertIn('(view.sys.isEs ? "En batería" : view.sys.tr("От батареи"))', self.controls_qml)
+        self.assertIn('view.sys.profileLabel ? (" · " + view.sys.profileLabel) : ""', self.controls_qml)
+
 
 
 class TestSpicyLyricsSynchronizationLogic(unittest.TestCase):

@@ -1918,6 +1918,21 @@ Item {
                                 }
                             }
                         }
+                        MediaBtn {
+                            icon: spicyLyrics.isDetectingTempo ? "󰑐" : (spicyLyrics.tempoAlignEnabled ? "⚡" : "󰐼")
+                            primary: spicyLyrics.tempoAlignEnabled
+                            enabledAction: true
+                            onAct: {
+                                if (!mediaCard.lyricsOpen) {
+                                    if (view.sys && view.sys.toggleMediaLyrics) {
+                                        view.sys.toggleMediaLyrics();
+                                    } else {
+                                        mediaCard.lyricsOpen = true;
+                                    }
+                                }
+                                spicyLyrics.detectTempo();
+                            }
+                        }
                     }
 
                     // ------------------- полоса продолжительности с cava
@@ -2165,8 +2180,10 @@ Item {
                     icon: view.sys.batteryPresent ? view.sys.batteryLevelIcon
                                                   : String.fromCodePoint(0xF0241)
                     label: view.sys.batteryPresent ? (view.sys.batteryPct + "%") : view.sys.profileLabel
-                    sub: (view.sys.batteryCharging ? view.sys.tr("Заряжается") : (view.sys.acOnline ? (view.sys.isEs ? "Conectado" : view.sys.tr("От сети")) : ""))
-                         + ((view.sys.batteryCharging || view.sys.acOnline) ? " · " : "")
+                    sub: (view.sys.batteryCharging ? (view.sys.isEs ? "Cargando" : view.sys.tr("Заряжается"))
+                         : (view.sys.acOnline ? (view.sys.isEs ? "Conectado" : view.sys.tr("От сети"))
+                         : ""))
+                         + ((view.sys.batteryCharging || view.sys.acOnline) && view.sys.profileLabel ? " · " : "")
                          + view.sys.profileLabel
                     on: true
                     wave: true
@@ -2564,9 +2581,10 @@ Item {
                         }
                         Text {
                             Layout.fillWidth: true
-                            text: (view.sys.batteryCharging ? view.sys.tr("Заряжается") : (view.sys.acOnline ? (view.sys.isEs ? "Conectado" : view.sys.tr("От сети")) : view.sys.tr("От батареи")))
-                                  + ((view.sys.batteryCharging || view.sys.acOnline) ? " · " : "")
-                                  + view.sys.profileLabel
+                            text: (view.sys.batteryCharging ? (view.sys.isEs ? "Cargando" : view.sys.tr("Заряжается"))
+                                  : (view.sys.acOnline ? (view.sys.isEs ? "Conectado" : view.sys.tr("От сети"))
+                                  : (view.sys.isEs ? "En batería" : view.sys.tr("От батареи"))))
+                                  + (view.sys.profileLabel ? (" · " + view.sys.profileLabel) : "")
                             color: Qt.rgba(1, 1, 1, 0.85)
                             elide: Text.ElideRight
                             font { family: view.sys.fontFam; pixelSize: 11 }

@@ -566,6 +566,8 @@ QtObject {
         "Ёмкость": "Capacidad",
         "Износ": "Salud",
         "От сети": "Conectado a CA",
+        "От батареи": "En batería",
+        "Питание от сети": "Alimentación de red",
         "Заряжается": "Cargando",
         "Поиск приложений": "Buscar aplicaciones",
         "Сети": "Redes",

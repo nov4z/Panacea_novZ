@@ -523,156 +523,6 @@ Item {
         anchors.fill: parent
         visible: root.status === "ok" && root.isSynced
 
-        // Control flotante de detección y alineación de tempo (BPM Sync)
-        RowLayout {
-            id: tempoBar
-            anchors.top: parent.top
-            anchors.right: parent.right
-            anchors.topMargin: 4
-            anchors.rightMargin: 10
-            z: 20
-            spacing: 4
-
-            // Píldora interactiva de detección de tempo
-            Rectangle {
-                id: tempoBtn
-                implicitHeight: 22
-                implicitWidth: tempoRow.implicitWidth + 16
-                radius: 11
-                color: root.tempoAlignEnabled
-                       ? (tempoHover.hovered ? Qt.rgba(root.colAccent.r, root.colAccent.g, root.colAccent.b, 0.28) : Qt.rgba(root.colAccent.r, root.colAccent.g, root.colAccent.b, 0.18))
-                       : (tempoHover.hovered ? Qt.rgba(1, 1, 1, 0.16) : Qt.rgba(1, 1, 1, 0.08))
-                border.color: root.tempoAlignEnabled
-                              ? (root.isMonochrome ? Qt.rgba(1, 1, 1, 0.50) : Qt.rgba(root.colAccent.r, root.colAccent.g, root.colAccent.b, 0.50))
-                              : Qt.rgba(1, 1, 1, 0.15)
-                border.width: 1
-
-                Behavior on color { ColorAnimation { duration: 180 } }
-                Behavior on border.color { ColorAnimation { duration: 180 } }
-
-                RowLayout {
-                    id: tempoRow
-                    anchors.centerIn: parent
-                    spacing: 5
-
-                    Text {
-                        text: root.isDetectingTempo ? "󰑐" : (root.tempoAlignEnabled ? "⚡" : "󰎆")
-                        font.family: root.fontFam
-                        font.pixelSize: 10
-                        font.bold: true
-                        color: root.tempoAlignEnabled ? (root.isMonochrome ? "#ffffff" : root.glowColor) : root.colMuted
-
-                        SequentialAnimation on rotation {
-                            running: root.isDetectingTempo
-                            loops: Animation.Infinite
-                            NumberAnimation { from: 0; to: 360; duration: 800 }
-                        }
-                    }
-
-                    Text {
-                        text: {
-                            if (root.isDetectingTempo) return "Analizando tempo...";
-                            if (root.tempoAlignEnabled && root.detectedBpm > 0) {
-                                var off = Math.round((root.acousticLeadSec + root.tempoOffsetSec) * 1000);
-                                return root.detectedBpm + " BPM · " + off + "ms";
-                            }
-                            return "Detectar Tempo";
-                        }
-                        font.family: root.lyricsFontFam
-                        font.pixelSize: 10
-                        font.bold: true
-                        font.weight: Font.DemiBold
-                        font.letterSpacing: -0.1
-                        color: root.tempoAlignEnabled ? "#ffffff" : Qt.rgba(1, 1, 1, 0.70)
-                    }
-                }
-
-                HoverHandler { id: tempoHover; cursorShape: Qt.PointingHandCursor }
-
-                MouseArea {
-                    anchors.fill: parent
-                    cursorShape: Qt.PointingHandCursor
-                    acceptedButtons: Qt.LeftButton | Qt.RightButton
-                    onClicked: mouse => {
-                        if (mouse.button === Qt.RightButton) {
-                            root.tempoAlignEnabled = !root.tempoAlignEnabled;
-                            root.updateActiveIndex();
-                        } else {
-                            if (!root.tempoAlignEnabled || root.detectedBpm === 0) {
-                                root.detectTempo();
-                            } else {
-                                root.detectTempo();
-                            }
-                        }
-                    }
-                }
-            }
-
-            // Controles de micro-ajuste (±10 ms) cuando la alineación está activa
-            RowLayout {
-                spacing: 3
-                visible: root.tempoAlignEnabled
-
-                Rectangle {
-                    implicitWidth: 18
-                    implicitHeight: 22
-                    radius: 8
-                    color: minusHover.hovered ? Qt.rgba(1, 1, 1, 0.22) : Qt.rgba(1, 1, 1, 0.08)
-                    border.color: Qt.rgba(1, 1, 1, 0.14)
-                    border.width: 1
-
-                    Text {
-                        anchors.centerIn: parent
-                        text: "−"
-                        font.family: root.fontFam
-                        font.pixelSize: 10
-                        font.bold: true
-                        color: root.colFg
-                    }
-
-                    HoverHandler { id: minusHover; cursorShape: Qt.PointingHandCursor }
-                    MouseArea {
-                        anchors.fill: parent
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: {
-                            root.manualOffsetMs -= 10;
-                            root.tempoOffsetSec = root.tempoOffsetSec - 0.010;
-                            root.updateActiveIndex();
-                        }
-                    }
-                }
-
-                Rectangle {
-                    implicitWidth: 18
-                    implicitHeight: 22
-                    radius: 8
-                    color: plusHover.hovered ? Qt.rgba(1, 1, 1, 0.22) : Qt.rgba(1, 1, 1, 0.08)
-                    border.color: Qt.rgba(1, 1, 1, 0.14)
-                    border.width: 1
-
-                    Text {
-                        anchors.centerIn: parent
-                        text: "+"
-                        font.family: root.fontFam
-                        font.pixelSize: 10
-                        font.bold: true
-                        color: root.colFg
-                    }
-
-                    HoverHandler { id: plusHover; cursorShape: Qt.PointingHandCursor }
-                    MouseArea {
-                        anchors.fill: parent
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: {
-                            root.manualOffsetMs += 10;
-                            root.tempoOffsetSec = root.tempoOffsetSec + 0.010;
-                            root.updateActiveIndex();
-                        }
-                    }
-                }
-            }
-        }
-
         ListView {
             id: lyricsList
             anchors.fill: parent
@@ -975,7 +825,10 @@ Item {
         Flickable {
             id: plainFlick
             anchors.fill: parent
-            anchors.margins: 12
+            anchors.topMargin: 26
+            anchors.bottomMargin: 12
+            anchors.leftMargin: 12
+            anchors.rightMargin: 12
             clip: true
             contentWidth: width
             contentHeight: plainColumn.implicitHeight
@@ -1003,6 +856,157 @@ Item {
                     font.letterSpacing: -0.05
                     color: Qt.rgba(1, 1, 1, 0.85)
                     lineHeight: 1.45
+                }
+            }
+        }
+    }
+
+    // Control flotante de detección y alineación de tempo (BPM Sync)
+    RowLayout {
+        id: tempoBar
+        anchors.top: parent.top
+        anchors.right: parent.right
+        anchors.topMargin: 4
+        anchors.rightMargin: 10
+        z: 30
+        spacing: 4
+        visible: root.active && (root.trackTitle.length > 0 || root.status === "ok")
+
+        // Píldora interactiva de detección de tempo
+        Rectangle {
+            id: tempoBtn
+            implicitHeight: 22
+            implicitWidth: tempoRow.implicitWidth + 16
+            radius: 11
+            color: root.tempoAlignEnabled
+                   ? (tempoHover.hovered ? Qt.rgba(root.colAccent.r, root.colAccent.g, root.colAccent.b, 0.28) : Qt.rgba(root.colAccent.r, root.colAccent.g, root.colAccent.b, 0.18))
+                   : (tempoHover.hovered ? Qt.rgba(1, 1, 1, 0.16) : Qt.rgba(1, 1, 1, 0.08))
+            border.color: root.tempoAlignEnabled
+                          ? (root.isMonochrome ? Qt.rgba(1, 1, 1, 0.50) : Qt.rgba(root.colAccent.r, root.colAccent.g, root.colAccent.b, 0.50))
+                          : Qt.rgba(1, 1, 1, 0.15)
+            border.width: 1
+
+            Behavior on color { ColorAnimation { duration: 180 } }
+            Behavior on border.color { ColorAnimation { duration: 180 } }
+
+            RowLayout {
+                id: tempoRow
+                anchors.centerIn: parent
+                spacing: 5
+
+                Text {
+                    text: root.isDetectingTempo ? "󰑐" : (root.tempoAlignEnabled ? "⚡" : "󰎆")
+                    font.family: root.fontFam
+                    font.pixelSize: 10
+                    font.bold: true
+                    color: root.tempoAlignEnabled ? (root.isMonochrome ? "#ffffff" : root.glowColor) : root.colMuted
+
+                    SequentialAnimation on rotation {
+                        running: root.isDetectingTempo
+                        loops: Animation.Infinite
+                        NumberAnimation { from: 0; to: 360; duration: 800 }
+                    }
+                }
+
+                Text {
+                    text: {
+                        if (root.isDetectingTempo) return "Analizando tempo...";
+                        if (root.tempoAlignEnabled && root.detectedBpm > 0) {
+                            var off = Math.round((root.acousticLeadSec + root.tempoOffsetSec) * 1000);
+                            return root.detectedBpm + " BPM · " + off + "ms";
+                        }
+                        return "Detectar Tempo";
+                    }
+                    font.family: root.lyricsFontFam
+                    font.pixelSize: 10
+                    font.bold: true
+                    font.weight: Font.DemiBold
+                    font.letterSpacing: -0.1
+                    color: root.tempoAlignEnabled ? "#ffffff" : Qt.rgba(1, 1, 1, 0.70)
+                }
+            }
+
+            HoverHandler { id: tempoHover; cursorShape: Qt.PointingHandCursor }
+
+            MouseArea {
+                anchors.fill: parent
+                cursorShape: Qt.PointingHandCursor
+                acceptedButtons: Qt.LeftButton | Qt.RightButton
+                onClicked: mouse => {
+                    if (mouse.button === Qt.RightButton) {
+                        root.tempoAlignEnabled = !root.tempoAlignEnabled;
+                        root.updateActiveIndex();
+                    } else {
+                        if (!root.tempoAlignEnabled || root.detectedBpm === 0) {
+                            root.detectTempo();
+                        } else {
+                            root.detectTempo();
+                        }
+                    }
+                }
+            }
+        }
+
+        // Controles de micro-ajuste (±10 ms) cuando la alineación está activa
+        RowLayout {
+            spacing: 3
+            visible: root.tempoAlignEnabled
+
+            Rectangle {
+                implicitWidth: 18
+                implicitHeight: 22
+                radius: 8
+                color: minusHover.hovered ? Qt.rgba(1, 1, 1, 0.22) : Qt.rgba(1, 1, 1, 0.08)
+                border.color: Qt.rgba(1, 1, 1, 0.14)
+                border.width: 1
+
+                Text {
+                    anchors.centerIn: parent
+                    text: "−"
+                    font.family: root.fontFam
+                    font.pixelSize: 10
+                    font.bold: true
+                    color: root.colFg
+                }
+
+                HoverHandler { id: minusHover; cursorShape: Qt.PointingHandCursor }
+                MouseArea {
+                    anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: {
+                        root.manualOffsetMs -= 10;
+                        root.tempoOffsetSec = root.tempoOffsetSec - 0.010;
+                        root.updateActiveIndex();
+                    }
+                }
+            }
+
+            Rectangle {
+                implicitWidth: 18
+                implicitHeight: 22
+                radius: 8
+                color: plusHover.hovered ? Qt.rgba(1, 1, 1, 0.22) : Qt.rgba(1, 1, 1, 0.08)
+                border.color: Qt.rgba(1, 1, 1, 0.14)
+                border.width: 1
+
+                Text {
+                    anchors.centerIn: parent
+                    text: "+"
+                    font.family: root.fontFam
+                    font.pixelSize: 10
+                    font.bold: true
+                    color: root.colFg
+                }
+
+                HoverHandler { id: plusHover; cursorShape: Qt.PointingHandCursor }
+                MouseArea {
+                    anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: {
+                        root.manualOffsetMs += 10;
+                        root.tempoOffsetSec = root.tempoOffsetSec + 0.010;
+                        root.updateActiveIndex();
+                    }
                 }
             }
         }
