@@ -135,7 +135,6 @@ Item {
     implicitHeight: stack.implicitHeight
 
     readonly property color battModeColor: {
-        if (view.sys.batteryPct <= 15) return view.sys.colCrit;
         var p = (view.sys.powerProfile || "balanced").toLowerCase();
         if (p === "performance" || p === "max-power") return view.sys.colPowerPerf;
         if (p === "power-saver" || p === "low-power") return view.sys.colPowerSaver;
@@ -143,7 +142,6 @@ Item {
     }
 
     readonly property color battModeBg: {
-        if (view.sys.batteryPct <= 15) return Qt.rgba(0.22, 0.04, 0.05, 0.90);
         var p = (view.sys.powerProfile || "balanced").toLowerCase();
         if (p === "performance" || p === "max-power") return Qt.rgba(0.22, 0.04, 0.05, 0.90);
         if (p === "power-saver" || p === "low-power") return Qt.rgba(0.05, 0.10, 0.24, 0.90);
