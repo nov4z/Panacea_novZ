@@ -299,103 +299,78 @@ setup_hyprland() {
     if [ -d "$HYPR_DIR" ]; then
         mkdir -p "$HYPR_DIR/custom"
 
-        # 1. Configurar custom/keybindings.lua para proteger los binds de cualquier actualización futura
-        cat << 'LUAEOF' > "$HYPR_DIR/custom/keybindings.lua"
--- Custom Keybindings & Shortcuts (Lua)
--- Maintained for Panacea_novZ custom keybinds (immune to updates)
-local mainMod = "SUPER"
-local QS = "qs -c " .. os.getenv("HOME") .. "/.config/panacea ipc call pill "
-local HOME = os.getenv("HOME")
-
--- Pill Navigation & Music
-hl.bind(mainMod .. " + A",             hl.dsp.exec_cmd(QS .. "dock"))
-hl.bind(mainMod .. " + Space",         hl.dsp.exec_cmd(QS .. "launcher"))
-hl.bind(mainMod .. " + M",             hl.dsp.exec_cmd(QS .. "music"))
-hl.bind(mainMod .. " + H",             hl.dsp.exec_cmd(QS .. "toggleHide"))
-hl.bind(mainMod .. " + SHIFT + H",     hl.dsp.exec_cmd(QS .. "rotateMusicCenter"))
-hl.bind(mainMod .. " + N",             hl.dsp.exec_cmd(QS .. "toggleMusicNotch"))
-hl.bind(mainMod .. " + O",             hl.dsp.exec_cmd(QS .. "toggleAntigravity"))
-hl.bind(mainMod .. " + apostrophe",    hl.dsp.exec_cmd(QS .. "shortcuts"))
-hl.bind(mainMod .. " + F",             hl.dsp.window.fullscreen())
-
--- Lenovo LOQ / Legion Fn+Q Performance Modes
-local PCYCLE = HOME .. "/.config/panacea/scripts/power_cycle.sh"
-hl.bind("XF86Launch1",   hl.dsp.exec_cmd(PCYCLE), { locked = true })
-hl.bind("XF86Launch2",   hl.dsp.exec_cmd(PCYCLE), { locked = true })
-hl.bind("XF86Launch3",   hl.dsp.exec_cmd(PCYCLE), { locked = true })
-hl.bind("XF86Launch4",   hl.dsp.exec_cmd(PCYCLE), { locked = true })
-hl.bind("XF86Tools",     hl.dsp.exec_cmd(PCYCLE), { locked = true })
-hl.bind("XF86Favorites", hl.dsp.exec_cmd(PCYCLE), { locked = true })
-hl.bind("XF86Battery",   hl.dsp.exec_cmd(PCYCLE), { locked = true })
-hl.bind("XF86Launch5",   hl.dsp.exec_cmd(PCYCLE), { locked = true })
-hl.bind("XF86Launch6",   hl.dsp.exec_cmd(PCYCLE), { locked = true })
-hl.bind("XF86Launch7",   hl.dsp.exec_cmd(PCYCLE), { locked = true })
-hl.bind("XF86Launch8",   hl.dsp.exec_cmd(PCYCLE), { locked = true })
-hl.bind("XF86Launch9",   hl.dsp.exec_cmd(PCYCLE), { locked = true })
-hl.bind("XF86Game",      hl.dsp.exec_cmd(PCYCLE), { locked = true })
-hl.bind("XF86Keyboard",  hl.dsp.exec_cmd(PCYCLE), { locked = true })
-hl.bind(mainMod .. " + ALT + P", hl.dsp.exec_cmd(PCYCLE))
-LUAEOF
-
-        # 2. Configurar custom/custom.conf para respaldo directo
-        cat << 'CONFEOF' > "$HYPR_DIR/custom/custom.conf"
-# ==============================================================================
-# Custom User Configurations (Hyprland Conf)
-# Maintained for Panacea_novZ custom keybinds (immune to updates)
-# ==============================================================================
-
-$terminal = kitty
-$pill = qs -c $HOME/.config/panacea ipc call pill
-
-bind = SUPER, A, exec, $pill dock
-bind = SUPER, Space, exec, $pill launcher
-bind = SUPER, M, exec, $pill music
-bind = SUPER, H, exec, $pill toggleHide
-bind = SUPER SHIFT, H, exec, $pill rotateMusicCenter
-bind = SUPER, N, exec, $pill toggleMusicNotch
-bind = SUPER, O, exec, $pill toggleAntigravity
-bind = SUPER, apostrophe, exec, $pill shortcuts
-bind = SUPER, code:20, exec, $pill shortcuts
-bind = SUPER, F, fullscreen
-
-# Lenovo LOQ / Legion Fn+Q
-bind = , XF86Launch1, exec, $HOME/.config/panacea/scripts/power_cycle.sh
-bind = , XF86Launch2, exec, $HOME/.config/panacea/scripts/power_cycle.sh
-bind = , XF86Launch3, exec, $HOME/.config/panacea/scripts/power_cycle.sh
-bind = , XF86Launch4, exec, $HOME/.config/panacea/scripts/power_cycle.sh
-bind = , XF86Tools, exec, $HOME/.config/panacea/scripts/power_cycle.sh
-bind = , XF86Favorites, exec, $HOME/.config/panacea/scripts/power_cycle.sh
-bind = , XF86Battery, exec, $HOME/.config/panacea/scripts/power_cycle.sh
-bind = , XF86Launch5, exec, $HOME/.config/panacea/scripts/power_cycle.sh
-bind = , XF86Launch6, exec, $HOME/.config/panacea/scripts/power_cycle.sh
-bind = , XF86Launch7, exec, $HOME/.config/panacea/scripts/power_cycle.sh
-bind = , XF86Launch8, exec, $HOME/.config/panacea/scripts/power_cycle.sh
-bind = , XF86Launch9, exec, $HOME/.config/panacea/scripts/power_cycle.sh
-bind = , XF86Game, exec, $HOME/.config/panacea/scripts/power_cycle.sh
-bind = , XF86Keyboard, exec, $HOME/.config/panacea/scripts/power_cycle.sh
-bind = SUPER ALT, P, exec, $HOME/.config/panacea/scripts/power_cycle.sh
-CONFEOF
-
-        # 3. Asegurar programas predeterminados (kitty, zen-browser)
+        # 1. Asegurar programas predeterminados (kitty, zen-browser)
         if [ -f "$HYPR_DIR/lua/programs.lua" ]; then
             sed -i 's/programs.terminal = "footclient"/programs.terminal = "kitty"/g' "$HYPR_DIR/lua/programs.lua"
             sed -i 's/programs.fileManagerTui = "footclient yazi"/programs.fileManagerTui = "kitty yazi"/g' "$HYPR_DIR/lua/programs.lua"
             sed -i 's/programs.browser = "firefox"/programs.browser = "zen-browser"/g' "$HYPR_DIR/lua/programs.lua"
         fi
 
-        # 4. Asegurar keybindings.lua contiene los atajos de la cápsula
-        if [ -f "$HYPR_DIR/lua/keybindings.lua" ]; then
-            if ! grep -q 'pillMusic' "$HYPR_DIR/lua/keybindings.lua"; then
-                sed -i 's/B("pillVault",    mainMod .. " + SHIFT + P",     hl.dsp.exec_cmd(QS .. "passwords"))/B("pillVault",    mainMod .. " + SHIFT + P",     hl.dsp.exec_cmd(QS .. "passwords"))\nB("pillMusic",    mainMod .. " + M",             hl.dsp.exec_cmd(QS .. "music"))\nB("pillHide",     mainMod .. " + H",             hl.dsp.exec_cmd(QS .. "toggleHide"))\nB("pillRotateCenter", mainMod .. " + SHIFT + H", hl.dsp.exec_cmd(QS .. "rotateMusicCenter"))\nB("pillToggleNotch",  mainMod .. " + N",         hl.dsp.exec_cmd(QS .. "toggleMusicNotch"))\nB("antigravityToggle", mainMod .. " + O",        hl.dsp.exec_cmd(QS .. "toggleAntigravity"))/g' "$HYPR_DIR/lua/keybindings.lua"
-            fi
-            sed -i 's/B("pillLauncher", mainMod .. " + A",/B("pillDock",     mainMod .. " + A",/g' "$HYPR_DIR/lua/keybindings.lua"
+        # 2. Corregir regla de ventana de Spotify para que no se oculte en special:magic
+        if [ -f "$HYPR_DIR/lua/windowrules.lua" ]; then
+            sed -i 's/workspace = "special:magic silent"/tile  = true/g' "$HYPR_DIR/lua/windowrules.lua"
+            sed -i 's/\^(footclient|foot)\$/\^(kitty|footclient|foot)\$/g' "$HYPR_DIR/lua/windowrules.lua"
         fi
 
-        # 5. Asegurar autostart en hyprland.conf
+        # 3. Asegurar idioma del teclado en latam y numlock seguro
+        if [ -f "$HYPR_DIR/lua/input.lua" ]; then
+            sed -i 's/kb_layout  = input_data.layouts or "us,ru"/kb_layout  = input_data.layouts or "latam"/g' "$HYPR_DIR/lua/input.lua"
+            sed -i 's/numlock_by_default = true/numlock_by_default = false/g' "$HYPR_DIR/lua/input.lua"
+        fi
+
+        # 4. Asegurar keybindings.lua contiene los atajos de Panacea_novZ
+        if [ -f "$HYPR_DIR/lua/keybindings.lua" ]; then
+            if ! grep -q 'pillMusic' "$HYPR_DIR/lua/keybindings.lua"; then
+                sed -i 's/B("pillVault",    mainMod .. " + SHIFT + P",     hl.dsp.exec_cmd(QS .. "passwords"))/B("pillVault",    mainMod .. " + SHIFT + P",     hl.dsp.exec_cmd(QS .. "passwords"))\nB("pillMusic",    mainMod .. " + M",             hl.dsp.exec_cmd(QS .. "music"))\nB("pillHide",     mainMod .. " + H",             hl.dsp.exec_cmd(QS .. "toggleHide"))\nB("pillRotateCenter", mainMod .. " + SHIFT + H", hl.dsp.exec_cmd(QS .. "rotateMusicCenter"))\nB("pillToggleNotch",  mainMod .. " + N",             hl.dsp.exec_cmd(QS .. "toggleMusicNotch"))\nB("antigravityToggle", mainMod .. " + O",            hl.dsp.exec_cmd(QS .. "toggleAntigravity"))/g' "$HYPR_DIR/lua/keybindings.lua"
+            fi
+            sed -i 's/B("pillLauncher", mainMod .. " + A",/B("pillDock",     mainMod .. " + A",\nB("pillLauncher", mainMod .. " + Space",         hl.dsp.exec_cmd(QS .. "launcher"))/g' "$HYPR_DIR/lua/keybindings.lua"
+            sed -i 's/B("pillShortcuts",mainMod .. " + slash",/B("pillShortcuts",mainMod .. " + apostrophe",/g' "$HYPR_DIR/lua/keybindings.lua"
+            sed -i 's/B("notes",        mainMod .. " + O",/B("notes",        "",/g' "$HYPR_DIR/lua/keybindings.lua"
+
+            # Lenovo LOQ / Legion Fn+Q hotkeys
+            if ! grep -q 'power_cycle.sh' "$HYPR_DIR/lua/keybindings.lua"; then
+                cat << 'LOQEOF' >> "$HYPR_DIR/lua/keybindings.lua"
+
+-- Lenovo LOQ / Legion Fn+Q & Perfiles de Rendimiento
+local PCYCLE = HOME .. "/.config/panacea/scripts/power_cycle.sh"
+hl.bind("XF86Launch1",   hl.dsp.exec_cmd(PCYCLE), { locked = true })
+hl.bind("XF86Launch2",   hl.dsp.exec_cmd(PCYCLE), { locked = true })
+hl.bind("XF86Launch3",   hl.dsp.exec_cmd(PCYCLE), { locked = true })
+hl.bind("XF86Launch4",   hl.dsp.exec_cmd(PCYCLE), { locked = true })
+hl.bind("XF86Tools",     hl.dsp.exec_cmd(PCYCLE), { locked = true })
+hl.bind("XF86Favorites",  hl.dsp.exec_cmd(PCYCLE), { locked = true })
+hl.bind("XF86Battery",    hl.dsp.exec_cmd(PCYCLE), { locked = true })
+hl.bind("XF86Launch5",    hl.dsp.exec_cmd(PCYCLE), { locked = true })
+hl.bind("XF86Launch6",    hl.dsp.exec_cmd(PCYCLE), { locked = true })
+hl.bind("XF86Launch7",    hl.dsp.exec_cmd(PCYCLE), { locked = true })
+hl.bind("XF86Launch8",    hl.dsp.exec_cmd(PCYCLE), { locked = true })
+hl.bind("XF86Launch9",    hl.dsp.exec_cmd(PCYCLE), { locked = true })
+hl.bind("XF86Game",       hl.dsp.exec_cmd(PCYCLE), { locked = true })
+hl.bind("XF86Keyboard",   hl.dsp.exec_cmd(PCYCLE), { locked = true })
+B("powerCycle", mainMod .. " + ALT + P", hl.dsp.exec_cmd(PCYCLE))
+LOQEOF
+            fi
+        fi
+
+        # 5. Mantener archivos custom limpios para evitar duplicados
+        cat << 'CLEANEOF' > "$HYPR_DIR/custom/keybindings.lua"
+-- Custom Keybindings & Shortcuts (Lua)
+-- Keep this file clean or for additional user-specific bindings.
+CLEANEOF
+
+        cat << 'CLEANCONF' > "$HYPR_DIR/custom/custom.conf"
+# Custom User Configurations (Hyprland Conf)
+CLEANCONF
+
+        # 6. Asegurar autostart y binds de fallback en hyprland.conf
         if [ -f "$HYPR_CONF" ]; then
             if ! grep -q "panacea" "$HYPR_CONF" && ! grep -q "qs -c .*panacea" "$HYPR_CONF"; then
                 echo -e "\n# Panacea Shell V:NOVZ Autostart\nexec-once = qs -c $INSTALL_DIR" >> "$HYPR_CONF"
                 log_success "Añadido exec-once a $HYPR_CONF."
+            fi
+            sed -i 's/^\$terminal = footclient/\$terminal = kitty/g' "$HYPR_CONF"
+            if ! grep -q 'pill launcher' "$HYPR_CONF"; then
+                sed -i 's/bind = \$mainMod, A, exec, \$pill dock/bind = \$mainMod, A, exec, \$pill dock\nbind = \$mainMod, Space, exec, \$pill launcher/g' "$HYPR_CONF"
             fi
         fi
 

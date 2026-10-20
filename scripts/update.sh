@@ -37,6 +37,8 @@ KEEP=(
     "$CONF/hypr/lua/keybindings.lua"
     "$CONF/hypr/lua/programs.lua"
     "$CONF/hypr/hyprland.conf"
+    "$CONF/hypr/lua/windowrules.lua"
+    "$CONF/hypr/lua/autostart.lua"
     "$CONF/hypr/lua/input.lua"
     "$CONF/hypr/lua/input_data.lua"
     "$CONF/hypr/input_data.conf"

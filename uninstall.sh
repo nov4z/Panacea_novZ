@@ -16,13 +16,22 @@ NC='\033[0m'
 INSTALL_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/panacea"
 CONFIG_BASE="${XDG_CONFIG_HOME:-$HOME/.config}"
 
+UNATTENDED=false
+for arg in "$@"; do
+    case "$arg" in
+        -y|--yes|--unattended) UNATTENDED=true ;;
+    esac
+done
+
 echo -e "${RED}${BOLD}Desinstalador de Panacea Shell V:NOVZ${NC}\n"
 
-read -r -p "¿Estás seguro de que deseas desinstalar Panacea Shell? [s/N]: " confirm
-case "$confirm" in
-    [sS][iI]|[sS]|[yY][eE][sS]|[yY]) ;;
-    *) echo "Operación cancelada."; exit 0 ;;
-esac
+if [ "$UNATTENDED" != true ]; then
+    read -r -p "¿Estás seguro de que deseas desinstalar Panacea Shell? [s/N]: " confirm
+    case "$confirm" in
+        [sS][iI]|[sS]|[yY][eE][sS]|[yY]) ;;
+        *) echo "Operación cancelada."; exit 0 ;;
+    esac
+fi
 
 # Detener Quickshell si está ejecutando panacea
 if pgrep -f "qs -c .*panacea" >/dev/null 2>&1; then
