@@ -46,9 +46,9 @@ Item {
             return {
                 id: id,
                 name: "PANACEA",
-                icon: (dock.sys && dock.sys.themeMaterial) ? "" : Qt.resolvedUrl("assets/arch_cachy_nothing.svg"),
-                glyph: (dock.sys && dock.sys.themeMaterial) ? "󰀻" : "",
-                glyphColor: (dock.sys && dock.sys.themeMaterial) ? dock.sys.colOn : "#ffffff",
+                icon: Qt.resolvedUrl("assets/panacea_bw.svg"),
+                glyph: "",
+                glyphColor: "#ffffff",
                 isBuiltin: true,
                 builtin: "arch"
             };
@@ -142,7 +142,7 @@ Item {
         };
     }
 
-    // 1. Sección Izquierda: Logo de Arch (Super+Space) + Config (Super+I) + Carpeta (Super+E)
+    // 1. Sección Izquierda: Logo de Panacea (Super+Space) + Config (Super+I) + Carpeta (Super+E)
     readonly property var leftItems: [
         dock.getItemInfo("panacea:arch"),
         dock.getItemInfo("panacea:settings"),

@@ -385,6 +385,26 @@ class TestComponentHierarchyAndContracts(unittest.TestCase):
                 f"Property '{prop_name}' must be declared inside adapter: JsonAdapter in shell.qml so it survives writeAdapter()/saveCfg()",
             )
 
+    def test_system_and_dock_panacea_monochrome_branding(self):
+        """Verifies Panacea B&W logo in SetSystem and Dock, and Material You dot synchronization."""
+        # 1. Assets exist and are valid
+        assets_dir = PROJECT_ROOT / "assets"
+        self.assertTrue((assets_dir / "panacea_bw.svg").exists(), "assets/panacea_bw.svg must exist")
+        self.assertTrue((assets_dir / "panacea_bw.png").exists(), "assets/panacea_bw.png must exist")
+        self.assertTrue((assets_dir / "arch_cachy_nothing.svg").exists(), "assets/arch_cachy_nothing.svg must exist")
+
+        # 2. SetSystem.qml checks
+        sys_qml = (QML_DIR / "SetSystem.qml").read_text(encoding="utf-8")
+        self.assertIn("import QtQuick.Effects", sys_qml)
+        self.assertIn("readonly property color accentColor:", sys_qml)
+        self.assertIn("page.sys.themeMaterial", sys_qml)
+        self.assertIn("assets/panacea_bw.svg", sys_qml)
+        self.assertNotIn('color: "#ff2825"', sys_qml)
+
+        # 3. DockView.qml checks
+        dock_qml = (QML_DIR / "DockView.qml").read_text(encoding="utf-8")
+        self.assertIn('icon: Qt.resolvedUrl("assets/panacea_bw.svg")', dock_qml)
+
 
 class TestSearchDiscoverability(unittest.TestCase):
     """Empirically tests search discoverability and keyword matching in SettingsView.qml."""

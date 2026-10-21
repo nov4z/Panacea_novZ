@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
+import QtQuick.Effects
 import Quickshell
 import Quickshell.Io
 
@@ -208,6 +209,16 @@ ColumnLayout {
 
         property bool largeOpen: false
 
+        readonly property color accentColor: {
+            if (page.sys && page.sys.themeMaterial) {
+                if (page.sys.matugenColors && page.sys.matugenColors.primary && page.sys.matugenColors.primary.dark) {
+                    return page.sys.matugenColors.primary.dark.color;
+                }
+                return page.sys.colOn;
+            }
+            return "#ff2825";
+        }
+
         // Cabecera del panel
         RowLayout {
             Layout.fillWidth: true
@@ -217,8 +228,9 @@ ColumnLayout {
                 width: 6
                 height: 6
                 radius: 3
-                color: "#ff2825"
+                color: customCard.accentColor
                 Layout.alignment: Qt.AlignVCenter
+                Behavior on color { ColorAnimation { duration: 200 } }
             }
 
             Text {
@@ -235,7 +247,7 @@ ColumnLayout {
             Item { Layout.fillWidth: true }
 
             Text {
-                text: customCard.largeOpen ? page.sys.tr("VISTA AMPLIADA") : page.sys.tr("HYBRID ARCH × CACHY")
+                text: customCard.largeOpen ? page.sys.tr("VISTA AMPLIADA") : page.sys.tr("PANACEA novZ")
                 color: page.sys.colMuted
                 font { family: page.sys.fontBody; pixelSize: page.sys.fontSize - 5; letterSpacing: 1.2 }
             }
@@ -279,7 +291,8 @@ ColumnLayout {
                             width: 5
                             height: 5
                             radius: 2.5
-                            color: "#ff2825"
+                            color: customCard.accentColor
+                            Behavior on color { ColorAnimation { duration: 200 } }
                         }
                         Text {
                             text: page.kernel.length > 0 ? page.kernel : "7.2.2-1-cachyos-bore"
@@ -329,7 +342,8 @@ ColumnLayout {
                                 width: 5
                                 height: 5
                                 radius: 2.5
-                                color: "#ff2825"
+                                color: customCard.accentColor
+                                Behavior on color { ColorAnimation { duration: 200 } }
                             }
 
                             Text {
@@ -455,7 +469,7 @@ ColumnLayout {
                             anchors.centerIn: parent
                             width: 74
                             height: 74
-                            source: Qt.resolvedUrl("assets/arch_cachy_nothing.svg")
+                            source: Qt.resolvedUrl("assets/panacea_bw.svg")
                             sourceSize.width: 148
                             sourceSize.height: 148
                             fillMode: Image.PreserveAspectFit
@@ -482,7 +496,8 @@ ColumnLayout {
                                 spacing: 4
                                 Rectangle {
                                     width: 5; height: 5; radius: 2.5
-                                    color: "#ff2825"
+                                    color: customCard.accentColor
+                                    Behavior on color { ColorAnimation { duration: 200 } }
                                 }
                                 Text {
                                     text: "CACHYOS"
@@ -530,7 +545,8 @@ ColumnLayout {
                             Text {
                                 Layout.alignment: Qt.AlignHCenter
                                 text: "novZ"
-                                color: "#ff2825"
+                                color: customCard.accentColor
+                                Behavior on color { ColorAnimation { duration: 200 } }
                                 font {
                                     family: page.sys.fontFam
                                     pixelSize: 11
@@ -587,7 +603,7 @@ ColumnLayout {
                     width: 210
                     height: 210
 
-                    // Hover con el logo Lenovo LOQ ('O' dividida en 3 partes en rojo Nothing OS #ff2825)
+                    // Hover con el halo / aro orbital sincronizado con el acento dinámico
                     Image {
                         id: loqHoverLogo
                         anchors.centerIn: parent
@@ -599,6 +615,11 @@ ColumnLayout {
                         fillMode: Image.PreserveAspectFit
                         opacity: largeLogoMa.containsMouse ? 0.85 : 0.0
                         scale: largeLogoMa.containsMouse ? 1.14 : 0.75
+                        layer.enabled: true
+                        layer.effect: MultiEffect {
+                            colorization: 1.0
+                            colorizationColor: customCard.accentColor
+                        }
 
                         Behavior on opacity { NumberAnimation { duration: 320; easing.type: Easing.OutCubic } }
                         Behavior on scale { NumberAnimation { duration: 360; easing.type: Easing.OutBack; easing.overshoot: 1.15 } }
@@ -614,13 +635,13 @@ ColumnLayout {
                         }
                     }
 
-                    // Logo Vectorial en Blanco
+                    // Logo Vectorial en Blanco y Negro (Panacea Nothing OS B&W)
                     Image {
                         id: largeLogoImg
                         anchors.centerIn: parent
                         width: 180
                         height: 180
-                        source: Qt.resolvedUrl("assets/arch_cachy_nothing.svg")
+                        source: Qt.resolvedUrl("assets/panacea_bw.svg")
                         sourceSize.width: 360
                         sourceSize.height: 360
                         fillMode: Image.PreserveAspectFit
@@ -664,7 +685,7 @@ ColumnLayout {
                         RowLayout {
                             Layout.fillWidth: true
                             spacing: 8
-                            Rectangle { width: 5; height: 5; radius: 2.5; color: "#ff2825" }
+                            Rectangle { width: 5; height: 5; radius: 2.5; color: customCard.accentColor; Behavior on color { ColorAnimation { duration: 200 } } }
                             ColumnLayout {
                                 spacing: 1
                                 Text {
@@ -684,7 +705,7 @@ ColumnLayout {
                         RowLayout {
                             Layout.fillWidth: true
                             spacing: 8
-                            Rectangle { width: 5; height: 5; radius: 2.5; color: "#ff2825" }
+                            Rectangle { width: 5; height: 5; radius: 2.5; color: customCard.accentColor; Behavior on color { ColorAnimation { duration: 200 } } }
                             ColumnLayout {
                                 spacing: 1
                                 Text {
@@ -704,7 +725,7 @@ ColumnLayout {
                         RowLayout {
                             Layout.fillWidth: true
                             spacing: 8
-                            Rectangle { width: 5; height: 5; radius: 2.5; color: "#ff2825" }
+                            Rectangle { width: 5; height: 5; radius: 2.5; color: customCard.accentColor; Behavior on color { ColorAnimation { duration: 200 } } }
                             ColumnLayout {
                                 spacing: 1
                                 Text {
@@ -724,7 +745,7 @@ ColumnLayout {
                         RowLayout {
                             Layout.fillWidth: true
                             spacing: 8
-                            Rectangle { width: 5; height: 5; radius: 2.5; color: "#ff2825" }
+                            Rectangle { width: 5; height: 5; radius: 2.5; color: customCard.accentColor; Behavior on color { ColorAnimation { duration: 200 } } }
                             ColumnLayout {
                                 spacing: 1
                                 Text {
@@ -744,7 +765,7 @@ ColumnLayout {
                         RowLayout {
                             Layout.fillWidth: true
                             spacing: 8
-                            Rectangle { width: 5; height: 5; radius: 2.5; color: "#ff2825" }
+                            Rectangle { width: 5; height: 5; radius: 2.5; color: customCard.accentColor; Behavior on color { ColorAnimation { duration: 200 } } }
                             ColumnLayout {
                                 spacing: 1
                                 Text {
@@ -764,7 +785,7 @@ ColumnLayout {
                         RowLayout {
                             Layout.fillWidth: true
                             spacing: 8
-                            Rectangle { width: 5; height: 5; radius: 2.5; color: "#ff2825" }
+                            Rectangle { width: 5; height: 5; radius: 2.5; color: customCard.accentColor; Behavior on color { ColorAnimation { duration: 200 } } }
                             ColumnLayout {
                                 spacing: 1
                                 Text {
@@ -791,7 +812,7 @@ ColumnLayout {
                     color: closeBtnMa.containsMouse ? Qt.rgba(page.sys.colFg.r, page.sys.colFg.g, page.sys.colFg.b, 0.12)
                                                     : Qt.rgba(page.sys.colFg.r, page.sys.colFg.g, page.sys.colFg.b, 0.05)
                     border.width: 1
-                    border.color: closeBtnMa.containsMouse ? "#ff2825" : Qt.rgba(page.sys.colFg.r, page.sys.colFg.g, page.sys.colFg.b, 0.15)
+                    border.color: closeBtnMa.containsMouse ? customCard.accentColor : Qt.rgba(page.sys.colFg.r, page.sys.colFg.g, page.sys.colFg.b, 0.15)
                     Behavior on color { ColorAnimation { duration: 120 } }
                     Behavior on border.color { ColorAnimation { duration: 120 } }
 
@@ -800,7 +821,7 @@ ColumnLayout {
                         spacing: 6
                         Text {
                             text: "󰅖"
-                            color: "#ff2825"
+                            color: customCard.accentColor
                             font { family: page.sys.fontFam; pixelSize: 11 }
                         }
                         Text {
