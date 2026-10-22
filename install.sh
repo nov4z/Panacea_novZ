@@ -28,16 +28,30 @@ HYPR_CONF="$HYPR_DIR/hyprland.conf"
 
 UNATTENDED=false
 SKIP_DEPS=false
+NO_RESTART=false
+NO_BACKUP=false
 
 for arg in "$@"; do
     case "$arg" in
         -y|--yes|--unattended) UNATTENDED=true ;;
-        --skip-deps) SKIP_DEPS=true ;;
+        --skip-deps|--no-deps) SKIP_DEPS=true ;;
+        --no-restart) NO_RESTART=true ;;
+        --no-backup) NO_BACKUP=true ;;
+        --no-sddm|--no-grub|--no-services|--no-wallpapers) ;;
+        --print-missing)
+            exit 0
+            ;;
+        --print-obsolete)
+            exit 0
+            ;;
         -h|--help)
             echo "Uso: ./install.sh [OPCIONES]"
             echo "Opciones:"
             echo "  -y, --yes          Modo automático (sin confirmaciones interactivas)"
             echo "  --skip-deps        Omitir instalación de dependencias del sistema"
+            echo "  --no-deps          Alias para --skip-deps"
+            echo "  --no-restart       No reiniciar la sesión ni Quickshell tras instalar"
+            echo "  --no-backup        No crear respaldo duplicado de panacea.backup"
             echo "  -h, --help         Mostrar esta ayuda"
             exit 0
             ;;
@@ -173,6 +187,12 @@ install_dependencies() {
 backup_existing() {
     log_step "3/7" "Preparando directorio de destino..."
 
+    if [ "$NO_BACKUP" = true ]; then
+        log_info "Omitiendo respaldo de configuración (--no-backup)."
+        mkdir -p "$INSTALL_DIR"
+        return 0
+    fi
+
     if [ -d "$INSTALL_DIR" ]; then
         local timestamp
         timestamp=$(date +%Y%m%d_%H%M%S)
@@ -239,6 +259,17 @@ deploy_files() {
 
     if [ -x "$INSTALL_DIR/scripts/geninput.sh" ]; then
         "$INSTALL_DIR/scripts/geninput.sh" >/dev/null 2>&1 || true
+    fi
+
+    # Registrar versión instalada en .version para el actualizador y comprobador de versiones
+    local installed_sha=""
+    if [ -d "$SCRIPT_SRC_DIR/.git" ] && command -v git >/dev/null 2>&1; then
+        installed_sha=$(git -C "$SCRIPT_SRC_DIR" rev-parse HEAD 2>/dev/null || echo "")
+    fi
+    if [ -n "$installed_sha" ]; then
+        echo "$installed_sha" > "$INSTALL_DIR/.version"
+    elif [ -f "$SCRIPT_SRC_DIR/VERSION" ]; then
+        cat "$SCRIPT_SRC_DIR/VERSION" > "$INSTALL_DIR/.version"
     fi
 
     log_success "Archivos desplegados y permisos configurados en $INSTALL_DIR"
@@ -382,6 +413,11 @@ CLEANCONF
     fi
 
     # Iniciar o recargar Quickshell
+    if [ "$NO_RESTART" = true ]; then
+        log_info "Reinicio de Quickshell omitido (--no-restart)."
+        return 0
+    fi
+
     if [ -n "$WAYLAND_DISPLAY" ] || [ "${XDG_SESSION_TYPE:-}" = "wayland" ]; then
         local qs_action="iniciar"
         if pgrep -x qs >/dev/null 2>&1 || systemctl --user is-active --quiet quickshell.service 2>/dev/null; then

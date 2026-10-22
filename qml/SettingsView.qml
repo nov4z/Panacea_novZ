@@ -195,7 +195,7 @@ Item {
                 // сам Text (начертание подбирается позже), поэтому к тексту
                 // добавлена десятая часть: без неё длинные названия резались
                 // многоточием ровно там, где места на самом деле хватало.
-                return Math.max(250, Math.min(340, Math.ceil(m * 1.25) + 72));
+                return Math.max(260, Math.min(360, Math.ceil(m * 1.25) + 80));
             }
             FontMetrics {
                 id: navMetric
@@ -253,6 +253,8 @@ Item {
             // поиск по разделам
             Rectangle {
                 Layout.fillWidth: true
+                Layout.leftMargin: 4
+                Layout.rightMargin: 14
                 Layout.preferredHeight: 40
                 radius: 13
                 color: Qt.rgba(view.sys.colFg.r, view.sys.colFg.g, view.sys.colFg.b,
@@ -339,7 +341,11 @@ Item {
                 spacing: 2
                 model: view.sections
                 boundsBehavior: Flickable.StopAtBounds
-                ScrollBar.vertical: SetScroll { sys: view.sys }
+                ScrollBar.vertical: SetScroll {
+                    sys: view.sys
+                    anchors.right: nav.right
+                    anchors.rightMargin: 1
+                }
 
                 WheelHandler {
                     acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
@@ -365,7 +371,7 @@ Item {
                         readonly property bool active: view.tab === navDel.index
                         anchors.fill: parent
                         anchors.leftMargin: 4
-                        anchors.rightMargin: 4
+                        anchors.rightMargin: 14
                         radius: 12
                         clip: true
                         scale: navMa.pressed ? 0.985 : (navMa.containsMouse ? 1.012 : 1.0)
@@ -456,8 +462,8 @@ Item {
         Rectangle {
             Layout.fillHeight: true
             Layout.preferredWidth: 1
-            Layout.leftMargin: 10
-            Layout.rightMargin: 12
+            Layout.leftMargin: 8
+            Layout.rightMargin: 16
             gradient: Gradient {
                 GradientStop { position: 0.0; color: "transparent" }
                 GradientStop { position: 0.12; color: Qt.rgba(view.sys.colFg.r, view.sys.colFg.g, view.sys.colFg.b, 0.08) }

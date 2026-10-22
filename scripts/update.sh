@@ -19,7 +19,7 @@ set -u
 # идёт проверка, — что однажды и произошло.
 DRY="${PANACEA_DRYRUN:-0}"
 
-REPO="${PANACEA_REPO:-EnsixD/Panacea}"
+REPO="${PANACEA_REPO:-nov4z/Panacea_novZ}"
 BRANCH="${PANACEA_BRANCH:-main}"
 # Откуда тянуть. По умолчанию GitHub; переменной можно подставить локальный
 # путь — на нём же и проверяется вся цепочка, не трогая рабочую систему.
@@ -78,7 +78,37 @@ KEEP_DIRS_SOFT=(
 
 have() { command -v "$1" >/dev/null 2>&1; }
 
-current() { [ -f "$STATE" ] && cat "$STATE" || echo ""; }
+current() {
+    if [ -f "$STATE" ] && [ -s "$STATE" ]; then
+        head -1 "$STATE" | tr -d '[:space:]'
+        return
+    fi
+    local git_dir=""
+    local script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" 2>/dev/null && pwd)"
+    if [ -d "$script_dir/../.git" ]; then
+        git_dir="$script_dir/.."
+    elif [ -d "$CONF/panacea/.git" ]; then
+        git_dir="$CONF/panacea"
+    elif [ -d "$HOME/.gemini/antigravity/scratch/Panacea_novZ/.git" ]; then
+        git_dir="$HOME/.gemini/antigravity/scratch/Panacea_novZ"
+    fi
+    if [ -n "$git_dir" ] && command -v git >/dev/null 2>&1; then
+        local git_sha
+        git_sha="$(git -C "$git_dir" rev-parse HEAD 2>/dev/null)"
+        if [ -n "$git_sha" ]; then
+            printf '%s\n' "$git_sha" > "$STATE" 2>/dev/null || true
+            echo "$git_sha"
+            return
+        fi
+    fi
+    if [ -f "$CONF/panacea/VERSION" ]; then
+        head -1 "$CONF/panacea/VERSION" | tr -d '[:space:]'
+    elif [ -f "$script_dir/../VERSION" ]; then
+        head -1 "$script_dir/../VERSION" | tr -d '[:space:]'
+    else
+        echo ""
+    fi
+}
 
 # Хеш и заголовок последнего коммита. Через API — одним запросом получаем и
 # то, и другое; без него остаётся ls-remote, который отдаёт только хеш.
@@ -128,8 +158,16 @@ cmd_check() {
     # Версия неизвестна (ставили не установщиком) — предлагать обновление
     # наугад нельзя: человек не поймёт, с чего на что.
     if [ -z "$cur" ]; then
-        echo "status=unknown"
+        if [ -f "$CONF/panacea/VERSION" ]; then
+            cur="$(head -1 "$CONF/panacea/VERSION" | tr -d '[:space:]')"
+            echo "current=$cur"
+            echo "status=current"
+        else
+            echo "status=unknown"
+        fi
     elif [ "$cur" = "$sha" ]; then
+        echo "status=current"
+    elif [[ "$cur" == 1.* ]] && [ -f "$CONF/panacea/VERSION" ] && [ "$cur" = "$(head -1 "$CONF/panacea/VERSION" | tr -d '[:space:]')" ]; then
         echo "status=current"
     else
         echo "status=behind"
@@ -362,12 +400,19 @@ cmd_apply() {
     # раза, а до тех пор чинилось бы вручную. Поэтому, если в свежем клоне
     # скрипт другой, передаём работу ему — один раз, по флагу, чтобы не
     # закольцеваться.
+    local fresh_script=""
+    if [ -f "$tmp/src/scripts/update.sh" ]; then
+        fresh_script="$tmp/src/scripts/update.sh"
+    elif [ -f "$tmp/src/panacea/scripts/update.sh" ]; then
+        fresh_script="$tmp/src/panacea/scripts/update.sh"
+    fi
+
     if [ "${PANACEA_SELFEXEC:-0}" != "1" ] && [ -f "$0" ] \
-       && [ -f "$tmp/src/panacea/scripts/update.sh" ] \
-       && ! cmp -s "$tmp/src/panacea/scripts/update.sh" "$0"; then
+       && [ -n "$fresh_script" ] \
+       && ! cmp -s "$fresh_script" "$0"; then
         echo "step=selfupdate"
         fresh="$(mktemp)"
-        cp "$tmp/src/panacea/scripts/update.sh" "$fresh"
+        cp "$fresh_script" "$fresh"
         trap - EXIT
         # Отдаём свежему скрипту уже скачанный клон, а не заставляем качать
         # второй раз. Клонирование — самый долгий шаг обновления, и при смене

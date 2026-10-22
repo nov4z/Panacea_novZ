@@ -27,6 +27,7 @@ import os
 import re
 import sys
 import json
+import subprocess
 import unittest
 from pathlib import Path
 
@@ -600,6 +601,60 @@ class TestStateSynchronizationAndSoundAssets(unittest.TestCase):
                 self.assertTrue(f.exists(), f"Core sound '{sound}' must exist in pack '{pack}'")
 
 
+class TestNovZCustomizationsAndBugfixes(unittest.TestCase):
+    """Verifies resolution of user-reported issues from Fotos 1, 2, 3, and 4."""
+
+    def test_settings_sidebar_margins_prevent_collision(self):
+        """Foto 1: Sidebar navItem must have clear separation from scrollbar and vertical separator."""
+        settings_path = QML_DIR / "SettingsView.qml"
+        content = settings_path.read_text(encoding="utf-8")
+        self.assertIn("anchors.rightMargin: 14", content, "navItem must have rightMargin >= 14 to avoid colliding with scrollbar")
+        self.assertIn("Layout.leftMargin: 8", content, "Vertical separator must have leftMargin >= 8")
+        self.assertIn("Math.max(260", content, "navW must maintain at least 260px for elegant spacing")
+
+    def test_update_script_targets_novz_github(self):
+        """Foto 2: update.sh must default to nov4z/Panacea_novZ and recognize installed version."""
+        update_path = PROJECT_ROOT / "scripts" / "update.sh"
+        content = update_path.read_text(encoding="utf-8")
+        self.assertIn('REPO="${PANACEA_REPO:-nov4z/Panacea_novZ}"', content)
+
+        # Run update.sh check
+        res = subprocess.run(["bash", str(update_path), "check"], capture_output=True, text=True, cwd=str(PROJECT_ROOT))
+        self.assertEqual(res.returncode, 0, f"update.sh check failed: {res.stderr}")
+        self.assertIn("current=", res.stdout)
+        self.assertNotIn("status=unknown", res.stdout, "update.sh check should recognize installed version instead of unknown")
+
+    def test_setsystem_contains_novz_github_profile(self):
+        """Foto 3: SetSystem.qml must include novZ GitHub profile card below author card."""
+        system_path = QML_DIR / "SetSystem.qml"
+        content = system_path.read_text(encoding="utf-8")
+        self.assertIn("github.com/nov4z", content)
+        self.assertIn("https://github.com/nov4z/Panacea_novZ", content)
+        self.assertIn("Perfil en GitHub de novZ (Panacea novZ)", content)
+
+        # Verify translations exist in Translations.qml
+        trans_path = QML_DIR / "Translations.qml"
+        trans_content = trans_path.read_text(encoding="utf-8")
+        self.assertIn('"Perfil en GitHub de novZ (Panacea novZ)"', trans_content)
+
+    def test_widgets_view_weather_and_system_icons(self):
+        """Foto 4: Weather widget must not contain microchip icon overlapping weather description."""
+        widgets_path = QML_DIR / "WidgetsView.qml"
+        content = widgets_path.read_text(encoding="utf-8")
+
+        # Weather row must NOT contain the microchip glyph
+        weather_row_idx = content.find('visible: view.rightMode === "weather"')
+        self.assertNotEqual(weather_row_idx, -1)
+        weather_section = content[weather_row_idx:weather_row_idx + 1500]
+        self.assertNotIn("󰍛", weather_section, "Chip icon 󰍛 must not appear inside weather card")
+
+        # System row must have 󰍛 as header icon
+        system_row_idx = content.find('visible: view.rightMode === "system"')
+        self.assertNotEqual(system_row_idx, -1)
+        system_section = content[system_row_idx:system_row_idx + 800]
+        self.assertIn("󰍛", system_section, "Chip icon 󰍛 must appear cleanly in system card header")
+
+
 def run_tests():
     loader = unittest.TestLoader()
     suite = unittest.TestSuite()
@@ -607,6 +662,7 @@ def run_tests():
     suite.addTests(loader.loadTestsFromTestCase(TestComponentHierarchyAndContracts))
     suite.addTests(loader.loadTestsFromTestCase(TestSearchDiscoverability))
     suite.addTests(loader.loadTestsFromTestCase(TestStateSynchronizationAndSoundAssets))
+    suite.addTests(loader.loadTestsFromTestCase(TestNovZCustomizationsAndBugfixes))
 
     runner = unittest.TextTestRunner(verbosity=2)
     res = runner.run(suite)

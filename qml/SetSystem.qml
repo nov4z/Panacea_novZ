@@ -50,7 +50,12 @@ ColumnLayout {
     Layout.fillWidth: true
     spacing: 12
 
-    Component.onCompleted: { pInfo.running = true; pLive.running = true; }
+    Component.onCompleted: {
+        pInfo.running = true;
+        pLive.running = true;
+        if (page.sys && !page.sys.updStatus && !page.sys.updChecking)
+            page.sys.checkUpdate();
+    }
 
     Process {
         id: pInfo
@@ -202,7 +207,58 @@ ColumnLayout {
             anchors.fill: parent
             hoverEnabled: true
             cursorShape: Qt.PointingHandCursor
-            onClicked: { pOpen.url = "https://github.com/EnsixD"; pOpen.running = true; }
+            onClicked: { pOpen.url = "https://github.com/EnsixD"; pOpen.running = false; pOpen.running = true; }
+        }
+    }
+
+    // ------------------------------------------------------------- perfil novZ (Panacea novZ)
+    Rectangle {
+        Layout.fillWidth: true
+        implicitHeight: 64
+        radius: 18
+        color: ghNovZMa.containsMouse
+               ? Qt.rgba(page.sys.colFg.r, page.sys.colFg.g, page.sys.colFg.b, 0.10)
+               : Qt.rgba(page.sys.colFg.r, page.sys.colFg.g, page.sys.colFg.b, 0.045)
+        Behavior on color { ColorAnimation { duration: page.sys.animFade } }
+
+        RowLayout {
+            anchors.fill: parent
+            anchors.leftMargin: 18
+            anchors.rightMargin: 18
+            spacing: 14
+
+            Text {
+                text: String.fromCodePoint(0xF02A4)   // логотип GitHub
+                color: page.sys.colFg
+                font { family: page.sys.fontFam; pixelSize: 26 }
+            }
+            ColumnLayout {
+                Layout.fillWidth: true
+                spacing: 1
+                Text {
+                    text: "github.com/nov4z"
+                    color: page.sys.colFg
+                    font { family: page.sys.fontDisplay; pixelSize: page.sys.fontSize + 1 }
+                }
+                Text {
+                    text: page.sys.tr("Perfil en GitHub de novZ (Panacea novZ)")
+                    color: page.sys.colMuted
+                    font { family: page.sys.fontBody; pixelSize: page.sys.fontSize - 4 }
+                }
+            }
+            Text {
+                text: String.fromCodePoint(0xF0327)   // стрелка наружу
+                color: page.sys.colMuted
+                font { family: page.sys.fontFam; pixelSize: page.sys.fontSize }
+            }
+        }
+
+        MouseArea {
+            id: ghNovZMa
+            anchors.fill: parent
+            hoverEnabled: true
+            cursorShape: Qt.PointingHandCursor
+            onClicked: { pOpen.url = "https://github.com/nov4z/Panacea_novZ"; pOpen.running = false; pOpen.running = true; }
         }
     }
 

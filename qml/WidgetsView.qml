@@ -670,8 +670,9 @@ Item {
 
                             RowLayout {
                                 anchors.fill: parent
-                                anchors.margins: 10
-                                spacing: 8
+                                anchors.leftMargin: 8
+                                anchors.rightMargin: 8
+                                spacing: 6
 
                                 WIcon {
                                     Layout.alignment: Qt.AlignVCenter
@@ -694,13 +695,6 @@ Item {
                                     elide: Text.ElideRight
                                     lineHeight: 0.95
                                     font { family: view.sys ? view.sys.fontFam : "sans-serif"; pixelSize: 11 }
-                                }
-
-                                // Иконка-подсказка: клик переключит на монитор системы
-                                Text {
-                                    text: "󰍛"
-                                    color: view.sys ? view.sys.colMuted : "#888888"
-                                    font { family: view.sys ? view.sys.fontFam : "sans-serif"; pixelSize: 13 }
                                 }
                             }
                         }
@@ -781,9 +775,18 @@ Item {
                         anchors.right: parent.right
                         anchors.margins: 12
                         anchors.topMargin: 10
+                        spacing: 6
+
+                        Text {
+                            text: "󰍛"
+                            font { family: view.sys ? view.sys.fontFam : "sans-serif"; pixelSize: 13 }
+                            color: view.sys ? view.sys.colMuted : "#888888"
+                            Layout.alignment: Qt.AlignVCenter
+                        }
 
                         Caption {
                             Layout.fillWidth: true
+                            Layout.alignment: Qt.AlignVCenter
                             text: {
                                 if (!view.sys) return "SYSTEM";
                                 if (view.sys.languageCode === "en") return "SYSTEM";
@@ -794,13 +797,6 @@ Item {
                                 }
                                 return trText || "SISTEMA";
                             }
-                            color: view.sys ? view.sys.colMuted : "#888888"
-                        }
-
-                        // Иконка-подсказка: клик переключит на погоду
-                        Text {
-                            text: "󰖐"
-                            font { family: view.sys ? view.sys.fontFam : "sans-serif"; pixelSize: 12 }
                             color: view.sys ? view.sys.colMuted : "#888888"
                         }
                     }
