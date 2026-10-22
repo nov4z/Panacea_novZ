@@ -434,6 +434,12 @@ class TestComponentHierarchyAndContracts(unittest.TestCase):
         self.assertIn("transformOrigin: Item.Center", sys_qml)
         self.assertIn("loops: Animation.Infinite", sys_qml)
         self.assertNotIn("Logo con Brillo Rojo", sys_qml)
+        # Coin badge rear face branding checks
+        self.assertNotIn('"CACHYOS"', sys_qml)
+        self.assertNotIn('"× PANACEA"', sys_qml)
+        self.assertIn('text: "PANACEA"', sys_qml)
+        self.assertIn('text: "CONFIG"', sys_qml)
+        self.assertIn('text: "novZ"', sys_qml)
 
         # 3. DockView.qml checks
         dock_qml = (QML_DIR / "DockView.qml").read_text(encoding="utf-8")

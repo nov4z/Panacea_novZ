@@ -480,7 +480,7 @@ ColumnLayout {
                         }
                     }
 
-                    // Cara trasera: INFO (CachyOS x Panacea Config novZ)
+                    // Cara trasera: INFO (Panacea Config novZ)
                     Item {
                         anchors.fill: parent
                         visible: logoBadge.showBack
@@ -493,7 +493,7 @@ ColumnLayout {
 
                         ColumnLayout {
                             anchors.centerIn: parent
-                            spacing: 3
+                            spacing: 4
 
                             RowLayout {
                                 Layout.alignment: Qt.AlignHCenter
@@ -504,7 +504,7 @@ ColumnLayout {
                                     Behavior on color { ColorAnimation { duration: 200 } }
                                 }
                                 Text {
-                                    text: "CACHYOS"
+                                    text: "PANACEA"
                                     color: "#ffffff"
                                     font {
                                         family: page.sys.fontFam
@@ -512,18 +512,6 @@ ColumnLayout {
                                         bold: true
                                         letterSpacing: 1.2
                                     }
-                                }
-                            }
-
-                            Text {
-                                Layout.alignment: Qt.AlignHCenter
-                                text: "× PANACEA"
-                                color: Qt.rgba(page.sys.colFg.r, page.sys.colFg.g, page.sys.colFg.b, 0.85)
-                                font {
-                                    family: page.sys.fontFam
-                                    pixelSize: 8
-                                    bold: true
-                                    letterSpacing: 1.1
                                 }
                             }
 
