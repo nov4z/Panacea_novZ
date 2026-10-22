@@ -574,7 +574,7 @@ ColumnLayout {
             }
         }
 
-        // ================= VISTA EN GRANDE EXPANDIDA (Logo con Brillo Rojo + Panel con Más Info Resumida) =================
+        // ================= VISTA EN GRANDE EXPANDIDA (Logo Panacea B&W con Giro Continuo + Panel con Más Info Resumida) =================
         Item {
             id: largeLogoArea
             Layout.fillWidth: true
