@@ -275,7 +275,7 @@ ColumnLayout {
                         font { family: page.sys.fontBody; pixelSize: page.sys.fontSize - 4; letterSpacing: 1.4; bold: true }
                     }
                     Text {
-                        text: page.osName.length > 0 ? page.osName : "CachyOS Linux"
+                        text: page.osName.length > 0 ? page.osName : "Linux"
                         color: page.sys.colFg
                         font { family: page.sys.fontDisplay; pixelSize: page.sys.fontSize; bold: true }
                     }
@@ -299,7 +299,7 @@ ColumnLayout {
                             Behavior on color { ColorAnimation { duration: 200 } }
                         }
                         Text {
-                            text: page.kernel.length > 0 ? page.kernel : "7.2.2-1-cachyos-bore"
+                            text: page.kernel.length > 0 ? page.kernel : "Linux"
                             color: page.sys.colFg
                             font { family: page.sys.fontBody; pixelSize: page.sys.fontSize - 1 }
                         }
@@ -491,36 +491,49 @@ ColumnLayout {
                             angle: logoBadge.spinAngle - 180
                         }
 
-                        ColumnLayout {
+                        // Separador central en el ecuador exacto de la ficha (96x96)
+                        Rectangle {
+                            id: coinSep
                             anchors.centerIn: parent
+                            width: 44
+                            height: 1
+                            color: Qt.rgba(page.sys.colFg.r, page.sys.colFg.g, page.sys.colFg.b, 0.20)
+                        }
+
+                        // Arriba: PANACEA con su viñeta de acento
+                        RowLayout {
+                            anchors {
+                                bottom: coinSep.top
+                                bottomMargin: 9
+                                horizontalCenter: parent.horizontalCenter
+                            }
                             spacing: 4
 
-                            RowLayout {
-                                Layout.alignment: Qt.AlignHCenter
-                                spacing: 4
-                                Rectangle {
-                                    width: 5; height: 5; radius: 2.5
-                                    color: customCard.accentColor
-                                    Behavior on color { ColorAnimation { duration: 200 } }
-                                }
-                                Text {
-                                    text: "PANACEA"
-                                    color: "#ffffff"
-                                    font {
-                                        family: page.sys.fontFam
-                                        pixelSize: 9
-                                        bold: true
-                                        letterSpacing: 1.2
-                                    }
-                                }
-                            }
-
                             Rectangle {
-                                Layout.alignment: Qt.AlignHCenter
-                                Layout.preferredWidth: 44
-                                Layout.preferredHeight: 1
-                                color: Qt.rgba(page.sys.colFg.r, page.sys.colFg.g, page.sys.colFg.b, 0.20)
+                                width: 5; height: 5; radius: 2.5
+                                color: customCard.accentColor
+                                Behavior on color { ColorAnimation { duration: 200 } }
                             }
+                            Text {
+                                text: "PANACEA"
+                                color: "#ffffff"
+                                font {
+                                    family: page.sys.fontFam
+                                    pixelSize: 9
+                                    bold: true
+                                    letterSpacing: 1.2
+                                }
+                            }
+                        }
+
+                        // Abajo: CONFIG novZ
+                        ColumnLayout {
+                            anchors {
+                                top: coinSep.bottom
+                                topMargin: 7
+                                horizontalCenter: parent.horizontalCenter
+                            }
+                            spacing: 2
 
                             Text {
                                 Layout.alignment: Qt.AlignHCenter
@@ -665,7 +678,7 @@ ColumnLayout {
                                     font { family: page.sys.fontBody; pixelSize: 8; letterSpacing: 1.2; bold: true }
                                 }
                                 Text {
-                                    text: "CachyOS x86-64-v3"
+                                    text: page.osName.length > 0 ? page.osName : "Linux"
                                     color: page.sys.colFg
                                     font { family: page.sys.fontFam; pixelSize: 10; bold: true }
                                 }

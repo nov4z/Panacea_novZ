@@ -434,9 +434,11 @@ class TestComponentHierarchyAndContracts(unittest.TestCase):
         self.assertIn("transformOrigin: Item.Center", sys_qml)
         self.assertIn("loops: Animation.Infinite", sys_qml)
         self.assertNotIn("Logo con Brillo Rojo", sys_qml)
-        # Coin badge rear face branding checks
+        # Coin badge rear face branding checks and complete universality
         self.assertNotIn('"CACHYOS"', sys_qml)
         self.assertNotIn('"× PANACEA"', sys_qml)
+        self.assertNotIn("cachyos", sys_qml.lower())
+        self.assertNotIn("cachy", sys_qml.lower())
         self.assertIn('text: "PANACEA"', sys_qml)
         self.assertIn('text: "CONFIG"', sys_qml)
         self.assertIn('text: "novZ"', sys_qml)
