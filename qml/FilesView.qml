@@ -881,7 +881,7 @@ Item {
                 }
 
                 Text {
-                    text: "PANACEA  //  ARCHIVOS"
+                    text: "PANACEA  //  " + (view.sys && view.sys.tr ? view.sys.tr("ARCHIVOS") : "ARCHIVOS")
                     color: Qt.rgba(view.sys.colFg.r, view.sys.colFg.g, view.sys.colFg.b, 0.42)
                     font {
                         family: view.sys.fontBody
@@ -998,7 +998,7 @@ Item {
                         Layout.leftMargin: 10
                         Layout.topMargin: 4
                         Layout.bottomMargin: 2
-                        text: "LUGARES"
+                        text: view.sys && view.sys.tr ? view.sys.tr("LUGARES") : "LUGARES"
                         color: Qt.rgba(view.sys.colFg.r, view.sys.colFg.g, view.sys.colFg.b, 0.35)
                         font {
                             family: view.sys.fontBody
@@ -1140,7 +1140,7 @@ Item {
                         Layout.leftMargin: 10
                         Layout.topMargin: 4
                         Layout.bottomMargin: 2
-                        text: "UNIDADES"
+                        text: view.sys && view.sys.tr ? view.sys.tr("UNIDADES") : "UNIDADES"
                         color: Qt.rgba(view.sys.colFg.r, view.sys.colFg.g, view.sys.colFg.b, 0.35)
                         font {
                             family: view.sys.fontBody
@@ -1653,7 +1653,7 @@ Item {
                 spacing: 6
 
                 Text {
-                    text: "ORDENAR"
+                    text: view.sys && view.sys.tr ? view.sys.tr("ORDENAR") : "ORDENAR"
                     color: Qt.rgba(view.sys.colFg.r, view.sys.colFg.g, view.sys.colFg.b, 0.32)
                     font {
                         family: view.sys.fontBody
@@ -1688,7 +1688,7 @@ Item {
                             spacing: 4
                             Text {
                                 id: sTxt
-                                text: sortPill.modelData.label
+                                text: view.sys && view.sys.tr ? view.sys.tr(sortPill.modelData.label) : sortPill.modelData.label
                                 color: sortPill.on ? view.sys.colFg : view.sys.colMuted
                                 font { family: view.sys.fontBody; pixelSize: view.sys.fontSize - 4; bold: sortPill.on }
                             }
@@ -1733,7 +1733,7 @@ Item {
                         }
                         Text {
                             id: hidTxt
-                            text: "Ocultos"
+                            text: view.sys && view.sys.tr ? view.sys.tr("Ocultos") : "Ocultos"
                             color: view.sys.cfg.filesHidden ? view.sys.colFg : view.sys.colMuted
                             font { family: view.sys.fontBody; pixelSize: view.sys.fontSize - 4; bold: view.sys.cfg.filesHidden }
                         }
@@ -1772,7 +1772,7 @@ Item {
                         }
                         Text {
                             id: ffTxt
-                            text: "Carpetas primero"
+                            text: view.sys && view.sys.tr ? view.sys.tr("Carpetas primero") : "Carpetas primero"
                             color: view.foldersFirst ? view.sys.colFg : view.sys.colMuted
                             font { family: view.sys.fontBody; pixelSize: view.sys.fontSize - 4; bold: view.foldersFirst }
                         }
@@ -2454,7 +2454,7 @@ Item {
                     color: Qt.rgba(1, 1, 1, 0.08)
                     Text {
                         anchors.centerIn: parent
-                        text: "Cancelar"
+                        text: view.sys && view.sys.tr ? view.sys.tr("Cancelar") : "Cancelar"
                         color: view.sys.colMuted
                         font { family: view.sys.fontBody; pixelSize: view.sys.fontSize - 3 }
                     }
@@ -2472,7 +2472,7 @@ Item {
                     color: view.sys.colOn
                     Text {
                         anchors.centerIn: parent
-                        text: "Aceptar"
+                        text: view.sys && view.sys.tr ? view.sys.tr("Aceptar") : "Aceptar"
                         color: "#ffffff"
                         font { family: view.sys.fontBody; pixelSize: view.sys.fontSize - 3; bold: true }
                     }

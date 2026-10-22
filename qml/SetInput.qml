@@ -169,7 +169,7 @@ ColumnLayout {
         TextField {
             id: layoutsField
             Layout.fillWidth: true
-            placeholderText: "us,tr"
+            placeholderText: "latam,us"
             text: page.sys.cfg.keyboardLayouts
             color: page.sys.colFg
             placeholderTextColor: page.sys.colMuted

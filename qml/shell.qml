@@ -1050,6 +1050,8 @@ PanelWindow {
         }
     }
 
+    Process { id: pUserLocaleSync }
+
     function setLang(code) {
         if (root.cfg.lang === code) return;
         // Оболочка переключается сразу, не дожидаясь пароля: её словарь
@@ -1057,6 +1059,17 @@ PanelWindow {
         root.cfg.lang = code;
         root.saveCfg();
         root.langChangeSeq++;
+
+        // Sincronizar el entorno de la sesión de usuario y aplicaciones en tiempo real
+        var loc = canonicalLocale(code) + ".UTF-8";
+        pUserLocaleSync.command = ["sh", "-c",
+            "mkdir -p \"$HOME/.config\" && " +
+            "printf 'LANG=%s\\nLC_TIME=%s\\n' \"" + loc + "\" \"" + loc + "\" > \"$HOME/.config/locale.conf\" && " +
+            "systemctl --user set-environment LANG=\"" + loc + "\" LC_TIME=\"" + loc + "\" 2>/dev/null || true; " +
+            "dbus-update-activation-environment --systemd LANG=\"" + loc + "\" LC_TIME=\"" + loc + "\" 2>/dev/null || true"
+        ];
+        if (pUserLocaleSync.running) pUserLocaleSync.running = false;
+        pUserLocaleSync.running = true;
 
         root.sysLangPending = true;
         pLocaleSet.command = ["pkexec", Quickshell.env("HOME") + "/.config/panacea/scripts/locale.sh", "set", code];

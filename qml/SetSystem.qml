@@ -698,7 +698,7 @@ ColumnLayout {
                                     font { family: page.sys.fontBody; pixelSize: 8; letterSpacing: 1.2; bold: true }
                                 }
                                 Text {
-                                    text: "BORE (Baja Latencia)"
+                                    text: page.sys && page.sys.tr ? page.sys.tr("BORE (Baja Latencia)") : "BORE (Baja Latencia)"
                                     color: page.sys.colFg
                                     font { family: page.sys.fontFam; pixelSize: 10; bold: true }
                                 }
@@ -738,7 +738,7 @@ ColumnLayout {
                                     font { family: page.sys.fontBody; pixelSize: 8; letterSpacing: 1.2; bold: true }
                                 }
                                 Text {
-                                    text: "novZ Personalizada"
+                                    text: page.sys && page.sys.tr ? page.sys.tr("novZ Personalizada") : "novZ Personalizada"
                                     color: page.sys.colFg
                                     font { family: page.sys.fontFam; pixelSize: 10; bold: true }
                                 }

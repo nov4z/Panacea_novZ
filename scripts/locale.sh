@@ -83,6 +83,10 @@ cmd_set() {
         echo "LC_TIME=${loc}" >> "$CONF"
     fi
 
+    if command -v localectl >/dev/null 2>&1; then
+        localectl set-locale LANG="${loc}" LC_TIME="${loc}" 2>/dev/null || true
+    fi
+
     echo "$1"
 }
 

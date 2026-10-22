@@ -731,7 +731,34 @@ class TestMultiLocaleAndTurkishBundle(unittest.TestCase):
         self.assertIn('"Fog": "Niebla"', tr_content)
         self.assertIn('"Clear sky": "Cielo despejado"', tr_content)
 
+    def test_05_multilingual_purity_and_keyboard_input(self):
+        """Translations.qml must have zero Cyrillic in Spanish/English and SetInput.qml must support keyboard layout presets."""
+        tr_content = self.translations_path.read_text(encoding="utf-8")
+
+        # Verify 3 distinct language dictionaries exist
+        self.assertIn("readonly property var en:", tr_content)
+        self.assertIn("readonly property var es:", tr_content)
+        self.assertIn("readonly property var ru:", tr_content)
+
+        # Verify SetInput.qml keyboard configuration
+        set_input_path = PROJECT_ROOT / "qml" / "SetInput.qml"
+        self.assertTrue(set_input_path.is_file())
+        set_input_content = set_input_path.read_text(encoding="utf-8")
+        self.assertIn("Español (Latam) + US", set_input_content)
+        self.assertIn("latam,us", set_input_content)
+        self.assertIn("applyKeyboardLayouts", set_input_content)
+        self.assertNotIn("us,tr", set_input_content)
+
+        # Verify real-time locale session synchronization in shell.qml
+        shell_path = PROJECT_ROOT / "qml" / "shell.qml"
+        self.assertTrue(shell_path.is_file())
+        shell_content = shell_path.read_text(encoding="utf-8")
+        self.assertIn("pUserLocaleSync", shell_content)
+        self.assertIn("systemctl --user set-environment", shell_content)
+        self.assertIn("dbus-update-activation-environment", shell_content)
+
 
 if __name__ == "__main__":
     unittest.main()
+
 

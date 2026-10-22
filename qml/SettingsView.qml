@@ -646,6 +646,7 @@ Item {
                             target: view.sys
                             function onLanguageCodeChanged() { pageLoader.reload(); }
                             function onLocaleIdChanged() { pageLoader.reload(); }
+                            function onLangChangeSeqChanged() { pageLoader.reload(); }
                         }
                     }
 

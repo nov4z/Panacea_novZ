@@ -170,7 +170,7 @@ Item {
                 }
 
                 Text {
-                    text: view.sink ? String(view.sink.description || view.sink.name || "Salida predeterminada") : "Control de volumen y dispositivos"
+                    text: view.sink ? String(view.sink.description || view.sink.name || (view.sys && view.sys.tr ? view.sys.tr("Salida predeterminada") : "Salida predeterminada")) : (view.sys && view.sys.tr ? view.sys.tr("Control de volumen y dispositivos") : "Control de volumen y dispositivos")
                     color: view.sys.colMuted
                     elide: Text.ElideRight
                     Layout.fillWidth: true
@@ -553,7 +553,7 @@ Item {
                             }
                             Text {
                                 id: activeTagText
-                                text: "Activo"
+                                text: view.sys && view.sys.tr ? view.sys.tr("Activo") : "Activo"
                                 color: view.sys.colOn
                                 font { family: view.sys.fontFam; pixelSize: 10; bold: true }
                             }
