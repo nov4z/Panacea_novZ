@@ -617,12 +617,23 @@ class TestNovZCustomizationsAndBugfixes(unittest.TestCase):
         update_path = PROJECT_ROOT / "scripts" / "update.sh"
         content = update_path.read_text(encoding="utf-8")
         self.assertIn('REPO="${PANACEA_REPO:-nov4z/Panacea_novZ}"', content)
+        self.assertNotIn(".gemini", content, "update.sh must not contain hardcoded scratch directory paths")
 
         # Run update.sh check
         res = subprocess.run(["bash", str(update_path), "check"], capture_output=True, text=True, cwd=str(PROJECT_ROOT))
         self.assertEqual(res.returncode, 0, f"update.sh check failed: {res.stderr}")
         self.assertIn("current=", res.stdout)
         self.assertNotIn("status=unknown", res.stdout, "update.sh check should recognize installed version instead of unknown")
+
+        # Verify semantic version fallback detection when older version is configured
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmp_conf:
+            panacea_conf = Path(tmp_conf) / "panacea"
+            panacea_conf.mkdir(parents=True)
+            (panacea_conf / ".version").write_text("1.0.10\n", encoding="utf-8")
+            env = dict(os.environ, XDG_CONFIG_HOME=tmp_conf)
+            res_behind = subprocess.run(["bash", str(update_path), "check"], capture_output=True, text=True, cwd=str(PROJECT_ROOT), env=env)
+            self.assertIn("status=behind", res_behind.stdout, "Older semantic version must report status=behind")
 
     def test_setsystem_contains_novz_github_profile(self):
         """Foto 3: SetSystem.qml must include novZ GitHub profile card below author card."""

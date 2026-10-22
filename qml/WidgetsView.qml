@@ -670,8 +670,8 @@ Item {
 
                             RowLayout {
                                 anchors.fill: parent
-                                anchors.leftMargin: 8
-                                anchors.rightMargin: 8
+                                anchors.leftMargin: 6
+                                anchors.rightMargin: 6
                                 spacing: 6
 
                                 WIcon {
@@ -690,7 +690,7 @@ Item {
                                         return view.weatherConditionTr(rawDesc);
                                     }
                                     color: view.sys ? view.sys.colFg : "#ffffff"
-                                    wrapMode: Text.WordWrap
+                                    wrapMode: Text.Wrap
                                     maximumLineCount: 2
                                     elide: Text.ElideRight
                                     lineHeight: 0.95

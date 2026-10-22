@@ -71,7 +71,7 @@ print_banner() {
 BANNER
     echo -e "${NC}"
     echo -e "${CYAN}${BOLD}  Dynamic Notch & Control Center Suite for Wayland / Hyprland${NC}"
-    echo -e "${DIM}  Modificación de Panacea (por EnsixD: https://github.com/EnsixD/Panacea) por NovZ${NC}\n"
+    echo -e "${DIM}  Modificación de Panacea (por EnsixD: https://github.com/EnsixD/Panacea) por NovZ (https://github.com/nov4z/Panacea_novZ)${NC}\n"
 }
 
 log_info()    { echo -e "  ${BLUE}${BOLD}ℹ${NC}  $1"; }

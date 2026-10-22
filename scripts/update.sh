@@ -89,8 +89,12 @@ current() {
         git_dir="$script_dir/.."
     elif [ -d "$CONF/panacea/.git" ]; then
         git_dir="$CONF/panacea"
-    elif [ -d "$HOME/.gemini/antigravity/scratch/Panacea_novZ/.git" ]; then
-        git_dir="$HOME/.gemini/antigravity/scratch/Panacea_novZ"
+    elif command -v git >/dev/null 2>&1; then
+        local top
+        top="$(git -C "$script_dir" rev-parse --show-toplevel 2>/dev/null || git rev-parse --show-toplevel 2>/dev/null || true)"
+        if [ -n "$top" ] && [ -d "$top/.git" ]; then
+            git_dir="$top"
+        fi
     fi
     if [ -n "$git_dir" ] && command -v git >/dev/null 2>&1; then
         local git_sha
@@ -155,23 +159,46 @@ cmd_check() {
     echo "current=$cur"
     echo "latest=$sha"
     echo "subject=$subject"
-    # Версия неизвестна (ставили не установщиком) — предлагать обновление
-    # наугад нельзя: человек не поймёт, с чего на что.
+
     if [ -z "$cur" ]; then
         if [ -f "$CONF/panacea/VERSION" ]; then
             cur="$(head -1 "$CONF/panacea/VERSION" | tr -d '[:space:]')"
             echo "current=$cur"
-            echo "status=current"
-        else
-            echo "status=unknown"
         fi
-    elif [ "$cur" = "$sha" ]; then
-        echo "status=current"
-    elif [[ "$cur" == 1.* ]] && [ -f "$CONF/panacea/VERSION" ] && [ "$cur" = "$(head -1 "$CONF/panacea/VERSION" | tr -d '[:space:]')" ]; then
-        echo "status=current"
-    else
-        echo "status=behind"
     fi
+
+    if [ -z "$cur" ]; then
+        echo "status=unknown"
+        return
+    fi
+
+    # Сравнение по коммиту (полный SHA)
+    if [ "$cur" = "$sha" ]; then
+        echo "status=current"
+        return
+    fi
+
+    # Если установленная версия — семантическая (например, 1.0.14-novz из VERSION)
+    if [ ${#cur} -ne 40 ]; then
+        local remote_ver=""
+        if [ "$IS_GITHUB" = "1" ] && have curl; then
+            remote_ver="$(curl -fsSL --max-time 5 "https://raw.githubusercontent.com/$REPO/$BRANCH/VERSION" 2>/dev/null | head -1 | tr -d '[:space:]')"
+        fi
+        if [ -n "$remote_ver" ]; then
+            if [ "$cur" = "$remote_ver" ]; then
+                echo "status=current"
+            else
+                echo "status=behind"
+            fi
+            return
+        fi
+        if [ -f "$CONF/panacea/VERSION" ] && [ "$cur" = "$(head -1 "$CONF/panacea/VERSION" | tr -d '[:space:]')" ]; then
+            echo "status=current"
+            return
+        fi
+    fi
+
+    echo "status=behind"
 }
 
 # Снимок живого состояния экранов в settings.json.
