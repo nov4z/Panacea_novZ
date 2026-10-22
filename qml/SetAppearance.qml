@@ -10,29 +10,32 @@ ColumnLayout {
     id: page
 
     property var sys
-    property var localeOptions: [{ id: "es", text: "Español" }, { id: "en", text: "English" }, { id: "ru", text: "Русский" }, { id: "tr", text: "Türkçe" }]
+    property var localeOptions: [{ id: "es", text: "Español" }, { id: "en", text: "English" }, { id: "ru", text: "Русский" }]
 
     Process {
         command: [page.sys.scriptDir + "/locale.sh", "list"]
         running: true
         stdout: StdioCollector {
             onStreamFinished: {
-                var options = [
-                    { id: "es", text: "Español" },
-                    { id: "en", text: "English" },
-                    { id: "ru", text: "Русский" },
-                    { id: "tr", text: "Türkçe" }
-                ];
+                var supported = { "es": "Español", "en": "English", "ru": "Русский" };
                 var lines = String(text).trim().split("\n");
+                var options = [];
                 for (var i = 0; i < lines.length; i++) {
                     var parts = lines[i].split("|");
                     if (parts.length !== 2 || !parts[0].length) continue;
-                    if (parts[0] === "es" || parts[0] === "en" || parts[0] === "ru" || parts[0] === "tr") continue;
-                    var locale = Qt.locale(parts[0]);
-                    var nativeName = locale && locale.name !== "C" ? locale.nativeLanguageName : "";
-                    options.push({ id: parts[0], text: nativeName ? nativeName + " · " + parts[0] : parts[1] });
+                    if (supported[parts[0]]) {
+                        options.push({ id: parts[0], text: supported[parts[0]] });
+                    }
                 }
-                if (options.length) page.localeOptions = options;
+                if (options.length === 3) {
+                    page.localeOptions = options;
+                } else {
+                    page.localeOptions = [
+                        { id: "es", text: "Español" },
+                        { id: "en", text: "English" },
+                        { id: "ru", text: "Русский" }
+                    ];
+                }
             }
         }
     }
@@ -109,7 +112,7 @@ ColumnLayout {
         }
         Text {
             Layout.fillWidth: true
-            visible: ["en", "ru", "tr", "es"].indexOf(page.sys.languageCode) < 0
+            visible: ["en", "ru", "es"].indexOf(page.sys.languageCode) < 0
             text: page.sys.tr("Для этого языка нет перевода интерфейса Panacea. Пока используется английский; запросите перевод через issue на GitHub.")
             color: page.sys.colMuted
             wrapMode: Text.WordWrap

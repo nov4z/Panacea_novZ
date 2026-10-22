@@ -146,6 +146,7 @@ ColumnLayout {
                        : (optMa.containsMouse
                           ? Qt.rgba(pick.sys.colFg.r, pick.sys.colFg.g, pick.sys.colFg.b, 0.08)
                           : "transparent")
+                Behavior on color { ColorAnimation { duration: 120 } }
 
                 Text {
                     anchors.fill: parent

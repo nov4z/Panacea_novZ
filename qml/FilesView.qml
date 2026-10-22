@@ -1020,6 +1020,7 @@ Item {
                             Layout.leftMargin: 4
                             Layout.rightMargin: 4
                             radius: 12
+                            clip: true
                             scale: placeMa.pressed ? 0.985 : (placeMa.containsMouse ? 1.012 : 1.0)
                             color: placeItem.active
                                    ? Qt.rgba(view.sys.colOn.r, view.sys.colOn.g, view.sys.colOn.b, 0.16)
@@ -1032,25 +1033,25 @@ Item {
                                           : (placeMa.containsMouse ? Qt.rgba(view.sys.colFg.r, view.sys.colFg.g, view.sys.colFg.b, 0.08) : "transparent")
                             Behavior on color { ColorAnimation { duration: view.sys.animFade } }
                             Behavior on border.color { ColorAnimation { duration: view.sys.animFade } }
-                            Behavior on scale { NumberAnimation { duration: 120; easing.type: Easing.OutQuad } }
+                            Behavior on scale { NumberAnimation { duration: 140; easing.type: Easing.OutCubic } }
 
                             // Indicador lateral Nothing OS
                             Rectangle {
                                 anchors.left: parent.left
-                                anchors.leftMargin: 2
+                                anchors.leftMargin: 6
                                 anchors.verticalCenter: parent.verticalCenter
                                 width: 3
-                                height: placeItem.active ? 20 : (placeMa.containsMouse ? 10 : 0)
+                                height: placeItem.active ? 18 : (placeMa.containsMouse ? 8 : 0)
                                 radius: 1.5
                                 color: view.sys.colOn
-                                opacity: placeItem.active ? 1 : (placeMa.containsMouse ? 0.5 : 0)
+                                opacity: placeItem.active ? 1 : (placeMa.containsMouse ? 0.45 : 0)
                                 Behavior on height { NumberAnimation { duration: 180; easing.type: Easing.OutCubic } }
                                 Behavior on opacity { NumberAnimation { duration: 180 } }
                             }
 
                             RowLayout {
                                 anchors.fill: parent
-                                anchors.leftMargin: 8
+                                anchors.leftMargin: 15
                                 anchors.rightMargin: 10
                                 spacing: 10
 

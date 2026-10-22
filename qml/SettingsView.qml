@@ -366,7 +366,8 @@ Item {
                         anchors.fill: parent
                         anchors.leftMargin: 4
                         anchors.rightMargin: 4
-                        radius: 13
+                        radius: 12
+                        clip: true
                         scale: navMa.pressed ? 0.985 : (navMa.containsMouse ? 1.012 : 1.0)
                         color: navItem.active
                                ? Qt.rgba(view.sys.colOn.r, view.sys.colOn.g, view.sys.colOn.b, 0.16)
@@ -380,25 +381,25 @@ Item {
 
                         Behavior on color { ColorAnimation { duration: view.sys.animFade } }
                         Behavior on border.color { ColorAnimation { duration: view.sys.animFade } }
-                        Behavior on scale { NumberAnimation { duration: 120; easing.type: Easing.OutQuad } }
+                        Behavior on scale { NumberAnimation { duration: 140; easing.type: Easing.OutCubic } }
 
                         // Indicador de selección lateral Nothing
                         Rectangle {
                             anchors.left: parent.left
-                            anchors.leftMargin: 2
+                            anchors.leftMargin: 6
                             anchors.verticalCenter: parent.verticalCenter
                             width: 3
-                            height: navItem.active ? 20 : (navMa.containsMouse ? 10 : 0)
+                            height: navItem.active ? 18 : (navMa.containsMouse ? 8 : 0)
                             radius: 1.5
                             color: view.sys.colOn
-                            opacity: navItem.active ? 1 : (navMa.containsMouse ? 0.5 : 0)
+                            opacity: navItem.active ? 1 : (navMa.containsMouse ? 0.45 : 0)
                             Behavior on height { NumberAnimation { duration: 180; easing.type: Easing.OutCubic } }
                             Behavior on opacity { NumberAnimation { duration: 180 } }
                         }
 
                         RowLayout {
                             anchors.fill: parent
-                            anchors.leftMargin: 8
+                            anchors.leftMargin: 15
                             anchors.rightMargin: 10
                             spacing: 10
 

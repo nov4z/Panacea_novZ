@@ -524,7 +524,8 @@ FocusScope {
                 width: list.width - 10
                 x: 4
                 height: 52
-                radius: 13
+                radius: 12
+                clip: true
                 color: isSelected
                        ? Qt.rgba(view.sys.colOn.r, view.sys.colOn.g, view.sys.colOn.b, 0.16)
                        : (rowMa.containsMouse ? Qt.rgba(view.sys.colFg.r, view.sys.colFg.g, view.sys.colFg.b, 0.065) : "transparent")
@@ -545,19 +546,20 @@ FocusScope {
                 // Indicador vertical de selección izquierda
                 Rectangle {
                     anchors.left: parent.left
-                    anchors.top: parent.top
-                    anchors.bottom: parent.bottom
-                    anchors.topMargin: 8
-                    anchors.bottomMargin: 8
+                    anchors.leftMargin: 6
+                    anchors.verticalCenter: parent.verticalCenter
                     width: 3
+                    height: row.isSelected ? 20 : (rowMa.containsMouse ? 10 : 0)
                     radius: 1.5
                     color: view.sys.colOn
-                    visible: row.isSelected
+                    opacity: row.isSelected ? 1 : (rowMa.containsMouse ? 0.45 : 0)
+                    Behavior on height { NumberAnimation { duration: 180; easing.type: Easing.OutCubic } }
+                    Behavior on opacity { NumberAnimation { duration: 180 } }
                 }
 
                 RowLayout {
                     anchors.fill: parent
-                    anchors.leftMargin: 12
+                    anchors.leftMargin: 15
                     anchors.rightMargin: 16
                     spacing: 12
 
