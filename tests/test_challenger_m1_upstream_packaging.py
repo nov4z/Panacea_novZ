@@ -713,6 +713,24 @@ class TestMultiLocaleAndTurkishBundle(unittest.TestCase):
         self.assertIn("var dayArr = view.sys.isEs ? daysEs : (view.isEn ? daysEn : daysRu);", content)
         self.assertIn("var monArr = view.sys.isEs ? monthsEs : (view.isEn ? monthsEn : monthsRu);", content)
 
+        # Weather condition translations & mapping
+        self.assertIn("function weatherConditionTr(desc)", content)
+        self.assertIn('"Llovizna"', content)
+        self.assertIn('"Chubascos"', content)
+        self.assertIn('"Niebla"', content)
+        self.assertIn('"Cielo despejado"', content)
+        self.assertIn('"Parcialmente nublado"', content)
+        self.assertIn('"Nublado"', content)
+        self.assertIn("view.weatherConditionTr(activeDay.desc)", content)
+        self.assertIn("view.weatherConditionTr(dayItem.modelData.desc)", content)
+
+        # Verify Translations.qml has weather keys
+        tr_content = self.translations_path.read_text(encoding="utf-8")
+        self.assertIn('"Drizzle": "Llovizna"', tr_content)
+        self.assertIn('"Rain showers": "Chubascos"', tr_content)
+        self.assertIn('"Fog": "Niebla"', tr_content)
+        self.assertIn('"Clear sky": "Cielo despejado"', tr_content)
+
 
 if __name__ == "__main__":
     unittest.main()

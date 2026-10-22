@@ -115,18 +115,18 @@ raw=$(curl -sS --connect-timeout 5 --max-time 12 \
 
 out=$(printf '%s' "$raw" | jq --arg city "$display_city" --arg lang "$LANG_" --arg units "$UNITS" '
 def wmo_desc(c):
-    if c == 0 then (if $lang == "ru" then "Ясно" else "Clear sky" end)
-    elif c == 1 then (if $lang == "ru" then "В основном ясно" else "Mainly clear" end)
-    elif c == 2 then (if $lang == "ru" then "Переменная облачность" else "Partly cloudy" end)
-    elif c == 3 then (if $lang == "ru" then "Пасмурно" else "Overcast" end)
-    elif c == 45 or c == 48 then (if $lang == "ru" then "Туман" else "Fog" end)
-    elif c == 51 or c == 53 or c == 55 then (if $lang == "ru" then "Морось" else "Drizzle" end)
-    elif c == 61 or c == 63 or c == 65 then (if $lang == "ru" then "Дождь" else "Rain" end)
-    elif c == 71 or c == 73 or c == 75 or c == 77 then (if $lang == "ru" then "Снег" else "Snow" end)
-    elif c == 80 or c == 81 or c == 82 then (if $lang == "ru" then "Ливень" else "Rain showers" end)
-    elif c == 85 or c == 86 then (if $lang == "ru" then "Снегопад" else "Snow showers" end)
-    elif c == 95 or c == 96 or c == 99 then (if $lang == "ru" then "Гроза" else "Thunderstorm" end)
-    else (if $lang == "ru" then "Облачно" else "Cloudy" end)
+    if c == 0 then (if $lang == "ru" then "Ясно" elif $lang == "es" then "Cielo despejado" else "Clear sky" end)
+    elif c == 1 then (if $lang == "ru" then "В основном ясно" elif $lang == "es" then "Mayormente despejado" else "Mainly clear" end)
+    elif c == 2 then (if $lang == "ru" then "Переменная облачность" elif $lang == "es" then "Parcialmente nublado" else "Partly cloudy" end)
+    elif c == 3 then (if $lang == "ru" then "Пасмурно" elif $lang == "es" then "Nublado" else "Overcast" end)
+    elif c == 45 or c == 48 then (if $lang == "ru" then "Туман" elif $lang == "es" then "Niebla" else "Fog" end)
+    elif c == 51 or c == 53 or c == 55 then (if $lang == "ru" then "Морось" elif $lang == "es" then "Llovizna" else "Drizzle" end)
+    elif c == 61 or c == 63 or c == 65 then (if $lang == "ru" then "Дождь" elif $lang == "es" then "Lluvia" else "Rain" end)
+    elif c == 71 or c == 73 or c == 75 or c == 77 then (if $lang == "ru" then "Снег" elif $lang == "es" then "Nieve" else "Snow" end)
+    elif c == 80 or c == 81 or c == 82 then (if $lang == "ru" then "Ливень" elif $lang == "es" then "Chubascos" else "Rain showers" end)
+    elif c == 85 or c == 86 then (if $lang == "ru" then "Снегопад" elif $lang == "es" then "Chubascos de nieve" else "Snow showers" end)
+    elif c == 95 or c == 96 or c == 99 then (if $lang == "ru" then "Гроза" elif $lang == "es" then "Tormenta" else "Thunderstorm" end)
+    else (if $lang == "ru" then "Облачно" elif $lang == "es" then "Nublado" else "Cloudy" end)
     end;
 
 def wmo_icon(c):

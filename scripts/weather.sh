@@ -87,18 +87,18 @@ m_body=$(curl -sS --connect-timeout 5 --max-time 12 \
 wcode=$(printf '%s' "$m_body" | jq -r '.current.weather_code // 0' 2>/dev/null)
 
 case "$wcode" in
-    0) cond="Clear";  icon="01d"; [ "$LANG_" = "ru" ] && desc="ясно" || desc="clear sky" ;;
-    1) cond="Clouds"; icon="02d"; [ "$LANG_" = "ru" ] && desc="в основном ясно" || desc="mainly clear" ;;
-    2) cond="Clouds"; icon="03d"; [ "$LANG_" = "ru" ] && desc="переменная облачность" || desc="partly cloudy" ;;
-    3) cond="Clouds"; icon="04d"; [ "$LANG_" = "ru" ] && desc="пасмурно" || desc="overcast" ;;
-    45|48) cond="Fog"; icon="50d"; [ "$LANG_" = "ru" ] && desc="туман" || desc="fog" ;;
-    51|53|55) cond="Drizzle"; icon="09d"; [ "$LANG_" = "ru" ] && desc="морось" || desc="drizzle" ;;
-    61|63|65) cond="Rain"; icon="10d"; [ "$LANG_" = "ru" ] && desc="дождь" || desc="rain" ;;
-    71|73|75|77) cond="Snow"; icon="13d"; [ "$LANG_" = "ru" ] && desc="снег" || desc="snow" ;;
-    80|81|82) cond="Rain"; icon="09d"; [ "$LANG_" = "ru" ] && desc="ливень" || desc="rain showers" ;;
-    85|86) cond="Snow"; icon="13d"; [ "$LANG_" = "ru" ] && desc="снегопад" || desc="snow showers" ;;
-    95|96|99) cond="Thunderstorm"; icon="11d"; [ "$LANG_" = "ru" ] && desc="гроза" || desc="thunderstorm" ;;
-    *) cond="Clouds"; icon="03d"; [ "$LANG_" = "ru" ] && desc="облачно" || desc="cloudy" ;;
+    0) cond="Clear";  icon="01d"; [ "$LANG_" = "ru" ] && desc="ясно" || { [ "$LANG_" = "es" ] && desc="cielo despejado" || desc="clear sky"; } ;;
+    1) cond="Clouds"; icon="02d"; [ "$LANG_" = "ru" ] && desc="в основном ясно" || { [ "$LANG_" = "es" ] && desc="mayormente despejado" || desc="mainly clear"; } ;;
+    2) cond="Clouds"; icon="03d"; [ "$LANG_" = "ru" ] && desc="переменная облачность" || { [ "$LANG_" = "es" ] && desc="parcialmente nublado" || desc="partly cloudy"; } ;;
+    3) cond="Clouds"; icon="04d"; [ "$LANG_" = "ru" ] && desc="пасмурно" || { [ "$LANG_" = "es" ] && desc="nublado" || desc="overcast"; } ;;
+    45|48) cond="Fog"; icon="50d"; [ "$LANG_" = "ru" ] && desc="туман" || { [ "$LANG_" = "es" ] && desc="niebla" || desc="fog"; } ;;
+    51|53|55) cond="Drizzle"; icon="09d"; [ "$LANG_" = "ru" ] && desc="морось" || { [ "$LANG_" = "es" ] && desc="llovizna" || desc="drizzle"; } ;;
+    61|63|65) cond="Rain"; icon="10d"; [ "$LANG_" = "ru" ] && desc="дождь" || { [ "$LANG_" = "es" ] && desc="lluvia" || desc="rain"; } ;;
+    71|73|75|77) cond="Snow"; icon="13d"; [ "$LANG_" = "ru" ] && desc="снег" || { [ "$LANG_" = "es" ] && desc="nieve" || desc="snow"; } ;;
+    80|81|82) cond="Rain"; icon="09d"; [ "$LANG_" = "ru" ] && desc="ливень" || { [ "$LANG_" = "es" ] && desc="chubascos" || desc="rain showers"; } ;;
+    85|86) cond="Snow"; icon="13d"; [ "$LANG_" = "ru" ] && desc="снегопад" || { [ "$LANG_" = "es" ] && desc="chubascos de nieve" || desc="snow showers"; } ;;
+    95|96|99) cond="Thunderstorm"; icon="11d"; [ "$LANG_" = "ru" ] && desc="гроза" || { [ "$LANG_" = "es" ] && desc="tormenta" || desc="thunderstorm"; } ;;
+    *) cond="Clouds"; icon="03d"; [ "$LANG_" = "ru" ] && desc="облачно" || { [ "$LANG_" = "es" ] && desc="nublado" || desc="cloudy"; } ;;
 esac
 
 printf '%s' "$m_body" | jq -r --arg cond "$cond" --arg desc "$desc" --arg icon "$icon" --arg city "$res_name" '

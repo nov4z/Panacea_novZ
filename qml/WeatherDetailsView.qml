@@ -50,6 +50,80 @@ Item {
                          : 0xF0590);
     }
 
+    function weatherConditionTr(desc) {
+        if (!desc) return "—";
+        var d = String(desc).trim();
+        if (!d.length) return "—";
+
+        var lang = "es";
+        if (view.sys) {
+            if (view.sys.languageCode === "ru") lang = "ru";
+            else if (view.sys.languageCode === "en") lang = "en";
+            else if (view.sys.languageCode === "tr" || view.sys.isTr) lang = "tr";
+            else if (view.sys.isEs || view.sys.languageCode === "es") lang = "es";
+        }
+
+        var map = {
+            "clear sky": { es: "Cielo despejado", en: "Clear sky", ru: "Ясно", tr: "Açık" },
+            "clear": { es: "Cielo despejado", en: "Clear", ru: "Ясно", tr: "Açık" },
+            "ясно": { es: "Cielo despejado", en: "Clear sky", ru: "Ясно", tr: "Açık" },
+
+            "mainly clear": { es: "Mayormente despejado", en: "Mainly clear", ru: "В основном ясно", tr: "Çoğunlukla açık" },
+            "в основном ясно": { es: "Mayormente despejado", en: "Mainly clear", ru: "В основном ясно", tr: "Çoğunlukla açık" },
+
+            "partly cloudy": { es: "Parcialmente nublado", en: "Partly cloudy", ru: "Переменная облачность", tr: "Parçalı bulutlu" },
+            "переменная облачность": { es: "Parcialmente nublado", en: "Partly cloudy", ru: "Переменная облачность", tr: "Parçalı bulutlu" },
+
+            "overcast": { es: "Nublado", en: "Overcast", ru: "Пасмурно", tr: "Kapalı" },
+            "пасмурно": { es: "Nublado", en: "Overcast", ru: "Пасмурно", tr: "Kapalı" },
+
+            "cloudy": { es: "Nublado", en: "Cloudy", ru: "Облачно", tr: "Bulutlu" },
+            "clouds": { es: "Nublado", en: "Cloudy", ru: "Облачно", tr: "Bulutlu" },
+            "облачно": { es: "Nublado", en: "Cloudy", ru: "Облачно", tr: "Bulutlu" },
+
+            "fog": { es: "Niebla", en: "Fog", ru: "Туман", tr: "Sisli" },
+            "туман": { es: "Niebla", en: "Fog", ru: "Туман", tr: "Sisli" },
+            "mist": { es: "Niebla", en: "Mist", ru: "Туман", tr: "Sisli" },
+            "haze": { es: "Neblina", en: "Haze", ru: "Дымка", tr: "Puslu" },
+
+            "drizzle": { es: "Llovizna", en: "Drizzle", ru: "Морось", tr: "Çiseleme" },
+            "light drizzle": { es: "Llovizna ligera", en: "Light drizzle", ru: "Небольшая морось", tr: "Hafif çiseleme" },
+            "морось": { es: "Llovizna", en: "Drizzle", ru: "Морось", tr: "Çiseleme" },
+
+            "rain": { es: "Lluvia", en: "Rain", ru: "Дождь", tr: "Yağmurlu" },
+            "light rain": { es: "Lluvia ligera", en: "Light rain", ru: "Небольшой дождь", tr: "Hafif yağmurlu" },
+            "heavy rain": { es: "Lluvia fuerte", en: "Heavy rain", ru: "Сильный дождь", tr: "Kuvvetli yağmurlu" },
+            "moderate rain": { es: "Lluvia moderada", en: "Moderate rain", ru: "Умеренный дождь", tr: "Orta şiddetli yağmurlu" },
+            "дождь": { es: "Lluvia", en: "Rain", ru: "Дождь", tr: "Yağmurlu" },
+
+            "rain showers": { es: "Chubascos", en: "Rain showers", ru: "Ливень", tr: "Sağanak yağış" },
+            "shower rain": { es: "Chubascos", en: "Shower rain", ru: "Ливень", tr: "Sağanak yağış" },
+            "ливень": { es: "Chubascos", en: "Rain showers", ru: "Ливень", tr: "Sağanak yağış" },
+
+            "snow": { es: "Nieve", en: "Snow", ru: "Снег", tr: "Karlı" },
+            "light snow": { es: "Nieve ligera", en: "Light snow", ru: "Небольшой снег", tr: "Hafif karlı" },
+            "heavy snow": { es: "Nieve fuerte", en: "Heavy snow", ru: "Снегопад", tr: "Yoğun karlı" },
+            "снег": { es: "Nieve", en: "Snow", ru: "Снег", tr: "Karlı" },
+
+            "snow showers": { es: "Chubascos de nieve", en: "Snow showers", ru: "Снегопад", tr: "Kar sağanağı" },
+            "снегопад": { es: "Chubascos de nieve", en: "Snow showers", ru: "Снегопад", tr: "Kar sağanağı" },
+
+            "thunderstorm": { es: "Tormenta", en: "Thunderstorm", ru: "Гроза", tr: "Gök gürültülü fırtına" },
+            "гроза": { es: "Tormenta", en: "Thunderstorm", ru: "Гроза", tr: "Gök gürültülü fırtına" }
+        };
+
+        var entry = map[d.toLowerCase()];
+        if (entry && entry[lang]) {
+            return entry[lang];
+        }
+
+        if (view.sys && view.sys.tr) {
+            var trRes = view.sys.tr(d);
+            if (trRes && trRes !== d) return trRes;
+        }
+        return d;
+    }
+
     readonly property var currentObj: (view.forecastData && view.forecastData.current) ? view.forecastData.current : null
     readonly property var dailyList: (view.forecastData && view.forecastData.daily) ? view.forecastData.daily : []
     readonly property var hourlyList: (view.forecastData && view.forecastData.hourly) ? view.forecastData.hourly : []
@@ -187,12 +261,12 @@ Item {
                             }
                             Text {
                                 text: activeDay
-                                      ? (activeDay.tempMin + "° … " + activeDay.tempMax + "° · " + activeDay.desc)
-                                      : (currentObj ? currentObj.desc : "—")
+                                      ? (activeDay.tempMin + "° … " + activeDay.tempMax + "° · " + view.weatherConditionTr(activeDay.desc))
+                                      : (currentObj ? view.weatherConditionTr(currentObj.desc) : "—")
                                 color: view.sys.colMuted
                                 font { family: view.sys.fontFam; pixelSize: view.sys.fontSize - 3 }
                                 elide: Text.ElideRight
-                                Layout.maximumWidth: 160
+                                Layout.maximumWidth: 180
                             }
                         }
                     }
@@ -459,7 +533,7 @@ Item {
 
                             Text {
                                 Layout.fillWidth: true
-                                text: dayItem.modelData.desc
+                                text: view.weatherConditionTr(dayItem.modelData.desc)
                                 color: view.sys.colMuted
                                 font { family: view.sys.fontFam; pixelSize: view.sys.fontSize - 4 }
                                 elide: Text.ElideRight

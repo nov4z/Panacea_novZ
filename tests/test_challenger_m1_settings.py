@@ -279,11 +279,27 @@ class TestComponentHierarchyAndContracts(unittest.TestCase):
         # Explicit checks for Nothing OS and Material You widget IDs
         self.assertEqual(counts.get("clockMa"), 1, "clockMa ID must be defined exactly once")
         self.assertEqual(counts.get("m3ClockMa"), 1, "m3ClockMa ID must be defined exactly once")
+        self.assertEqual(counts.get("digitalClockWrap"), 1, "digitalClockWrap ID must be defined exactly once")
+        self.assertEqual(counts.get("digitalClockNum"), 1, "digitalClockNum ID must be defined exactly once")
         self.assertIn("m3WidgetsStack", counts)
         self.assertIn("m3ScallopClock", counts)
         self.assertIn("m3WeatherPebble", counts)
         self.assertIn("clockCard", counts)
         self.assertIn("progressCard", counts)
+
+        # Digital clock containment & auto-scaling
+        self.assertIn("scaleFactor:", content)
+        self.assertIn("maxWidth:", content)
+        self.assertIn("scale: digitalClockWrap.scaleFactor", content)
+
+        # Widget localization in Spanish/multilingual
+        self.assertIn('view.sys.tr("СИСТЕМА")', content)
+        self.assertIn('view.sys.tr("Sistema")', content)
+        self.assertIn('view.sys.tr("Прогресс дня")', content)
+        self.assertIn('view.sys.tr("Осталось")', content)
+
+        # Indicator dot accent color with Material You fallback
+        self.assertIn("(view.sys && view.sys.colOn) ? view.sys.colOn", content)
 
     def test_settings_view_structure_and_imports(self):
         """Verifies imports, root item, and required functions in SettingsView.qml."""

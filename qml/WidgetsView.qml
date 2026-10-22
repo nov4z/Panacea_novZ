@@ -433,19 +433,33 @@ Item {
                         color: view.sys ? Qt.rgba(view.sys.colFg.r, view.sys.colFg.g, view.sys.colFg.b, 0.4) : "#666666"
                     }
 
-                    Num {
+                    Item {
+                        id: digitalClockWrap
                         Layout.alignment: Qt.AlignHCenter
-                        value: {
-                            if (!view.sys) return "";
-                            if (view.is12) {
-                                var d12 = new Date();
-                                return Qt.formatDateTime(d12, "h:mm");
+                        readonly property real maxWidth: Math.max(100, clockCard.width - 24)
+                        readonly property real scaleFactor: (digitalClockNum.implicitWidth > maxWidth && digitalClockNum.implicitWidth > 0)
+                                                            ? (maxWidth / digitalClockNum.implicitWidth)
+                                                            : 1.0
+                        implicitWidth: Math.min(digitalClockNum.implicitWidth * scaleFactor, maxWidth)
+                        implicitHeight: digitalClockNum.implicitHeight * scaleFactor
+
+                        Num {
+                            id: digitalClockNum
+                            anchors.centerIn: parent
+                            scale: digitalClockWrap.scaleFactor
+                            transformOrigin: Item.Center
+                            value: {
+                                if (!view.sys) return "";
+                                if (view.is12) {
+                                    var d12 = new Date();
+                                    return Qt.formatDateTime(d12, (view.sys && view.sys.clockSeconds) ? "h:mm:ss" : "h:mm");
+                                }
+                                return view.sys.timeText;
                             }
-                            return view.sys.timeText;
+                            size: (value.length > 8) ? 15 : (value.length > 5 ? 19 : 32)
+                            gapRatio: (value.length > 5) ? 0.12 : 0.14
+                            color: view.sys ? view.sys.colFg : "#ffffff"
                         }
-                        size: 32
-                        gapRatio: 0.14
-                        color: view.sys ? view.sys.colFg : "#ffffff"
                     }
 
                     Caption {
@@ -574,7 +588,13 @@ Item {
                                 Text {
                                     Layout.fillWidth: true
                                     Layout.alignment: Qt.AlignVCenter
-                                    text: (view.sys && view.sys.weatherReady) ? view.sys.weatherDesc : "—"
+                                    text: {
+                                        if (!view.sys || !view.sys.weatherReady) return "—";
+                                        var rawDesc = view.sys.weatherDesc;
+                                        if (!rawDesc) return "—";
+                                        if (view.sys.languageCode === "en") return rawDesc;
+                                        return view.sys.tr(rawDesc) || rawDesc;
+                                    }
                                     color: view.sys ? view.sys.colFg : "#ffffff"
                                     wrapMode: Text.WordWrap
                                     maximumLineCount: 2
@@ -671,7 +691,16 @@ Item {
 
                         Caption {
                             Layout.fillWidth: true
-                            text: view.sys ? view.sys.tr("СИСТЕМА") : "SYSTEM"
+                            text: {
+                                if (!view.sys) return "SYSTEM";
+                                if (view.sys.languageCode === "en") return "SYSTEM";
+                                var trText = view.sys.tr("СИСТЕМА");
+                                if (!trText || trText === "СИСТЕМА") {
+                                    var s = view.sys.tr("Sistema");
+                                    if (s && s !== "Sistema") return s.toUpperCase();
+                                }
+                                return trText || "SISTEMA";
+                            }
                             color: view.sys ? view.sys.colMuted : "#888888"
                         }
 
@@ -828,9 +857,17 @@ Item {
 
                     Caption {
                         Layout.fillWidth: true
-                        text: view.progressMode === "day"
-                              ? (view.sys ? view.sys.tr("ПРОГРЕСС ДНЯ") : "DAY PROGRESS")
-                              : (view.sys ? view.sys.tr("ПРОГРЕСС ГОДА") : "YEAR PROGRESS")
+                        text: {
+                            if (!view.sys) return view.progressMode === "day" ? "DAY PROGRESS" : "YEAR PROGRESS";
+                            if (view.sys.languageCode === "en") return view.progressMode === "day" ? "DAY PROGRESS" : "YEAR PROGRESS";
+                            if (view.progressMode === "day") {
+                                var dTr = view.sys.tr("Прогресс дня");
+                                return (dTr && dTr !== "Прогресс дня") ? dTr.toUpperCase() : (view.sys.tr("ПРОГРЕСС ДНЯ") || "PROGRESO DEL DÍA");
+                            } else {
+                                var yTr = view.sys.tr("Прогресс года");
+                                return (yTr && yTr !== "Прогресс года") ? yTr.toUpperCase() : (view.sys.tr("ПРОГРЕСС ГОДА") || "PROGRESO DEL AÑO");
+                            }
+                        }
                         font.bold: true
                         font.pixelSize: 9
                         font.letterSpacing: 1.2
@@ -862,7 +899,7 @@ Item {
                             color: index < view.curHour
                                    ? Qt.rgba(1, 1, 1, 0.88)
                                    : (index === view.curHour
-                                      ? ((view.sys && view.sys.colCrit) ? view.sys.colCrit : "#d71921")
+                                      ? ((view.sys && view.sys.colOn) ? view.sys.colOn : ((view.sys && view.sys.colCrit) ? view.sys.colCrit : "#d71921"))
                                       : Qt.rgba(1, 1, 1, 0.12))
                             opacity: index === view.curHour ? view.pulseOpacity : 1.0
                         }
@@ -886,7 +923,7 @@ Item {
                             color: index < view.curMonth
                                    ? Qt.rgba(1, 1, 1, 0.88)
                                    : (index === view.curMonth
-                                      ? ((view.sys && view.sys.colCrit) ? view.sys.colCrit : "#d71921")
+                                      ? ((view.sys && view.sys.colOn) ? view.sys.colOn : ((view.sys && view.sys.colCrit) ? view.sys.colCrit : "#d71921"))
                                       : Qt.rgba(1, 1, 1, 0.12))
                             opacity: index === view.curMonth ? view.pulseOpacity : 1.0
                         }
@@ -898,10 +935,21 @@ Item {
 
                     Text {
                         Layout.fillWidth: true
-                        text: (view.sys ? view.sys.tr("Осталось ") : "Remaining ") +
-                              (view.progressMode === "day"
-                               ? view.remainDayText
-                               : (view.remainYearDays + " " + (view.sys ? view.sys.tr("дн.") : "days")))
+                        text: {
+                            var pfx = "Remaining ";
+                            if (view.sys) {
+                                if (view.sys.languageCode === "en") {
+                                    pfx = "Remaining ";
+                                } else {
+                                    var oTr = view.sys.tr("Осталось");
+                                    pfx = (oTr && oTr !== "Осталось") ? (oTr + " ") : (view.sys.tr("Осталось ") || "Restante ");
+                                }
+                            }
+                            var sfx = (view.progressMode === "day"
+                                       ? view.remainDayText
+                                       : (view.remainYearDays + " " + (view.sys ? view.sys.tr("дн.") : "days")));
+                            return pfx + sfx;
+                        }
                         color: view.sys ? view.sys.colMuted : "#888888"
                         font {
                             family: view.sys ? view.sys.fontFam : "sans-serif"

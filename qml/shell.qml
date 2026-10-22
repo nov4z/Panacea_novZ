@@ -3110,7 +3110,7 @@ PanelWindow {
         pWeather.command = ["sh", "-c",
             root.scriptDir + "/weather.sh \"$1\" \"$2\" \"$3\" \"$4\"", "_",
             String(root.cfg.weatherKey), String(root.cfg.weatherCity),
-            String(root.cfg.weatherUnits), ["ru", "tr"].indexOf(root.languageCode) >= 0 ? root.languageCode : "en"];
+            String(root.cfg.weatherUnits), ["ru", "tr", "es"].indexOf(root.languageCode) >= 0 ? root.languageCode : "en"];
         pWeather.running = false;
         pWeather.running = true;
     }
@@ -3155,7 +3155,7 @@ PanelWindow {
         pWeatherForecast.command = ["sh", "-c",
             root.scriptDir + "/weather_forecast.sh \"$1\" \"$2\" \"$3\" \"$4\"", "_",
             String(root.cfg.weatherKey), String(root.cfg.weatherCity),
-            String(root.cfg.weatherUnits), ["ru", "tr"].indexOf(root.languageCode) >= 0 ? root.languageCode : "en"];
+            String(root.cfg.weatherUnits), ["ru", "tr", "es"].indexOf(root.languageCode) >= 0 ? root.languageCode : "en"];
         pWeatherForecast.running = false;
         pWeatherForecast.running = true;
     }
