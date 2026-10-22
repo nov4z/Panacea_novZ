@@ -257,6 +257,34 @@ class TestQmlDelimiterAndSyntaxIntegrity(unittest.TestCase):
 class TestComponentHierarchyAndContracts(unittest.TestCase):
     """Empirically tests component structure, contracts, and UI elements."""
 
+    def test_widgets_view_qml_unique_ids_and_structure(self):
+        """Verifies WidgetsView.qml exists, parses cleanly, and contains strictly unique IDs."""
+        p = QML_DIR / "WidgetsView.qml"
+        self.assertTrue(p.exists(), "WidgetsView.qml must exist")
+        content = p.read_text(encoding="utf-8")
+
+        parser = QmlLexerBracketParser(content, str(p))
+        ok, errs = parser.parse()
+        self.assertTrue(ok, f"Delimiter errors in WidgetsView.qml: {errs}")
+
+        # Extract all element IDs defined as `id: <identifier>`
+        ids = re.findall(r"^\s*id:\s*([a-zA-Z0-9_]+)", content, re.MULTILINE)
+        self.assertGreater(len(ids), 10, "WidgetsView.qml must contain element IDs")
+
+        from collections import Counter
+        counts = Counter(ids)
+        duplicates = {k: v for k, v in counts.items() if v > 1}
+        self.assertEqual(duplicates, {}, f"WidgetsView.qml must have unique IDs, found duplicates: {duplicates}")
+
+        # Explicit checks for Nothing OS and Material You widget IDs
+        self.assertEqual(counts.get("clockMa"), 1, "clockMa ID must be defined exactly once")
+        self.assertEqual(counts.get("m3ClockMa"), 1, "m3ClockMa ID must be defined exactly once")
+        self.assertIn("m3WidgetsStack", counts)
+        self.assertIn("m3ScallopClock", counts)
+        self.assertIn("m3WeatherPebble", counts)
+        self.assertIn("clockCard", counts)
+        self.assertIn("progressCard", counts)
+
     def test_settings_view_structure_and_imports(self):
         """Verifies imports, root item, and required functions in SettingsView.qml."""
         content = (QML_DIR / "SettingsView.qml").read_text(encoding="utf-8")

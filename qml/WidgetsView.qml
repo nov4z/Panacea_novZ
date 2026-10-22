@@ -954,7 +954,7 @@ Item {
             Layout.alignment: Qt.AlignVCenter
             Layout.preferredWidth: 185
             Layout.preferredHeight: 185
-            scale: clockMa.pressed ? 0.985 : (clockMa.containsMouse ? 1.025 : 1.0)
+            scale: m3ClockMa.pressed ? 0.985 : (m3ClockMa.containsMouse ? 1.025 : 1.0)
             Behavior on scale { NumberAnimation { duration: 150; easing.type: Easing.OutCubic } }
 
             // Fondo con 12 pétalos festoneados continuos y redondeados
@@ -1100,7 +1100,7 @@ Item {
             }
 
             MouseArea {
-                id: clockMa
+                id: m3ClockMa
                 anchors.fill: parent
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor

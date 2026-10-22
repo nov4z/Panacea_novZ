@@ -13,6 +13,7 @@ Item {
     implicitHeight: 560
 
     readonly property bool isEn: view.sys ? (view.sys.languageCode ? view.sys.languageCode !== "ru" : view.sys.isEn) : true
+    readonly property bool isTr: view.sys ? (view.sys.languageCode === "tr" || view.sys.isTr) : false
     readonly property bool isMaterial: !!(view.sys && view.sys.themeMaterial)
 
     function dayName(dateStr, idx) {
@@ -32,7 +33,7 @@ Item {
         var monthsTr = ["Oca", "Şub", "Mar", "Nis", "May", "Haz", "Tem", "Ağu", "Eyl", "Eki", "Kas", "Ara"];
         var dayArr = view.sys.isEs ? daysEs : (view.isEn ? daysEn : daysRu);
         var monArr = view.sys.isEs ? monthsEs : (view.isEn ? monthsEn : monthsRu);
-        if (isTr) { dayArr = daysTr; monArr = monthsTr; }
+        if (view.isTr) { dayArr = daysTr; monArr = monthsTr; }
         return dayArr[d.getDay()] + ", " + d.getDate() + " " + monArr[d.getMonth()];
     }
 
