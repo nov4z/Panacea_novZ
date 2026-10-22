@@ -53,7 +53,7 @@ ColumnLayout {
         { id: "lock",             label: page.sys.tr("Блокировка"),        icon: "󰌾" },
         { id: "unlock",           label: page.sys.tr("Разблокировка"),     icon: "󰌿" },
         { id: "tock",             label: page.sys.tr("Tock"),              icon: "󰌌" },
-        { id: "kbd_light",        label: page.sys.tr("Подсветка LOQ"),     icon: "󰌌" },
+        { id: "kbd_light",        label: page.sys.tr("Подсветка клавиатуры"), icon: "󰌌" },
         { id: "vol_tick",         label: page.sys.tr("Громкость"),         icon: "󰕾" }
     ]
 
@@ -289,6 +289,42 @@ ColumnLayout {
             sub: page.sys.tr("Карточки на обоях: дата, погода и часы. Начертание берут у выбранной темы.")
             on: page.sys.cfg.featWidgets
             onToggled: v => { page.sys.cfg.featWidgets = v; page.sys.saveCfg(); }
+        }
+
+        SetSelect {
+            visible: page.sys.cfg.featWidgets && !page.sys.themeMaterial
+            sys: page.sys
+            label: page.sys.isEs ? "Modo del reloj" : (page.sys.isEn ? "Clock mode" : "Режим часов")
+            options: [
+                { id: "analog",  text: page.sys.isEs ? "Analógico" : (page.sys.isEn ? "Analog" : "Стрелочные") },
+                { id: "digital", text: page.sys.isEs ? "Digital"   : (page.sys.isEn ? "Digital" : "Цифровые") }
+            ]
+            value: page.sys.cfg.widgetClockMode || "analog"
+            onPicked: id => { page.sys.cfg.widgetClockMode = id; page.sys.saveCfg(); }
+        }
+
+        SetSelect {
+            visible: page.sys.cfg.featWidgets && !page.sys.themeMaterial
+            sys: page.sys
+            label: page.sys.isEs ? "Widget secundario" : (page.sys.isEn ? "Secondary widget" : "Вспомогательный виджет")
+            options: [
+                { id: "weather", text: page.sys.isEs ? "Clima"   : (page.sys.isEn ? "Weather" : "Погода") },
+                { id: "system",  text: page.sys.isEs ? "Sistema" : (page.sys.isEn ? "System"  : "Система") }
+            ]
+            value: page.sys.cfg.widgetRightMode || "weather"
+            onPicked: id => { page.sys.cfg.widgetRightMode = id; page.sys.saveCfg(); }
+        }
+
+        SetSelect {
+            visible: page.sys.cfg.featWidgets && !page.sys.themeMaterial
+            sys: page.sys
+            label: page.sys.isEs ? "Barra de progreso" : (page.sys.isEn ? "Progress bar" : "Шкала прогресса")
+            options: [
+                { id: "day",  text: page.sys.isEs ? "Día (24H)" : (page.sys.isEn ? "Day (24H)" : "День (24H)") },
+                { id: "year", text: page.sys.isEs ? "Año (365D)" : (page.sys.isEn ? "Year (365D)" : "Год (365D)") }
+            ]
+            value: page.sys.cfg.widgetProgressMode || "day"
+            onPicked: id => { page.sys.cfg.widgetProgressMode = id; page.sys.saveCfg(); }
         }
 
         Text {

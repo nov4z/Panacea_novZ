@@ -13,6 +13,7 @@ Item {
     implicitHeight: 560
 
     readonly property bool isEn: view.sys ? (view.sys.languageCode ? view.sys.languageCode !== "ru" : view.sys.isEn) : true
+    readonly property bool isMaterial: !!(view.sys && view.sys.themeMaterial)
 
     function dayName(dateStr, idx) {
         if (idx === 0) return view.sys.tr("Сегодня");
@@ -24,11 +25,14 @@ Item {
         var daysRu = ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
         var daysEn = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
         var daysEs = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
+        var daysTr = ["Paz", "Pzt", "Sal", "Çar", "Per", "Cum", "Cmt"];
         var monthsRu = ["янв", "фев", "мар", "апр", "мая", "июн", "июл", "авг", "сен", "окт", "ноя", "дек"];
         var monthsEn = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
         var monthsEs = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
+        var monthsTr = ["Oca", "Şub", "Mar", "Nis", "May", "Haz", "Tem", "Ağu", "Eyl", "Eki", "Kas", "Ara"];
         var dayArr = view.sys.isEs ? daysEs : (view.isEn ? daysEn : daysRu);
         var monArr = view.sys.isEs ? monthsEs : (view.isEn ? monthsEn : monthsRu);
+        if (isTr) { dayArr = daysTr; monArr = monthsTr; }
         return dayArr[d.getDay()] + ", " + d.getDate() + " " + monArr[d.getMonth()];
     }
 
@@ -53,9 +57,13 @@ Item {
     Rectangle {
         id: bgCard
         anchors.fill: parent
-        radius: 24
-        color: Qt.rgba(0.06, 0.06, 0.07, 0.98)
-        border.color: view.sys.colLine
+        radius: isMaterial ? 28 : 24
+        color: (isMaterial && view.sys)
+               ? (view.sys.colM3Surface || Qt.rgba(0.08, 0.08, 0.09, 0.98))
+               : Qt.rgba(0.06, 0.06, 0.07, 0.98)
+        border.color: (isMaterial && view.sys && view.sys.colOn)
+                      ? Qt.rgba(view.sys.colOn.r, view.sys.colOn.g, view.sys.colOn.b, 0.14)
+                      : view.sys.colLine
         border.width: 1
         clip: true
 
@@ -144,9 +152,13 @@ Item {
             Rectangle {
                 Layout.fillWidth: true
                 Layout.preferredHeight: 120
-                radius: 18
-                color: Qt.rgba(1, 1, 1, 0.04)
-                border.color: Qt.rgba(1, 1, 1, 0.07)
+                radius: isMaterial ? 20 : 18
+                color: (isMaterial && view.sys)
+                       ? (view.sys.colM3SurfaceContainer || Qt.rgba(0.12, 0.12, 0.14, 0.98))
+                       : Qt.rgba(1, 1, 1, 0.04)
+                border.color: (isMaterial && view.sys && view.sys.colOn)
+                              ? Qt.rgba(view.sys.colOn.r, view.sys.colOn.g, view.sys.colOn.b, 0.10)
+                              : Qt.rgba(1, 1, 1, 0.07)
                 border.width: 1
 
                 RowLayout {
@@ -314,10 +326,23 @@ Item {
                                 required property int index
                                 Layout.preferredWidth: 64
                                 Layout.preferredHeight: 88
-                                radius: 14
-                                color: index === 0 ? Qt.rgba(view.sys.colOn.r, view.sys.colOn.g, view.sys.colOn.b, 0.16)
-                                                   : (hMa.containsMouse ? Qt.rgba(1, 1, 1, 0.08) : Qt.rgba(1, 1, 1, 0.03))
-                                border.color: index === 0 ? view.sys.colOn : Qt.rgba(1, 1, 1, 0.06)
+                                radius: isMaterial ? 16 : 14
+                                color: index === 0
+                                       ? ((isMaterial && view.sys)
+                                          ? (view.sys.colM3PrimaryContainer || (view.sys.colOn ? Qt.rgba(view.sys.colOn.r, view.sys.colOn.g, view.sys.colOn.b, 0.25) : Qt.rgba(1, 1, 1, 0.25)))
+                                          : (view.sys && view.sys.colOn ? Qt.rgba(view.sys.colOn.r, view.sys.colOn.g, view.sys.colOn.b, 0.16) : Qt.rgba(1, 1, 1, 0.16)))
+                                       : (hMa.containsMouse
+                                          ? ((isMaterial && view.sys)
+                                             ? (view.sys.colM3SurfaceContainerHigh || Qt.rgba(1, 1, 1, 0.08))
+                                             : Qt.rgba(1, 1, 1, 0.08))
+                                          : ((isMaterial && view.sys)
+                                             ? (view.sys.colM3SurfaceContainer || Qt.rgba(1, 1, 1, 0.03))
+                                             : Qt.rgba(1, 1, 1, 0.03)))
+                                border.color: index === 0
+                                       ? (view.sys ? view.sys.colOn : "#ffffff")
+                                       : ((isMaterial && view.sys && view.sys.colOn)
+                                          ? Qt.rgba(view.sys.colOn.r, view.sys.colOn.g, view.sys.colOn.b, 0.08)
+                                          : Qt.rgba(1, 1, 1, 0.06))
                                 border.width: 1
 
                                 ColumnLayout {
@@ -393,11 +418,23 @@ Item {
                         required property int index
                         width: dailyListComp.width
                         height: 38
-                        radius: 12
+                        radius: isMaterial ? 14 : 12
                         color: view.selectedDayIndex === index
-                               ? Qt.rgba(view.sys.colOn.r, view.sys.colOn.g, view.sys.colOn.b, 0.22)
-                               : (dayMa.containsMouse ? Qt.rgba(1, 1, 1, 0.06) : Qt.rgba(1, 1, 1, 0.02))
-                        border.color: view.selectedDayIndex === index ? view.sys.colOn : Qt.rgba(1, 1, 1, 0.05)
+                               ? ((isMaterial && view.sys)
+                                  ? (view.sys.colM3PrimaryContainer || (view.sys.colOn ? Qt.rgba(view.sys.colOn.r, view.sys.colOn.g, view.sys.colOn.b, 0.25) : Qt.rgba(1, 1, 1, 0.25)))
+                                  : (view.sys && view.sys.colOn ? Qt.rgba(view.sys.colOn.r, view.sys.colOn.g, view.sys.colOn.b, 0.22) : Qt.rgba(1, 1, 1, 0.22)))
+                               : (dayMa.containsMouse
+                                  ? ((isMaterial && view.sys)
+                                     ? (view.sys.colM3SurfaceContainerHigh || Qt.rgba(1, 1, 1, 0.06))
+                                     : Qt.rgba(1, 1, 1, 0.06))
+                                  : ((isMaterial && view.sys)
+                                     ? (view.sys.colM3SurfaceContainer || Qt.rgba(1, 1, 1, 0.02))
+                                     : Qt.rgba(1, 1, 1, 0.02)))
+                        border.color: view.selectedDayIndex === index
+                               ? (view.sys ? view.sys.colOn : "#ffffff")
+                               : ((isMaterial && view.sys && view.sys.colOn)
+                                  ? Qt.rgba(view.sys.colOn.r, view.sys.colOn.g, view.sys.colOn.b, 0.06)
+                                  : Qt.rgba(1, 1, 1, 0.05))
                         border.width: 1
 
                         RowLayout {

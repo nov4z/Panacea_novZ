@@ -20,6 +20,50 @@ Item {
     implicitHeight: isMaterial ? m3WidgetsStack.implicitHeight : stack.implicitHeight
 
     // ------------------------------------------------------------------
+    // Режимы карточек Nothing OS
+    readonly property string clockMode: (view.sys && view.sys.cfg && view.sys.cfg.widgetClockMode) || "analog"
+    readonly property string rightMode: (view.sys && view.sys.cfg && view.sys.cfg.widgetRightMode) || "weather"
+    readonly property string progressMode: (view.sys && view.sys.cfg && view.sys.cfg.widgetProgressMode) || "day"
+
+    // Формат часов: 12-часовой или 24-часовой (из системных настроек)
+    readonly property bool is12: view.sys && view.sys.cfg ? Boolean(view.sys.cfg.clock12) : false
+
+    // Синхронизация с системным временем через view.sys
+    readonly property int curHour: (view.sys && view.sys.timeHour !== undefined) ? view.sys.timeHour : (new Date()).getHours()
+    readonly property int curMin: (view.sys && view.sys.timeMinute !== undefined) ? view.sys.timeMinute : (new Date()).getMinutes()
+    readonly property int curMonth: { var _ = (view.sys && view.sys.dayNum); return (new Date()).getMonth(); }
+
+    readonly property int curDayOfYear: {
+        var _ = (view.sys && view.sys.dayNum);
+        var now = new Date();
+        var start = new Date(now.getFullYear(), 0, 1);
+        return Math.floor((now - start) / (1000 * 60 * 60 * 24));
+    }
+    readonly property int totalDaysInYear: {
+        var _ = (view.sys && view.sys.dayNum);
+        var now = new Date();
+        var start = new Date(now.getFullYear(), 0, 1);
+        var end = new Date(now.getFullYear() + 1, 0, 1);
+        return Math.max(1, Math.round((end - start) / (1000 * 60 * 60 * 24)));
+    }
+
+    readonly property int dayPct: Math.min(100, Math.max(0, Math.floor((curHour * 60 + curMin) / 1440 * 100)))
+    readonly property int yearPct: Math.min(100, Math.max(0, Math.floor(curDayOfYear / totalDaysInYear * 100)))
+
+    readonly property int remainDayMins: Math.max(0, 1440 - (curHour * 60 + curMin))
+    readonly property string remainDayText: Math.floor(remainDayMins / 60) + (view.sys && view.sys.isEn ? "h " : (view.sys && view.sys.isTr ? "sa " : (view.sys && view.sys.isEs ? "h " : "ч "))) + (remainDayMins % 60) + (view.sys && view.sys.isEn ? "m" : (view.sys && view.sys.isTr ? "dk" : (view.sys && view.sys.isEs ? "m" : "м")))
+    readonly property int remainYearDays: Math.max(0, totalDaysInYear - curDayOfYear)
+
+    // Пульсация текущего сегмента времени в стиле глифов Nothing
+    property real pulseOpacity: 1.0
+    SequentialAnimation on pulseOpacity {
+        loops: Animation.Infinite
+        running: view.visible && !view.isMaterial
+        NumberAnimation { to: 0.30; duration: 750; easing.type: Easing.InOutQuad }
+        NumberAnimation { to: 1.0; duration: 750; easing.type: Easing.InOutQuad }
+    }
+
+    // ------------------------------------------------------------------
     // Paleta dinámica Material You sincronizada con el notch
     readonly property bool isMonochromeMedia: {
         if (!view.sys || !view.sys.mediaArtColor) return false;
@@ -171,113 +215,309 @@ Item {
         width: view.fullW
         spacing: view.gap
 
-        // ------------------------------------------------------ дата
-        Card {
-            Layout.preferredWidth: view.col
-            Layout.preferredHeight: 112
-
-            // Число крупно, день недели мелко в углу. Красный здесь
-            // единственный на весь набор — им отмечены выходные, и больше
-            // ему на рабочем столе делать нечего.
-            // Число по центру карточки, а подписи разведены по углам: день
-            // недели в верхний правый, месяц в нижний левый. Так число ни с
-            // одной из них не соседствует вплотную и читается само по себе.
-            Num {
-                anchors.centerIn: parent
-                value: view.sys.dayNum
-                size: 52
-                gapRatio: 0.14
-                color: view.sys.colFg
-            }
-
-            Text {
-                anchors.right: parent.right
-                anchors.top: parent.top
-                anchors.rightMargin: 16
-                anchors.topMargin: 13
-                text: view.sys.dayText
-                color: view.sys.weekend ? view.sys.colCrit : view.sys.colMuted
-                font {
-                    family: view.sys.fontFam; pixelSize: 11; bold: true
-                }
-            }
-
-            // Месяц словом под числом. Обычным шрифтом: точками набраны
-            // цифры, а слово по той же сетке пришлось бы рисовать по букве.
-            Caption {
-                anchors.left: parent.left
-                anchors.bottom: parent.bottom
-                anchors.leftMargin: 16
-                anchors.bottomMargin: 12
-                width: parent.width - 30
-                // Ярче общего приглушённого: тот рассчитан на подписи под
-                // значением, а здесь месяц — сам по себе, второй половиной
-                // даты, и в приглушённом тонет.
-                color: Qt.rgba(view.sys.colFg.r, view.sys.colFg.g,
-                               view.sys.colFg.b, 0.85)
-                text: view.sys.monthText
-            }
-        }
-
-        // ------------------------------- погода: большая карточка и соседи
+        // ------------------------------------------------------ Ряд 1: Дата и Часы
         RowLayout {
             Layout.preferredWidth: view.fullW
             spacing: view.gap
 
-            // Градусы, значок и город. Единственное место, где показана
-            // температура.
-            // Высота ровно та, что складывается справа: карточка описания
-            // 62, просвет 12 и кружки 66. Было 132 против 140, и правый
-            // столбец на восемь пикселей не сходился с левым — в наборе из
-            // прямоугольников такой перекос видно сразу.
+            // Карточка даты (144x140)
+            Card {
+                id: dateCard
+                Layout.preferredWidth: view.col
+                Layout.preferredHeight: 140
+                color: dateMa.containsMouse ? Qt.rgba(0.13, 0.13, 0.14, 0.98) : Qt.rgba(0.09, 0.09, 0.09, 0.96)
+                border.color: dateMa.containsMouse ? (view.sys && view.sys.colOn ? Qt.rgba(view.sys.colOn.r, view.sys.colOn.g, view.sys.colOn.b, 0.4) : Qt.rgba(1, 1, 1, 0.4)) : Qt.rgba(1, 1, 1, 0.06)
+                Behavior on color { ColorAnimation { duration: 120 } }
+                Behavior on border.color { ColorAnimation { duration: 120 } }
+
+                Num {
+                    anchors.centerIn: parent
+                    value: view.sys ? view.sys.dayNum : ""
+                    size: 50
+                    gapRatio: 0.14
+                    color: view.sys ? view.sys.colFg : "#ffffff"
+                }
+
+                Text {
+                    anchors.right: parent.right
+                    anchors.top: parent.top
+                    anchors.rightMargin: 16
+                    anchors.topMargin: 13
+                    text: view.sys ? view.sys.dayText : ""
+                    color: (view.sys && view.sys.weekend) ? view.sys.colCrit : (view.sys ? view.sys.colMuted : "#888888")
+                    font {
+                        family: view.sys ? view.sys.fontFam : "sans-serif"
+                        pixelSize: 11
+                        bold: true
+                    }
+                }
+
+                Caption {
+                    anchors.left: parent.left
+                    anchors.bottom: parent.bottom
+                    anchors.leftMargin: 16
+                    anchors.bottomMargin: 13
+                    width: parent.width - 32
+                    color: view.sys ? Qt.rgba(view.sys.colFg.r, view.sys.colFg.g, view.sys.colFg.b, 0.85) : "#dddddd"
+                    text: view.sys ? view.sys.monthText : ""
+                }
+
+                MouseArea {
+                    id: dateMa
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: {
+                        if (view.sys && view.sys.togglePage) view.sys.togglePage("cal");
+                    }
+                }
+            }
+
+            // Карточка часов Nothing OS (144x140) — переключает аналоговые / цифровые
+            Card {
+                id: clockCard
+                Layout.preferredWidth: view.col
+                Layout.preferredHeight: 140
+                color: clockMa.containsMouse ? Qt.rgba(0.13, 0.13, 0.14, 0.98) : Qt.rgba(0.09, 0.09, 0.09, 0.96)
+                border.color: clockMa.containsMouse ? (view.sys && view.sys.colOn ? Qt.rgba(view.sys.colOn.r, view.sys.colOn.g, view.sys.colOn.b, 0.4) : Qt.rgba(1, 1, 1, 0.4)) : Qt.rgba(1, 1, 1, 0.06)
+                Behavior on color { ColorAnimation { duration: 120 } }
+                Behavior on border.color { ColorAnimation { duration: 120 } }
+
+                // Режим аналоговых часов Nothing
+                Item {
+                    anchors.fill: parent
+                    visible: view.clockMode === "analog"
+
+                    Canvas {
+                        id: clockCanvas
+                        anchors.fill: parent
+
+                        Connections {
+                            target: view.sys
+                            ignoreUnknownSignals: true
+                            function onTimeSecondChanged() { clockCanvas.requestPaint(); }
+                            function onTimeTextChanged() { clockCanvas.requestPaint(); }
+                            function onTimeHourChanged() { clockCanvas.requestPaint(); }
+                        }
+
+                        Connections {
+                            target: view
+                            function onIs12Changed() { clockCanvas.requestPaint(); }
+                        }
+
+                        Timer {
+                            interval: 1000
+                            running: view.visible && !view.isMaterial && view.clockMode === "analog"
+                            repeat: true
+                            triggeredOnStart: true
+                            onTriggered: clockCanvas.requestPaint()
+                        }
+
+                        onPaint: {
+                            var ctx = getContext("2d");
+                            ctx.reset();
+                            var cx = width / 2;
+                            var cy = height / 2;
+                            var r = Math.min(cx, cy) - 16;
+
+                            var is12 = view.is12;
+
+                            if (is12) {
+                                // 12-часовой циферблат: 12 точечных меток (шаг 30°)
+                                for (var i = 0; i < 12; i++) {
+                                    var ang = i * (Math.PI / 6) - Math.PI / 2;
+                                    var x = cx + Math.cos(ang) * r;
+                                    var y = cy + Math.sin(ang) * r;
+                                    ctx.beginPath();
+                                    if (i % 3 === 0) {
+                                        // 12, 3, 6, 9 часов: акцентные белые точки
+                                        ctx.arc(x, y, 2.0, 0, Math.PI * 2);
+                                        ctx.fillStyle = "#ffffff";
+                                    } else {
+                                        // Промежуточные часы: полупрозрачные точки
+                                        ctx.arc(x, y, 1.3, 0, Math.PI * 2);
+                                        ctx.fillStyle = "rgba(255, 255, 255, 0.35)";
+                                    }
+                                    ctx.fill();
+                                }
+                            } else {
+                                // 24-часовой циферблат: 24 точечные метки (шаг 15°)
+                                for (var j = 0; j < 24; j++) {
+                                    var ang24 = j * (Math.PI / 12) - Math.PI / 2;
+                                    var x24 = cx + Math.cos(ang24) * r;
+                                    var y24 = cy + Math.sin(ang24) * r;
+                                    ctx.beginPath();
+                                    if (j % 6 === 0) {
+                                        // 00 (полночь/верх), 06 (утро/право), 12 (полдень/низ), 18 (вечер/лево)
+                                        ctx.arc(x24, y24, 2.0, 0, Math.PI * 2);
+                                        ctx.fillStyle = "#ffffff";
+                                    } else if (j % 2 === 0) {
+                                        // Четные часы: средние белые точки
+                                        ctx.arc(x24, y24, 1.4, 0, Math.PI * 2);
+                                        ctx.fillStyle = "rgba(255, 255, 255, 0.50)";
+                                    } else {
+                                        // Нечетные часы: тонкие деликатные точки
+                                        ctx.arc(x24, y24, 1.0, 0, Math.PI * 2);
+                                        ctx.fillStyle = "rgba(255, 255, 255, 0.25)";
+                                    }
+                                    ctx.fill();
+                                }
+                            }
+
+                            // Синхронизация с системным временем через view.sys
+                            var h = (view.sys && view.sys.timeHour !== undefined) ? view.sys.timeHour : (new Date()).getHours();
+                            var m = (view.sys && view.sys.timeMinute !== undefined) ? view.sys.timeMinute : (new Date()).getMinutes();
+                            var s = (view.sys && view.sys.timeSecond !== undefined) ? view.sys.timeSecond : (new Date()).getSeconds();
+
+                            // 1. Часовая стрелка: элегантная белая капсула
+                            // В 12-часовом формате оборот 12 часов (PI/6), в 24-часовом — 24 часа (PI/12)
+                            var hAng = is12
+                                ? (((h % 12) + m / 60 + s / 3600) * (Math.PI / 6) - Math.PI / 2)
+                                : ((h + m / 60 + s / 3600) * (Math.PI / 12) - Math.PI / 2);
+
+                            ctx.beginPath();
+                            ctx.lineWidth = 3.6;
+                            ctx.lineCap = "round";
+                            ctx.strokeStyle = "#ffffff";
+                            ctx.moveTo(cx + Math.cos(hAng) * 3, cy + Math.sin(hAng) * 3);
+                            ctx.lineTo(cx + Math.cos(hAng) * (r * 0.50), cy + Math.sin(hAng) * (r * 0.50));
+                            ctx.stroke();
+
+                            // 2. Минутная стрелка: тонкая изящная белая игла (1 оборот = 60 минут)
+                            var mAng = (m + s / 60) * (Math.PI / 30) - Math.PI / 2;
+                            ctx.beginPath();
+                            ctx.lineWidth = 2.0;
+                            ctx.lineCap = "round";
+                            ctx.strokeStyle = "rgba(255, 255, 255, 0.95)";
+                            ctx.moveTo(cx + Math.cos(mAng) * 3, cy + Math.sin(mAng) * 3);
+                            ctx.lineTo(cx + Math.cos(mAng) * (r * 0.78), cy + Math.sin(mAng) * (r * 0.78));
+                            ctx.stroke();
+
+                            // 3. Секундная стрелка Nothing Red: тонкая стрелка с противовесом (1 оборот = 60 секунд)
+                            var sAng = s * (Math.PI / 30) - Math.PI / 2;
+                            ctx.beginPath();
+                            ctx.lineWidth = 1.2;
+                            ctx.lineCap = "round";
+                            ctx.strokeStyle = (view.sys && view.sys.colCrit) ? String(view.sys.colCrit) : "#d71921";
+                            ctx.moveTo(cx - Math.cos(sAng) * (r * 0.18), cy - Math.sin(sAng) * (r * 0.18));
+                            ctx.lineTo(cx + Math.cos(sAng) * (r * 0.82), cy + Math.sin(sAng) * (r * 0.82));
+                            ctx.stroke();
+
+                            // 4. Фирменная центральная втулка Nothing OS
+                            ctx.beginPath();
+                            ctx.arc(cx, cy, 3.8, 0, Math.PI * 2);
+                            ctx.fillStyle = "#141414";
+                            ctx.fill();
+                            ctx.lineWidth = 1.0;
+                            ctx.strokeStyle = "rgba(255, 255, 255, 0.25)";
+                            ctx.stroke();
+
+                            // Красная точка в самом центре
+                            ctx.beginPath();
+                            ctx.arc(cx, cy, 1.8, 0, Math.PI * 2);
+                            ctx.fillStyle = (view.sys && view.sys.colCrit) ? String(view.sys.colCrit) : "#d71921";
+                            ctx.fill();
+                        }
+                    }
+                }
+
+                // Режим цифровых часов
+                ColumnLayout {
+                    anchors.centerIn: parent
+                    visible: view.clockMode !== "analog"
+                    spacing: 6
+
+                    Caption {
+                        Layout.alignment: Qt.AlignHCenter
+                        text: "NOTHING"
+                        color: view.sys ? Qt.rgba(view.sys.colFg.r, view.sys.colFg.g, view.sys.colFg.b, 0.4) : "#666666"
+                    }
+
+                    Num {
+                        Layout.alignment: Qt.AlignHCenter
+                        value: {
+                            if (!view.sys) return "";
+                            if (view.is12) {
+                                var d12 = new Date();
+                                return Qt.formatDateTime(d12, "h:mm");
+                            }
+                            return view.sys.timeText;
+                        }
+                        size: 32
+                        gapRatio: 0.14
+                        color: view.sys ? view.sys.colFg : "#ffffff"
+                    }
+
+                    Caption {
+                        Layout.alignment: Qt.AlignHCenter
+                        text: {
+                            if (view.is12) {
+                                var d = new Date();
+                                return (d.getHours() >= 12 ? "PM" : "AM") + (view.sys && view.sys.clockSeconds ? " · " + d.getSeconds() : "");
+                            }
+                            return view.sys && view.sys.clockSeconds ? (new Date()).getSeconds() : "LOCAL";
+                        }
+                        color: view.sys ? view.sys.colMuted : "#888888"
+                    }
+                }
+
+                MouseArea {
+                    id: clockMa
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: {
+                        if (view.sys && view.sys.cfg) {
+                            view.sys.cfg.widgetClockMode = (view.clockMode === "analog" ? "digital" : "analog");
+                            view.sys.saveCfg();
+                        }
+                    }
+                }
+            }
+        }
+
+        // ------------------------------------------------------ Ряд 2: Погода / Система
+        RowLayout {
+            Layout.preferredWidth: view.fullW
+            spacing: view.gap
+
+            // Главная карточка погоды (144x140) — клик открывает полное окно прогноза
             Card {
                 id: mainWeatherCard
                 Layout.preferredWidth: view.col
-                Layout.preferredHeight: 62 + view.gap + 66
+                Layout.preferredHeight: 140
                 Layout.alignment: Qt.AlignTop
-                color: wCardMa.containsMouse
-                       ? ((view.sys && view.sys.themeMaterial && view.sys.colM3SurfaceContainerHigh) ? view.sys.colM3SurfaceContainerHigh : (view.sys && view.sys.themeMaterial ? Qt.rgba(0.20, 0.18, 0.24, 0.98) : Qt.rgba(0.13, 0.13, 0.14, 0.98)))
-                       : ((view.sys && view.sys.themeMaterial)
-                          ? (view.isMonochromeMedia ? view.widgetBg : Qt.rgba(0.13, 0.11, 0.16, 0.94))
-                          : Qt.rgba(0.09, 0.09, 0.09, 0.96))
-                border.color: wCardMa.containsMouse
-                              ? Qt.rgba(view.sys.colOn.r, view.sys.colOn.g, view.sys.colOn.b, 0.4)
-                              : (view.sys && view.sys.themeMaterial ? Qt.rgba(view.sys.colOn.r, view.sys.colOn.g, view.sys.colOn.b, 0.14) : Qt.rgba(1, 1, 1, 0.06))
-                scale: wCardMa.pressed ? 0.985 : (wCardMa.containsMouse ? 1.02 : 1.0)
-                Behavior on scale { NumberAnimation { duration: 150; easing.type: Easing.OutCubic } }
-                Behavior on color { ColorAnimation { duration: 140 } }
-                Behavior on border.color { ColorAnimation { duration: 140 } }
+                color: wCardMa.containsMouse ? Qt.rgba(0.13, 0.13, 0.14, 0.98) : Qt.rgba(0.09, 0.09, 0.09, 0.96)
+                border.color: wCardMa.containsMouse ? (view.sys && view.sys.colOn ? Qt.rgba(view.sys.colOn.r, view.sys.colOn.g, view.sys.colOn.b, 0.4) : Qt.rgba(1, 1, 1, 0.4)) : Qt.rgba(1, 1, 1, 0.06)
+                Behavior on color { ColorAnimation { duration: 120 } }
+                Behavior on border.color { ColorAnimation { duration: 120 } }
 
                 ColumnLayout {
                     anchors.centerIn: parent
-                    spacing: 10
+                    spacing: 8
 
-                    // Погодные числа обычным шрифтом, а не точками. Точки
-                    // оставлены числу даты и часам — тем, что и на макете
-                    // набрано ими. Градус в точечной сетке выходит квадратным
-                    // кружком из четырёх точек, а он должен быть гладким.
                     Text {
                         Layout.alignment: Qt.AlignHCenter
-                        text: view.sys.weatherReady ? view.sys.weatherTemp + "°" : "--°"
-                        color: view.sys && view.sys.themeMaterial ? view.sys.colOn : view.sys.colFg
-                        font { family: view.sys.fontFam; pixelSize: 26; bold: !!(view.sys && view.sys.themeMaterial) }
+                        text: (view.sys && view.sys.weatherReady) ? view.sys.weatherTemp + "°" : "--°"
+                        color: view.sys ? view.sys.colFg : "#ffffff"
+                        font { family: view.sys ? view.sys.fontFam : "sans-serif"; pixelSize: 26 }
                     }
 
                     WIcon {
                         Layout.alignment: Qt.AlignHCenter
-                        size: 30
-                        color: view.sys && view.sys.themeMaterial ? view.sys.colOn : view.sys.colFg
+                        size: 28
+                        color: view.sys ? view.sys.colFg : "#ffffff"
                     }
 
                     Text {
                         Layout.alignment: Qt.AlignHCenter
                         Layout.maximumWidth: view.col - 20
-                        text: view.sys.weatherReady
-                              ? view.sys.weatherPlace : view.sys.tr("Нет данных")
-                        color: view.sys.colMuted
+                        text: (view.sys && view.sys.weatherReady)
+                              ? view.sys.weatherPlace : (view.sys ? view.sys.tr("Нет данных") : "--")
+                        color: view.sys ? view.sys.colMuted : "#888888"
                         horizontalAlignment: Text.AlignHCenter
                         elide: Text.ElideRight
-                        font { family: view.sys.fontFam; pixelSize: 11 }
+                        font { family: view.sys ? view.sys.fontFam : "sans-serif"; pixelSize: 11 }
                     }
                 }
 
@@ -286,159 +526,408 @@ Item {
                     anchors.fill: parent
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
-                    onClicked: view.sys.openWeatherDetails()
+                    onClicked: { if (view.sys) view.sys.openWeatherDetails(); }
                 }
             }
 
-            ColumnLayout {
+            // Правая карточка (144x140) — КЛИК ПЕРЕКЛЮЧАЕТ МЕЖДУ ПОГОДОЙ И СИСТЕМОЙ
+            Card {
+                id: rightToggleCard
                 Layout.preferredWidth: view.col
+                Layout.preferredHeight: 140
                 Layout.alignment: Qt.AlignTop
-                spacing: view.gap
+                color: rightCardMa.containsMouse ? Qt.rgba(0.13, 0.13, 0.14, 0.98) : Qt.rgba(0.09, 0.09, 0.09, 0.96)
+                border.color: rightCardMa.containsMouse ? (view.sys && view.sys.colOn ? Qt.rgba(view.sys.colOn.r, view.sys.colOn.g, view.sys.colOn.b, 0.4) : Qt.rgba(1, 1, 1, 0.4)) : Qt.rgba(1, 1, 1, 0.06)
+                Behavior on color { ColorAnimation { duration: 120 } }
+                Behavior on border.color { ColorAnimation { duration: 120 } }
 
-                // Что за погода — словами. Градусов здесь нет намеренно:
-                // они уже сказаны слева.
-                Card {
-                    Layout.preferredWidth: view.col
-                    Layout.preferredHeight: 62
-                    color: descCardMa.containsMouse
-                           ? ((view.sys && view.sys.themeMaterial && view.sys.colM3SurfaceContainerHigh) ? view.sys.colM3SurfaceContainerHigh : (view.sys && view.sys.themeMaterial ? Qt.rgba(0.20, 0.18, 0.24, 0.98) : Qt.rgba(0.13, 0.13, 0.14, 0.98)))
-                           : ((view.sys && view.sys.themeMaterial)
-                              ? (view.isMonochromeMedia ? view.widgetBg : Qt.rgba(0.13, 0.11, 0.16, 0.94))
-                              : Qt.rgba(0.09, 0.09, 0.09, 0.96))
-                    border.color: descCardMa.containsMouse
-                                  ? Qt.rgba(view.sys.colOn.r, view.sys.colOn.g, view.sys.colOn.b, 0.4)
-                                  : (view.sys && view.sys.themeMaterial ? Qt.rgba(view.sys.colOn.r, view.sys.colOn.g, view.sys.colOn.b, 0.14) : Qt.rgba(1, 1, 1, 0.06))
-                    scale: descCardMa.pressed ? 0.985 : (descCardMa.containsMouse ? 1.02 : 1.0)
-                    Behavior on scale { NumberAnimation { duration: 150; easing.type: Easing.OutCubic } }
-                    Behavior on color { ColorAnimation { duration: 140 } }
-                    Behavior on border.color { ColorAnimation { duration: 140 } }
+                // Режим: ПОДРОБНОСТИ ПОГОДЫ
+                Item {
+                    anchors.fill: parent
+                    visible: view.rightMode === "weather"
 
-                    RowLayout {
+                    ColumnLayout {
                         anchors.fill: parent
-                        anchors.leftMargin: 12
-                        anchors.rightMargin: 12
+                        anchors.margins: 10
                         spacing: 8
 
-                        WIcon {
-                            Layout.alignment: Qt.AlignVCenter
-                            size: 18
-                            color: view.sys.colFg
-                        }
-
-                        // В две строки, а не в одну с многоточием. Описание
-                        // приходит от сервиса и бывает длинным — «overcast
-                        // clouds» в одну строку не влезало и обрывалось на
-                        // «overcast …», то есть теряло ровно то слово, ради
-                        // которого карточка и стоит.
-                        Text {
+                        // Верхняя плашка с описанием погоды
+                        Rectangle {
                             Layout.fillWidth: true
-                            Layout.alignment: Qt.AlignVCenter
-                            text: view.sys.weatherReady ? view.sys.weatherDesc : "—"
-                            color: view.sys.colFg
-                            wrapMode: Text.WordWrap
-                            maximumLineCount: 2
-                            elide: Text.ElideRight
-                            lineHeight: 0.95
-                            font { family: view.sys.fontFam; pixelSize: 11 }
-                        }
-                    }
+                            Layout.preferredHeight: 52
+                            radius: 14
+                            color: Qt.rgba(1, 1, 1, 0.035)
+                            border.color: Qt.rgba(1, 1, 1, 0.06)
+                            border.width: 1
 
-                    MouseArea {
-                        id: descCardMa
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: view.sys.openWeatherDetails()
+                            RowLayout {
+                                anchors.fill: parent
+                                anchors.margins: 10
+                                spacing: 8
+
+                                WIcon {
+                                    Layout.alignment: Qt.AlignVCenter
+                                    size: 18
+                                    color: view.sys ? view.sys.colFg : "#ffffff"
+                                }
+
+                                Text {
+                                    Layout.fillWidth: true
+                                    Layout.alignment: Qt.AlignVCenter
+                                    text: (view.sys && view.sys.weatherReady) ? view.sys.weatherDesc : "—"
+                                    color: view.sys ? view.sys.colFg : "#ffffff"
+                                    wrapMode: Text.WordWrap
+                                    maximumLineCount: 2
+                                    elide: Text.ElideRight
+                                    lineHeight: 0.95
+                                    font { family: view.sys ? view.sys.fontFam : "sans-serif"; pixelSize: 11 }
+                                }
+
+                                // Иконка-подсказка: клик переключит на монитор системы
+                                Text {
+                                    text: "󰍛"
+                                    color: view.sys ? view.sys.colMuted : "#888888"
+                                    font { family: view.sys ? view.sys.fontFam : "sans-serif"; pixelSize: 13 }
+                                }
+                            }
+                        }
+
+                        // Нижние кружки (Влажность и Ветер)
+                        RowLayout {
+                            Layout.fillWidth: true
+                            spacing: 8
+
+                            Rectangle {
+                                Layout.fillWidth: true
+                                Layout.preferredHeight: 60
+                                radius: 16
+                                color: Qt.rgba(1, 1, 1, 0.035)
+                                border.color: Qt.rgba(1, 1, 1, 0.06)
+                                border.width: 1
+
+                                ColumnLayout {
+                                    anchors.centerIn: parent
+                                    spacing: 2
+
+                                    Text {
+                                        Layout.alignment: Qt.AlignHCenter
+                                        text: (view.sys && view.sys.weatherReady) ? (view.sys.weatherHumidity + "%") : "--"
+                                        color: view.sys ? view.sys.colFg : "#ffffff"
+                                        font { family: view.sys ? view.sys.fontFam : "sans-serif"; pixelSize: 15; bold: true }
+                                    }
+
+                                    Caption {
+                                        Layout.alignment: Qt.AlignHCenter
+                                        text: view.sys ? view.sys.tr("Влажность") : "HUMIDITY"
+                                        font.pixelSize: 7
+                                        font.letterSpacing: 0.2
+                                    }
+                                }
+                            }
+
+                            Rectangle {
+                                Layout.fillWidth: true
+                                Layout.preferredHeight: 60
+                                radius: 16
+                                color: Qt.rgba(1, 1, 1, 0.035)
+                                border.color: Qt.rgba(1, 1, 1, 0.06)
+                                border.width: 1
+
+                                ColumnLayout {
+                                    anchors.centerIn: parent
+                                    spacing: 2
+
+                                    Text {
+                                        Layout.alignment: Qt.AlignHCenter
+                                        text: (view.sys && view.sys.weatherReady) ? String(view.sys.weatherWind) : "--"
+                                        color: view.sys ? view.sys.colFg : "#ffffff"
+                                        font { family: view.sys ? view.sys.fontFam : "sans-serif"; pixelSize: 15; bold: true }
+                                    }
+
+                                    Caption {
+                                        Layout.alignment: Qt.AlignHCenter
+                                        text: (view.sys ? view.sys.tr("Ветер") : "WIND") + " " + (view.sys ? view.sys.weatherWindUnit : "")
+                                        font.pixelSize: 7
+                                        font.letterSpacing: 0.2
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
 
-                // Два кружка: влажность и ветер. Круглые, чтобы не спорить
-                // с прямоугольниками вокруг, и мелкие — это подробности, а
-                // не главное на столе.
-                RowLayout {
-                    Layout.preferredWidth: view.col
-                    spacing: view.gap
+                // Режим: СИСТЕМНЫЙ МОНИТОР (Концентрические дуги RAM и SSD)
+                Item {
+                    anchors.fill: parent
+                    visible: view.rightMode === "system"
 
-                    Repeater {
-                        model: [
-                            { v: view.sys.weatherHumidity, suffix: "%",
-                              cap: view.sys.tr("Влажность") },
-                            // Единица у ветра стоит в подписи, а не при
-                            // числе: в кружок «5 м/с» не помещается, а без
-                            // единицы число ничего не значит.
-                            { v: view.sys.weatherWind, suffix: "",
-                              cap: view.sys.tr("Ветер") + " " + view.sys.weatherWindUnit }
-                        ]
+                    // Верхняя строка заголовка
+                    RowLayout {
+                        anchors.top: parent.top
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.margins: 12
+                        anchors.topMargin: 10
 
-                        Rectangle {
-                            id: circleCard
-                            required property var modelData
-                            Layout.preferredWidth: 66
-                            Layout.preferredHeight: 66
-                            radius: view.sys && view.sys.themeMaterial ? 22 : 33
-                            color: circleMa.containsMouse
-                                   ? ((view.sys && view.sys.themeMaterial && view.sys.colM3SurfaceContainerHigh) ? view.sys.colM3SurfaceContainerHigh : (view.sys && view.sys.themeMaterial ? Qt.rgba(0.20, 0.18, 0.24, 0.98) : Qt.rgba(0.13, 0.13, 0.14, 0.98)))
-                                   : ((view.sys && view.sys.themeMaterial)
-                                      ? (view.isMonochromeMedia ? view.widgetBg : ((view.sys && view.sys.colM3SurfaceContainer) ? view.sys.colM3SurfaceContainer : Qt.rgba(0.16, 0.14, 0.19, 0.94)))
-                                      : Qt.rgba(0.09, 0.09, 0.09, 0.96))
-                            border.color: circleMa.containsMouse
-                                          ? Qt.rgba(view.sys.colOn.r, view.sys.colOn.g, view.sys.colOn.b, 0.4)
-                                          : (view.sys && view.sys.themeMaterial ? Qt.rgba(view.sys.colOn.r, view.sys.colOn.g, view.sys.colOn.b, 0.14) : Qt.rgba(1, 1, 1, 0.06))
-                            border.width: 1
-                            scale: circleMa.pressed ? 0.96 : (circleMa.containsMouse ? 1.03 : 1.0)
-                            Behavior on scale { NumberAnimation { duration: 150; easing.type: Easing.OutCubic } }
-                            Behavior on radius { NumberAnimation { duration: 280; easing.type: Easing.OutCubic } }
-                            Behavior on color { ColorAnimation { duration: 140 } }
-                            Behavior on border.color { ColorAnimation { duration: 140 } }
+                        Caption {
+                            Layout.fillWidth: true
+                            text: view.sys ? view.sys.tr("СИСТЕМА") : "SYSTEM"
+                            color: view.sys ? view.sys.colMuted : "#888888"
+                        }
 
-                            ColumnLayout {
-                                anchors.centerIn: parent
-                                spacing: 3
+                        // Иконка-подсказка: клик переключит на погоду
+                        Text {
+                            text: "󰖐"
+                            font { family: view.sys ? view.sys.fontFam : "sans-serif"; pixelSize: 12 }
+                            color: view.sys ? view.sys.colMuted : "#888888"
+                        }
+                    }
 
-                                Text {
-                                    Layout.alignment: Qt.AlignHCenter
-                                    text: view.sys.weatherReady
-                                          ? circleCard.modelData.v + circleCard.modelData.suffix : "--"
-                                    color: view.sys.colFg
-                                    font { family: view.sys.fontFam; pixelSize: 15 }
-                                }
-                                // Подпись мельче и без разрядки: «HUMIDITY»
-                                // вразрядку не помещалось в круг и лезло на
-                                // его край. Кружок заодно подрос.
-                                Caption {
-                                    Layout.alignment: Qt.AlignHCenter
-                                    Layout.maximumWidth: 58
-                                    horizontalAlignment: Text.AlignHCenter
-                                    font.pixelSize: 8
-                                    font.letterSpacing: 0.3
-                                    text: circleCard.modelData.cap
-                                }
+                    // Концентрические кольца: внешнее RAM, внутреннее SSD
+                    Item {
+                        anchors.centerIn: parent
+                        anchors.verticalCenterOffset: -2
+                        width: 76
+                        height: 76
+
+                        Canvas {
+                            id: ringsCanvas
+                            anchors.fill: parent
+
+                            Connections {
+                                target: view.sys
+                                ignoreUnknownSignals: true
+                                function onLoadMemChanged() { ringsCanvas.requestPaint(); }
+                                function onLoadDiskChanged() { ringsCanvas.requestPaint(); }
                             }
 
-                            MouseArea {
-                                id: circleMa
-                                anchors.fill: parent
-                                hoverEnabled: true
-                                cursorShape: Qt.PointingHandCursor
-                                onClicked: view.sys.openWeatherDetails()
+                            onPaint: {
+                                var ctx = getContext("2d");
+                                ctx.reset();
+                                var cx = width / 2;
+                                var cy = height / 2;
+
+                                var ram = (view.sys && view.sys.loadMem !== undefined && view.sys.loadMem >= 0) ? view.sys.loadMem : 0;
+                                var disk = (view.sys && view.sys.loadDisk !== undefined && view.sys.loadDisk >= 0) ? view.sys.loadDisk : 0;
+
+                                // Внешнее кольцо: RAM (radius 31, lineWidth 4)
+                                var r1 = 31;
+                                ctx.lineWidth = 4;
+                                ctx.lineCap = "round";
+
+                                ctx.beginPath();
+                                ctx.arc(cx, cy, r1, 0, Math.PI * 2);
+                                ctx.strokeStyle = "rgba(255, 255, 255, 0.10)";
+                                ctx.stroke();
+
+                                if (ram > 0) {
+                                    ctx.beginPath();
+                                    var aStart = -Math.PI / 2;
+                                    var aEnd = aStart + (Math.min(100, ram) / 100) * Math.PI * 2;
+                                    ctx.arc(cx, cy, r1, aStart, aEnd);
+                                    ctx.strokeStyle = ram > 85 ? ((view.sys && view.sys.colCrit) ? String(view.sys.colCrit) : "#d71921") : "rgba(255, 255, 255, 0.95)";
+                                    ctx.stroke();
+                                }
+
+                                // Внутреннее кольцо: SSD (radius 21, lineWidth 4)
+                                var r2 = 21;
+                                ctx.beginPath();
+                                ctx.arc(cx, cy, r2, 0, Math.PI * 2);
+                                ctx.strokeStyle = "rgba(255, 255, 255, 0.08)";
+                                ctx.stroke();
+
+                                if (disk > 0) {
+                                    ctx.beginPath();
+                                    var aStart2 = -Math.PI / 2;
+                                    var aEnd2 = aStart2 + (Math.min(100, disk) / 100) * Math.PI * 2;
+                                    ctx.arc(cx, cy, r2, aStart2, aEnd2);
+                                    ctx.strokeStyle = (view.sys && view.sys.colCrit) ? String(view.sys.colCrit) : "#d71921";
+                                    ctx.stroke();
+                                }
                             }
+                        }
+
+                        Num {
+                            anchors.centerIn: parent
+                            value: (view.sys && view.sys.loadMem !== undefined && view.sys.loadMem >= 0) ? String(view.sys.loadMem) : "--"
+                            size: 11
+                            gapRatio: 0.18
+                            color: view.sys ? view.sys.colFg : "#ffffff"
+                        }
+                    }
+
+                    // Нижняя строка: показатели RAM и SSD
+                    RowLayout {
+                        anchors.bottom: parent.bottom
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.margins: 14
+                        anchors.bottomMargin: 8
+
+                        ColumnLayout {
+                            spacing: 1
+                            Text {
+                                text: (view.sys && view.sys.loadMem !== undefined && view.sys.loadMem >= 0) ? (view.sys.loadMem + "%") : "--%"
+                                color: view.sys ? view.sys.colFg : "#ffffff"
+                                font { family: view.sys ? view.sys.fontFam : "sans-serif"; pixelSize: 11; bold: true }
+                            }
+                            Caption { text: "RAM"; font.pixelSize: 8 }
+                        }
+
+                        Item { Layout.fillWidth: true }
+
+                        ColumnLayout {
+                            spacing: 1
+                            Layout.alignment: Qt.AlignRight
+                            Text {
+                                Layout.alignment: Qt.AlignRight
+                                text: (view.sys && view.sys.loadDisk !== undefined && view.sys.loadDisk >= 0) ? (view.sys.loadDisk + "%") : "--%"
+                                color: (view.sys && view.sys.colCrit) ? view.sys.colCrit : "#d71921"
+                                font { family: view.sys ? view.sys.fontFam : "sans-serif"; pixelSize: 11; bold: true }
+                            }
+                            Caption { Layout.alignment: Qt.AlignRight; text: "SSD"; font.pixelSize: 8 }
+                        }
+                    }
+                }
+
+                // ЕДИНЫЙ клик по всей правой карточке: переключает Погода <-> Система
+                MouseArea {
+                    id: rightCardMa
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: {
+                        if (view.sys && view.sys.cfg) {
+                            view.sys.cfg.widgetRightMode = (view.rightMode === "weather" ? "system" : "weather");
+                            view.sys.saveCfg();
                         }
                     }
                 }
             }
         }
 
-        // ------------------------------------------------------ часы
+        // ------------------------------------------------------ Ряд 3: Life Bar / Day & Year Progress (300x72)
         Card {
+            id: progressCard
             Layout.preferredWidth: view.fullW
-            Layout.preferredHeight: 62
+            Layout.preferredHeight: 72
+            color: progMa.containsMouse ? Qt.rgba(0.13, 0.13, 0.14, 0.98) : Qt.rgba(0.09, 0.09, 0.09, 0.96)
+            border.color: progMa.containsMouse ? (view.sys && view.sys.colOn ? Qt.rgba(view.sys.colOn.r, view.sys.colOn.g, view.sys.colOn.b, 0.4) : Qt.rgba(1, 1, 1, 0.4)) : Qt.rgba(1, 1, 1, 0.06)
+            Behavior on color { ColorAnimation { duration: 120 } }
+            Behavior on border.color { ColorAnimation { duration: 120 } }
 
-            Num {
-                anchors.centerIn: parent
-                value: view.sys.timeText
-                size: 30
-                gapRatio: 0.14
-                color: view.sys.colFg
+            ColumnLayout {
+                anchors.fill: parent
+                anchors.margins: 14
+                anchors.topMargin: 10
+                anchors.bottomMargin: 10
+                spacing: 8
+
+                RowLayout {
+                    Layout.fillWidth: true
+
+                    Caption {
+                        Layout.fillWidth: true
+                        text: view.progressMode === "day"
+                              ? (view.sys ? view.sys.tr("ПРОГРЕСС ДНЯ") : "DAY PROGRESS")
+                              : (view.sys ? view.sys.tr("ПРОГРЕСС ГОДА") : "YEAR PROGRESS")
+                        font.bold: true
+                        font.pixelSize: 9
+                        font.letterSpacing: 1.2
+                        color: view.sys ? view.sys.colMuted : "#888888"
+                    }
+
+                    Num {
+                        value: (view.progressMode === "day" ? view.dayPct : view.yearPct) + "%"
+                        size: 13
+                        gapRatio: 0.15
+                        color: view.sys ? view.sys.colFg : "#ffffff"
+                    }
+                }
+
+                // 24 сегмента для 24 часов
+                RowLayout {
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 6
+                    spacing: 3
+                    visible: view.progressMode === "day"
+
+                    Repeater {
+                        model: 24
+                        Rectangle {
+                            required property int index
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: 6
+                            radius: 3
+                            color: index < view.curHour
+                                   ? Qt.rgba(1, 1, 1, 0.88)
+                                   : (index === view.curHour
+                                      ? ((view.sys && view.sys.colCrit) ? view.sys.colCrit : "#d71921")
+                                      : Qt.rgba(1, 1, 1, 0.12))
+                            opacity: index === view.curHour ? view.pulseOpacity : 1.0
+                        }
+                    }
+                }
+
+                // 12 сегментов для 12 месяцев года
+                RowLayout {
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 6
+                    spacing: 5
+                    visible: view.progressMode === "year"
+
+                    Repeater {
+                        model: 12
+                        Rectangle {
+                            required property int index
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: 6
+                            radius: 3
+                            color: index < view.curMonth
+                                   ? Qt.rgba(1, 1, 1, 0.88)
+                                   : (index === view.curMonth
+                                      ? ((view.sys && view.sys.colCrit) ? view.sys.colCrit : "#d71921")
+                                      : Qt.rgba(1, 1, 1, 0.12))
+                            opacity: index === view.curMonth ? view.pulseOpacity : 1.0
+                        }
+                    }
+                }
+
+                RowLayout {
+                    Layout.fillWidth: true
+
+                    Text {
+                        Layout.fillWidth: true
+                        text: (view.sys ? view.sys.tr("Осталось ") : "Remaining ") +
+                              (view.progressMode === "day"
+                               ? view.remainDayText
+                               : (view.remainYearDays + " " + (view.sys ? view.sys.tr("дн.") : "days")))
+                        color: view.sys ? view.sys.colMuted : "#888888"
+                        font {
+                            family: view.sys ? view.sys.fontFam : "sans-serif"
+                            pixelSize: 10
+                        }
+                    }
+
+                    Caption {
+                        text: "󰔛 " + (view.progressMode === "day" ? "24H" : "365D")
+                        font.pixelSize: 8
+                        color: view.sys ? Qt.rgba(view.sys.colFg.r, view.sys.colFg.g, view.sys.colFg.b, 0.4) : "#666666"
+                    }
+                }
+            }
+
+            MouseArea {
+                id: progMa
+                anchors.fill: parent
+                hoverEnabled: true
+                cursorShape: Qt.PointingHandCursor
+                onClicked: {
+                    if (view.sys && view.sys.cfg) {
+                        view.sys.cfg.widgetProgressMode = (view.progressMode === "day" ? "year" : "day");
+                        view.sys.saveCfg();
+                    }
+                }
             }
         }
     }

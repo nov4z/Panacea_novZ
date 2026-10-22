@@ -2887,11 +2887,11 @@ ColumnLayout {
         }
     }
 
-    // ============================================================= HARDWARE LENOVO LOQ: RETROILUMINACIÓN
+    // ============================================================= HARDWARE: RETROILUMINACIÓN DE TECLADO
     SetCard {
         sys: page.sys
 
-        SetLabel { sys: page.sys; text: page.sys.tr("Hardware Lenovo LOQ: Retroiluminación (Fn+Space)") }
+        SetLabel { sys: page.sys; text: page.sys.tr("Hardware: Retroiluminación de Teclado (Fn+Space)") }
 
         Text {
             Layout.fillWidth: true
@@ -3040,15 +3040,15 @@ ColumnLayout {
         }
     }
 
-    // ============================================================= HARDWARE LENOVO LOQ: MODOS DE RENDIMIENTO
+    // ============================================================= HARDWARE: MODOS DE RENDIMIENTO
     SetCard {
         sys: page.sys
 
-        SetLabel { sys: page.sys; text: page.sys.tr("Hardware Lenovo LOQ: Modos de Rendimiento (Fn+Q)") }
+        SetLabel { sys: page.sys; text: page.sys.tr("Hardware: Modos de Rendimiento (Fn+Q)") }
 
         Text {
             Layout.fillWidth: true
-            text: page.sys.tr("Vinculado al hardware de Lenovo LOQ (Fn+Q o Super+Alt+P). Cambia en tiempo real entre Modo Ahorro (Silencioso), Modo Equilibrado y Modo Rendimiento con aviso animado en el Dynamic Island.")
+            text: page.sys.tr("Vinculado al hardware (Fn+Q o Super+Alt+P). Cambia en tiempo real entre Modo Ahorro (Silencioso), Modo Equilibrado y Modo Rendimiento con aviso animado en el Dynamic Island.")
             color: page.sys.colMuted
             wrapMode: Text.WordWrap
             font { family: page.sys.fontBody; pixelSize: page.sys.fontSize - 3 }

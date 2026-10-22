@@ -12,7 +12,7 @@ Empirically tests:
 2. Component Hierarchy and AST Structure:
    - Verifies existence and layout integrity of newly exposed sections in SettingsView.qml,
      SetCustomNotch.qml, SetMedia.qml, and SetBarIsland.qml.
-   - Verifies all 18 referenced section page files exist on the filesystem.
+   - Verifies all 17 referenced section page files exist on the filesystem.
    - Verifies exact control properties, options, default expressions, and persistence hooks.
 3. Search Discoverability and Query Matching:
    - Replicates QML matches(s) search logic against parsed sections.
@@ -240,7 +240,7 @@ class TestQmlDelimiterAndSyntaxIntegrity(unittest.TestCase):
         self.assertTrue(ok, f"Delimiter errors in SetBarIsland.qml: {errs}")
 
     def test_all_settings_section_pages_delimiter_balance(self):
-        """Validates delimiter balance for all 18 referenced section pages."""
+        """Validates delimiter balance for all 17 referenced section pages."""
         settings_view = (QML_DIR / "SettingsView.qml").read_text(encoding="utf-8")
         page_names = re.findall(r'page:\s*"([^"]+)"', settings_view)
         self.assertGreater(len(page_names), 0, "Should discover section pages in SettingsView.qml")
@@ -444,8 +444,8 @@ class TestSearchDiscoverability(unittest.TestCase):
         return q in section["title"].lower() or q in section["keys"].lower()
 
     def test_sections_parsed_successfully(self):
-        """Verifies that all 18 sections were parsed from SettingsView.qml."""
-        self.assertEqual(len(self.sections), 18)
+        """Verifies that all 17 sections were parsed from SettingsView.qml."""
+        self.assertEqual(len(self.sections), 17)
         ids = [s["id"] for s in self.sections]
         self.assertIn("customnotch", ids)
         self.assertIn("bar", ids)
@@ -524,7 +524,7 @@ class TestSearchDiscoverability(unittest.TestCase):
         """Verifies boundary conditions: empty matches all, non-existent matches none."""
         # Empty query
         all_matches = [s["id"] for s in self.sections if self._matches(s, "")]
-        self.assertEqual(len(all_matches), 18)
+        self.assertEqual(len(all_matches), 17)
 
         # Non-existent query
         none_matches = [s["id"] for s in self.sections if self._matches(s, "nonexistent_query_xyz123")]

@@ -305,6 +305,9 @@ PanelWindow {
             // поверх обоев и меняют вид рабочего стола, а такое включают
             // сами, а не обнаруживают после обновления.
             property bool   featWidgets: false
+            property string widgetClockMode: "analog"
+            property string widgetRightMode: "weather"
+            property string widgetProgressMode: "day"
             property bool   systemLoadOnIsland: false
             // JSON string: {"Turkish":"TR","Russian":"RU"}
             property string keyboardLayoutMap: ""
@@ -537,7 +540,8 @@ PanelWindow {
         keyboardLayouts: "us,ru", keyboardVariants: ",", keyboardOptions: "grp:alt_shift_toggle",
         recFps: 60, recDir: "~/Videos", recSysAudio: false, recMic: false, recMicDevice: "",
         weatherKey: "", weatherCity: "", weatherUnits: "metric",
-        weatherOnIsland: true, systemLoadOnIsland: false, keyboardLayoutMap: "", featWidgets: false, termAlpha: 0.90,
+        weatherOnIsland: true, systemLoadOnIsland: false, keyboardLayoutMap: "", featWidgets: false,
+        widgetClockMode: "analog", widgetRightMode: "weather", widgetProgressMode: "day", termAlpha: 0.90,
         braveReturnDelay: 1000, notchSectionGap: 10, notchBatteryGap: 8, notchClockPad: 0,
         musicArtSize: 26, musicWaveSens: 100, musicCoverRadius: 7,
         musicCoverBounce: true, musicCoverRipple: true, musicCoverRippleShape: 0,
@@ -823,7 +827,8 @@ PanelWindow {
     readonly property string localeId: String(cfg.lang || "en")
     readonly property string languageCode: localeId.split(/[_-]/)[0].toLowerCase()
     readonly property bool isEn: languageCode === "en"
-    readonly property bool isEs: languageCode === "es" || (!isEn && languageCode !== "ru" && languageCode !== "tr")
+    readonly property bool isTr: languageCode === "tr"
+    readonly property bool isEs: languageCode === "es" || (!isEn && languageCode !== "ru" && !isTr)
     function tr(k) {
         if (root.languageCode === "ru") return k;
         if ((root.languageCode === "es" || root.isEs) && i18n.es && i18n.es[k] !== undefined) return i18n.es[k];
@@ -2991,7 +2996,7 @@ PanelWindow {
     // питания и настройки тачпада. Пустые разделы честнее убрать, чем
     // показывать вечные нули.
     readonly property bool showBattery: root.batteryPresent
-    readonly property bool showPowerProfiles: root.batteryPresent && root.cfg.featPowerProfiles
+    readonly property bool showPowerProfiles: (root.batteryPresent || (root.powerProfile && root.powerProfile.length > 0)) && root.cfg.featPowerProfiles
 
     Process {
         id: pMachine
@@ -5133,7 +5138,7 @@ PanelWindow {
     readonly property bool anyToastActive: anySystemToastActive || osdActive || toastActive
 
     function setKbdBacklight(lvl) {
-        pKbdLightSet.command = ["brightnessctl", "-d", "platform::kbd_backlight", "set", String(lvl)];
+        pKbdLightSet.command = ["brightnessctl", "-d", "*kbd_backlight*", "set", String(lvl)];
         pKbdLightSet.running = true;
     }
     function cycleKbdBacklight() {

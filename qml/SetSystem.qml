@@ -61,10 +61,14 @@ ColumnLayout {
             "else " +
             "  wm_ver=\"${XDG_CURRENT_DESKTOP:-Hyprland} $(hyprctl version -j 2>/dev/null | sed -n 's/.*\\\"tag\\\": *\\\"\\([^\\\"]*\\)\\\".*/\\1/p')\"; " +
             "fi; " +
+            "cpu_n=$(sed -n 's/^model name[ \\t]*: //p' /proc/cpuinfo 2>/dev/null | head -1); " +
+            "[ -z \"$cpu_n\" ] && cpu_n=$(sed -n 's/^Model[ \\t]*: //p' /proc/cpuinfo 2>/dev/null | head -1); " +
+            "[ -z \"$cpu_n\" ] && cpu_n=$(lscpu 2>/dev/null | sed -n 's/^Model name:[ \\t]*//p' | head -1); " +
+            "gpu_n=$(lspci 2>/dev/null | sed -n 's/.*\\(VGA compatible controller\\|3D controller\\): //p' | head -1); " +
             "printf '%s\\n' \"$(. /etc/os-release 2>/dev/null; echo $PRETTY_NAME)\" " +
             "\"$(uname -r)\" \"$wm_ver\" " +
-            "\"$(sed -n 's/^model name[ \\t]*: //p' /proc/cpuinfo | head -1)\" " +
-            "\"$(lspci 2>/dev/null | sed -n 's/.*VGA compatible controller: //p' | head -1)\" " +
+            "\"${cpu_n:-Generic Processor}\" " +
+            "\"${gpu_n:-Generic Graphics}\" " +
             "\"$(cat /etc/hostname 2>/dev/null)\""]
         stdout: StdioCollector {
             onStreamFinished: {
@@ -79,26 +83,26 @@ ColumnLayout {
         }
     }
 
-    // Температуру берём из hwmon по имени чипа, а не из thermal_zone:
-    // на этой машине единственная зона — acpitz, и она показывает шесть
-    // градусов. Из hwmon же понятно, чей это датчик, и его можно подписать.
+    // Monitoreo de hardware universal en vivo:
+    // Lee directamente /proc/meminfo para asegurar memoria y swap sin depender del idioma/locale.
+    // Detección universal de CPU/GPU en sysfs hwmon y thermal_zone para cualquier distribución/PC.
     Process {
         id: pLive
         command: ["sh", "-c",
-            // память | подкачка | загрузка | процессы | ЦП | видео | диск | аптайм | сама оболочка
-            "free -k | awk '/^Mem:/{printf \"%s %s|\", $3, $2} /^Swap:/{printf \"%s %s|\", $3, $2}'; " +
-            "awk '{printf \"%s|\", $1}' /proc/loadavg; " +
-            "ls -d /proc/[0-9]* | wc -l | tr -d '\\n'; printf '|'; " +
-            "for h in /sys/class/hwmon/hwmon*; do n=$(cat $h/name 2>/dev/null); " +
-            "case $n in k10temp|coretemp|zenpower|cpu_thermal|acpitz_cpu) " +
-            "cat $h/temp1_input 2>/dev/null | tr -d '\\n'; break;; esac; done; printf '|'; " +
-            // Видео: сперва hwmon, как у процессора. Проприетарный драйвер
-            // Nvidia датчик туда не всегда выставляет, поэтому если пусто —
-            // спрашиваем nvidia-smi. Он отдаёт градусы целым числом, а hwmon
-            // — тысячные доли, поэтому домножаем.
+            // 0: Memoria | 1: Swap | 2: Carga CPU 1m | 3: Procesos | 4: Temp CPU | 5: Temp GPU | 6: Disco | 7: Uptime | 8: RSS Panacea
+            "awk '/MemTotal:/{mt=$2} /MemAvailable:/{ma=$2} /SwapTotal:/{st=$2} /SwapFree:/{sf=$2} END{printf \"%d %d|%d %d|\", (mt-ma), mt, (st-sf), st}' /proc/meminfo 2>/dev/null || printf '0 0|0 0|'; " +
+            "awk '{printf \"%s|\", $1}' /proc/loadavg 2>/dev/null || printf '0|'; " +
+            "ls -d /proc/[0-9]* 2>/dev/null | wc -l | tr -d '\\n'; printf '|'; " +
+            "cpu_t=''; for h in /sys/class/hwmon/hwmon*; do n=$(cat $h/name 2>/dev/null); " +
+            "case $n in k10temp|coretemp|zenpower|cpu_thermal|cpu-thermal|soc_thermal|acpitz_cpu|thinkpad|asus|dell_smm) " +
+            "for tf in $h/temp1_input $h/temp2_input $h/temp*_input; do [ -r \"$tf\" ] && { cpu_t=$(cat \"$tf\" 2>/dev/null); [ -n \"$cpu_t\" ] && break 2; }; done;; esac; done; " +
+            "if [ -z \"$cpu_t\" ]; then for z in /sys/class/thermal/thermal_zone*; do " +
+            "zt=$(cat $z/type 2>/dev/null); case $zt in *cpu*|*CPU*|*pkg*|*PKG*|x86_pkg_temp|acpitz) " +
+            "zv=$(cat $z/temp 2>/dev/null); if [ -n \"$zv\" ] && [ \"$zv\" -gt 0 ] 2>/dev/null; then cpu_t=\"$zv\"; break; fi;; esac; done; fi; " +
+            "printf '%s|' \"$cpu_t\"; " +
             "gpu=''; for h in /sys/class/hwmon/hwmon*; do n=$(cat $h/name 2>/dev/null); " +
-            "case $n in amdgpu|nouveau|radeon|i915|nvidia) " +
-            "gpu=$(cat $h/temp1_input 2>/dev/null); break;; esac; done; " +
+            "case $n in amdgpu|nouveau|radeon|i915|nvidia|xe) " +
+            "for tf in $h/temp1_input $h/temp*_input; do [ -r \"$tf\" ] && { gpu=$(cat \"$tf\" 2>/dev/null); [ -n \"$gpu\" ] && break 2; }; done;; esac; done; " +
             "if [ -z \"$gpu\" ] && command -v nvidia-smi >/dev/null 2>&1; then " +
             "c=$(nvidia-smi --query-gpu=temperature.gpu --format=csv,noheader,nounits 2>/dev/null | head -1 | tr -d ' '); " +
             "case \"$c\" in [0-9]*) gpu=$((c * 1000));; esac; fi; " +
@@ -106,15 +110,16 @@ ColumnLayout {
             "zt=$(cat $z/type 2>/dev/null); case $zt in SEN4|SEN5|*gpu*|*GPU*|*dGPU*) " +
             "zv=$(cat $z/temp 2>/dev/null); if [ -n \"$zv\" ] && [ \"$zv\" -gt 0 ] 2>/dev/null; then gpu=\"$zv\"; break; fi;; esac; done; fi; " +
             "printf '%s|' \"$gpu\"; " +
-            "df -k --output=used,size / | tail -1 | tr -s ' ' | sed 's/^ //' | tr -d '\\n'; printf '|'; " +
-            "uptime -p | tr -d '\\n'; printf '|'; " +
-            // сама оболочка: sh запущен из неё, поэтому её PID — это PPID
-            "awk '/VmRSS/{printf \"%s\", $2}' /proc/$PPID/status; printf '@'"]
+            "dsk=$(LC_ALL=C df -k --output=used,size / 2>/dev/null | tail -1 | tr -s ' ' | sed 's/^ //'); " +
+            "[ -z \"$dsk\" ] && dsk=$(LC_ALL=C df -k / 2>/dev/null | awk 'END{print $3, $2}'); " +
+            "printf '%s|' \"$dsk\"; " +
+            "uptime -p 2>/dev/null | tr -d '\\n'; printf '|'; " +
+            "rss=$(awk '/VmRSS/{print $2}' /proc/$PPID/status 2>/dev/null); " +
+            "if [ -z \"$rss\" ] || [ \"$rss\" -le 0 ] 2>/dev/null; then " +
+            "rss=$(ps -C qs,quickshell -o rss= 2>/dev/null | head -1 | tr -d ' '); fi; " +
+            "printf '%s@' \"${rss:-0}\""]
         stdout: StdioCollector {
             onStreamFinished: {
-                // Сборщик копит вывод всех запусков подряд, поэтому берём
-                // последнюю законченную запись, а не начало текста: без
-                // этого показания навсегда оставались снимком первого опроса.
                 var recs = text.split("@").filter(r => r.indexOf("|") > 0);
                 if (!recs.length) return;
                 var a = recs[recs.length - 1].trim().split("|");
@@ -127,7 +132,6 @@ ColumnLayout {
                 page.swapTotal = (+swp[1] || 0) / 1048576;
                 page.load1  = +a[2] || 0;
                 page.procs  = +a[3] || 0;
-                // датчики отдают тысячные доли градуса
                 page.tempCpu = (+a[4] > 0) ? (+a[4] / 1000) : -1;
                 page.tempGpu = (+a[5] > 0) ? (+a[5] / 1000) : -1;
                 page.diskUsed  = (+dsk[0] || 0) / 1048576;

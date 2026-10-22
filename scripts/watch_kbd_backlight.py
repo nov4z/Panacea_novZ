@@ -22,7 +22,22 @@ try:
 except Exception:
     pass
 
-SYSFS = "/sys/class/leds/platform::kbd_backlight/brightness"
+import glob
+
+def get_sysfs_path():
+    candidates = [
+        "/sys/class/leds/platform::kbd_backlight/brightness",
+        "/sys/class/leds/*kbd_backlight*/brightness",
+        "/sys/class/leds/*::kbd_backlight/brightness",
+        "/sys/class/leds/*keyboard*/brightness",
+    ]
+    for pattern in candidates:
+        matches = glob.glob(pattern)
+        if matches:
+            return matches[0]
+    return "/sys/class/leds/platform::kbd_backlight/brightness"
+
+SYSFS = get_sysfs_path()
 
 def read_level():
     try:

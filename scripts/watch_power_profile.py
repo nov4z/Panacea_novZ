@@ -22,6 +22,8 @@ try:
 except Exception:
     pass
 
+import subprocess
+
 SYSFS = "/sys/firmware/acpi/platform_profile"
 
 MAP = {
@@ -35,9 +37,17 @@ MAP = {
 
 def read_profile():
     try:
-        with open(SYSFS, "r") as f:
-            raw = f.read().strip()
-            return MAP.get(raw, raw)
+        if os.path.exists(SYSFS):
+            with open(SYSFS, "r") as f:
+                raw = f.read().strip()
+                return MAP.get(raw, raw)
+        else:
+            # Universal fallback for generic PCs without ACPI platform_profile
+            cmd = "busctl --system get-property net.hadess.PowerProfiles /net/hadess/PowerProfiles net.hadess.PowerProfiles ActiveProfile 2>/dev/null"
+            out = subprocess.check_output(cmd, shell=True, text=True, timeout=1).strip()
+            if out.startswith('s '):
+                out = out[2:].strip('"')
+            return MAP.get(out, out)
     except Exception:
         return ""
 

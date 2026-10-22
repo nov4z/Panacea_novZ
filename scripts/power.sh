@@ -14,22 +14,36 @@ OBJ="/net/hadess/PowerProfiles"
 
 case "$1" in
     get)
-        busctl --system get-property "$BUS" "$OBJ" "$BUS" ActiveProfile 2>/dev/null \
-            | sed 's/^s //; s/"//g'
+        out=$(busctl --system get-property "$BUS" "$OBJ" "$BUS" ActiveProfile 2>/dev/null | sed 's/^s //; s/"//g')
+        if [ -z "$out" ] && command -v powerprofilesctl >/dev/null 2>&1; then
+            out=$(powerprofilesctl get 2>/dev/null)
+        fi
+        echo "${out:-balanced}"
         ;;
     set)
         [ -z "$2" ] && exit 1
-        busctl --system set-property "$BUS" "$OBJ" "$BUS" ActiveProfile s "$2" 2>/dev/null
+        if ! busctl --system set-property "$BUS" "$OBJ" "$BUS" ActiveProfile s "$2" 2>/dev/null; then
+            if command -v powerprofilesctl >/dev/null 2>&1; then
+                powerprofilesctl set "$2" 2>/dev/null
+            fi
+        fi
         ;;
     cycle)
         curr=$(busctl --system get-property "$BUS" "$OBJ" "$BUS" ActiveProfile 2>/dev/null | sed 's/^s //; s/"//g')
+        if [ -z "$curr" ] && command -v powerprofilesctl >/dev/null 2>&1; then
+            curr=$(powerprofilesctl get 2>/dev/null)
+        fi
         case "$curr" in
             power-saver) next="balanced" ;;
             balanced)    next="performance" ;;
             performance) next="power-saver" ;;
             *)           next="balanced" ;;
         esac
-        busctl --system set-property "$BUS" "$OBJ" "$BUS" ActiveProfile s "$next" 2>/dev/null
+        if ! busctl --system set-property "$BUS" "$OBJ" "$BUS" ActiveProfile s "$next" 2>/dev/null; then
+            if command -v powerprofilesctl >/dev/null 2>&1; then
+                powerprofilesctl set "$next" 2>/dev/null
+            fi
+        fi
         echo "$next"
         ;;
     *)

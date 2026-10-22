@@ -77,10 +77,7 @@ Item {
                 + "мышь указатель курсор скорость сенса чувствительность разгон прямой ввод raton touchpad puntero" },
         { id: "system",  title: "Sistema",        g: 0xF0493, page: "SetSystem.qml",
           sub: view.sys.tr("Información del equipo, procesador, memoria RAM y procesos activos."),
-          keys: "about system cpu ram temperature система озу температура процессы sistema procesador memoria disco" },
-        { id: "backup",  title: "Copia de Seguridad", g: 0xF09BF, page: "SetBackup.qml",
-          sub: view.sys.tr("Guardar y restaurar puntos de configuración, exportar e importar."),
-          keys: "backup restaurar copia seguridad restore snapshot export import revert reset guardar baseline punto restauracion" }
+          keys: "about system cpu ram temperature система озу температура процессы sistema procesador memoria disco" }
     ]
 
     readonly property var section: sections[Math.max(0, Math.min(sections.length - 1, tab))]

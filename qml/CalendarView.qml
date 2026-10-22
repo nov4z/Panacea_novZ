@@ -44,9 +44,20 @@ Item {
                                      "July","August","September","October","November","December"]
     readonly property var monthsEs: ["Enero","Febrero","Marzo","Abril","Mayo","Junio",
                                      "Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"]
+    readonly property var monthsTr: ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran",
+                                     "Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"]
     readonly property var dowRu: ["Пн","Вт","Ср","Чт","Пт","Сб","Вс"]
     readonly property var dowEn: ["Mo","Tu","We","Th","Fr","Sa","Su"]
     readonly property var dowEs: ["Lu","Ma","Mi","Ju","Vi","Sá","Do"]
+    readonly property var dowTr: ["Pzt","Sal","Çar","Per","Cum","Cmt","Paz"]
+
+    readonly property bool isTr: view.sys ? (view.sys.languageCode === "tr" || view.sys.isTr) : false
+    readonly property bool isEs: view.sys ? view.sys.isEs : false
+    readonly property bool isEn: view.sys ? view.sys.isEn : false
+    readonly property bool isMaterial: !!(view.sys && view.sys.themeMaterial)
+
+    readonly property var currentMonths: isTr ? monthsTr : (isEs ? monthsEs : (isEn ? monthsEn : monthsRu))
+    readonly property var currentDow: isTr ? dowTr : (isEs ? dowEs : (isEn ? dowEn : dowRu))
 
     // 42 ячейки: шесть недель, чтобы сетка не прыгала между месяцами
     readonly property var cells: {
@@ -75,8 +86,10 @@ Item {
 
         Layout.preferredWidth: 30
         Layout.preferredHeight: 30
-        radius: 10
-        color: navMa.containsMouse ? Qt.rgba(1, 1, 1, 0.13) : Qt.rgba(1, 1, 1, 0.06)
+        radius: isMaterial ? 15 : 10
+        color: navMa.containsMouse
+               ? (isMaterial ? (view.sys.colM3SurfaceContainerHigh || Qt.rgba(1, 1, 1, 0.15)) : Qt.rgba(1, 1, 1, 0.13))
+               : (isMaterial ? (view.sys.colM3SurfaceContainer || Qt.rgba(1, 1, 1, 0.08)) : Qt.rgba(1, 1, 1, 0.06))
         Behavior on color { ColorAnimation { duration: 150 } }
         scale: navMa.pressed ? 0.94 : (navMa.containsMouse ? 1.06 : 1.0)
         Behavior on scale { NumberAnimation { duration: 140; easing.type: Easing.OutCubic } }
@@ -84,7 +97,7 @@ Item {
         Text {
             anchors.centerIn: parent
             text: parent.sym
-            color: view.sys.colMuted
+            color: isMaterial ? (view.sys.colOn || view.sys.colFg) : view.sys.colMuted
             font { family: view.sys.fontFam; pixelSize: view.sys.fontSize }
         }
         MouseArea {
@@ -112,8 +125,8 @@ Item {
                 spacing: -2
                 Text {
                     Layout.alignment: Qt.AlignHCenter
-                    text: (view.sys.isEs ? view.monthsEs : (view.sys.isEn ? view.monthsEn : view.monthsRu))[view.viewMonth]
-                    color: view.sys.colFg
+                    text: view.currentMonths[view.viewMonth]
+                    color: isMaterial ? (view.sys.colOn || view.sys.colFg) : view.sys.colFg
                     font { family: view.sys.fontFam; pixelSize: view.sys.fontSize + 2; bold: true }
                 }
                 Text {
@@ -132,14 +145,16 @@ Item {
             Layout.fillWidth: true
             spacing: 4
             Repeater {
-                model: view.sys.isEs ? view.dowEs : (view.sys.isEn ? view.dowEn : view.dowRu)
+                model: view.currentDow
                 Text {
                     required property int index
                     required property string modelData
                     Layout.fillWidth: true
                     horizontalAlignment: Text.AlignHCenter
                     text: modelData
-                    color: index >= 5 ? Qt.rgba(1, 0.42, 0.42, 0.55) : view.sys.colMuted
+                    color: index >= 5
+                           ? (isMaterial ? (view.sys.colCrit || "#e08096") : Qt.rgba(1, 0.42, 0.42, 0.55))
+                           : (isMaterial ? (view.sys.colM3OnSurface || view.sys.colMuted) : view.sys.colMuted)
                     font { family: view.sys.fontFam; pixelSize: view.sys.fontSize - 4; bold: true }
                 }
             }
@@ -175,12 +190,17 @@ Item {
 
                     Layout.fillWidth: true
                     Layout.preferredHeight: 34
-                    radius: 10
+                    radius: isMaterial ? 17 : 10
                     color: cell.modelData.isToday
-                           ? Qt.rgba(view.sys.colOn.r, view.sys.colOn.g, view.sys.colOn.b, 0.22)
+                           ? (isMaterial
+                              ? (view.sys.colOn || "#ffffff")
+                              : (view.sys && view.sys.colOn ? Qt.rgba(view.sys.colOn.r, view.sys.colOn.g, view.sys.colOn.b, 0.22) : Qt.rgba(1, 1, 1, 0.22)))
                            : (cellMa.containsMouse && cell.modelData.inMonth
-                              ? Qt.rgba(1, 1, 1, 0.08) : "transparent")
-                    border.color: cell.modelData.isToday ? view.sys.colOn : "transparent"
+                              ? (isMaterial ? (view.sys.colM3SurfaceContainerHigh || Qt.rgba(1, 1, 1, 0.10)) : Qt.rgba(1, 1, 1, 0.08))
+                              : "transparent")
+                    border.color: cell.modelData.isToday
+                                  ? (isMaterial ? "transparent" : (view.sys ? view.sys.colOn : "#ffffff"))
+                                  : "transparent"
                     border.width: 1
                     Behavior on color { ColorAnimation { duration: 140 } }
                     scale: (cellMa.containsMouse && cell.modelData.inMonth) ? 1.05 : 1.0
@@ -190,9 +210,13 @@ Item {
                         anchors.centerIn: parent
                         text: cell.modelData.day
                         color: !cell.modelData.inMonth ? Qt.rgba(1, 1, 1, 0.18)
-                             : cell.modelData.isToday  ? view.sys.colFg
-                             : cell.modelData.weekend  ? Qt.rgba(1, 0.42, 0.42, 0.85)
-                                                       : view.sys.colFg
+                             : cell.modelData.isToday
+                               ? (isMaterial
+                                  ? (view.sys.colM3OnPrimary || (view.sys.matugenColors && view.sys.matugenColors.on_primary ? view.sys.matugenColors.on_primary.dark.color : "#121212"))
+                                  : view.sys.colFg)
+                             : cell.modelData.weekend
+                               ? (isMaterial ? (view.sys.colCrit || "#e08096") : Qt.rgba(1, 0.42, 0.42, 0.85))
+                               : view.sys.colFg
                         font {
                             family: view.sys.fontFam
                             pixelSize: view.sys.fontSize - 2
@@ -215,18 +239,20 @@ Item {
             Layout.alignment: Qt.AlignHCenter
             Layout.preferredWidth: 118
             Layout.preferredHeight: 28
-            radius: 10
+            radius: isMaterial ? 14 : 10
             visible: view.viewMonth !== view.today.getMonth()
                      || view.viewYear !== view.today.getFullYear()
-            color: todayMa.containsMouse ? Qt.rgba(1, 1, 1, 0.13) : Qt.rgba(1, 1, 1, 0.06)
+            color: todayMa.containsMouse
+                   ? (isMaterial ? (view.sys.colM3SurfaceContainerHigh || Qt.rgba(1, 1, 1, 0.15)) : Qt.rgba(1, 1, 1, 0.13))
+                   : (isMaterial ? (view.sys.colM3SurfaceContainer || Qt.rgba(1, 1, 1, 0.08)) : Qt.rgba(1, 1, 1, 0.06))
             Behavior on color { ColorAnimation { duration: 150 } }
             scale: todayMa.pressed ? 0.96 : (todayMa.containsMouse ? 1.03 : 1.0)
             Behavior on scale { NumberAnimation { duration: 140; easing.type: Easing.OutCubic } }
             Text {
                 anchors.centerIn: parent
                 text: view.sys.tr("Сегодня")
-                color: view.sys.colMuted
-                font { family: view.sys.fontFam; pixelSize: view.sys.fontSize - 4 }
+                color: isMaterial ? (view.sys.colOn || view.sys.colFg) : view.sys.colMuted
+                font { family: view.sys.fontFam; pixelSize: view.sys.fontSize - 4; bold: isMaterial }
             }
             MouseArea {
                 id: todayMa

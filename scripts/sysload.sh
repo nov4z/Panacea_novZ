@@ -42,19 +42,30 @@ mem=$(awk '/^MemTotal:/{t=$2} /^MemAvailable:/{a=$2}
 
 # ------------------------------------------------------------------------ диск
 # Занятое место на корневом разделе (/) в процентах.
-disk=$(df -k / 2>/dev/null | awk 'NR==2 {if ($2>0) printf "%d", $3*100/$2}')
+disk=$(LC_ALL=C df -k / 2>/dev/null | awk 'NR==2 {if ($2>0) printf "%d", $3*100/$2}')
 
 # -------------------------------------------------------------- температура ЦП
 if [ "$fast" -eq 0 ]; then
     for h in /sys/class/hwmon/hwmon*; do
         case "$(cat "$h/name" 2>/dev/null)" in
-            k10temp|coretemp|zenpower|cpu_thermal|acpitz_cpu)
-                v=$(cat "$h/temp1_input" 2>/dev/null)
-                [ -n "$v" ] && tcpu=$((v / 1000))
-                break
+            k10temp|coretemp|zenpower|cpu_thermal|cpu-thermal|soc_thermal|acpitz_cpu|thinkpad|asus|dell_smm)
+                for tf in "$h"/temp1_input "$h"/temp2_input "$h"/temp*_input; do
+                    [ -r "$tf" ] && v=$(cat "$tf" 2>/dev/null)
+                    [ -n "$v" ] && [ "$v" -gt 0 ] 2>/dev/null && { tcpu=$((v / 1000)); break 2; }
+                done
                 ;;
         esac
     done
+    if [ -z "$tcpu" ]; then
+        for z in /sys/class/thermal/thermal_zone*; do
+            case "$(cat "$z/type" 2>/dev/null)" in
+                *cpu*|*CPU*|*pkg*|*PKG*|x86_pkg_temp|acpitz)
+                    zv=$(cat "$z/temp" 2>/dev/null)
+                    [ -n "$zv" ] && [ "$zv" -gt 0 ] 2>/dev/null && { tcpu=$((zv / 1000)); break; }
+                    ;;
+            esac
+        done
+    fi
 
     # ------------------------------------------------------------------- видеокарта
     for d in /sys/class/drm/card*/device; do
@@ -64,10 +75,11 @@ if [ "$fast" -eq 0 ]; then
     done
     for h in /sys/class/hwmon/hwmon*; do
         case "$(cat "$h/name" 2>/dev/null)" in
-            amdgpu|nouveau|radeon|i915|nvidia)
-                v=$(cat "$h/temp1_input" 2>/dev/null)
-                [ -n "$v" ] && tgpu=$((v / 1000))
-                break
+            amdgpu|nouveau|radeon|i915|nvidia|xe)
+                for tf in "$h"/temp1_input "$h"/temp*_input; do
+                    [ -r "$tf" ] && v=$(cat "$tf" 2>/dev/null)
+                    [ -n "$v" ] && [ "$v" -gt 0 ] 2>/dev/null && { tgpu=$((v / 1000)); break 2; }
+                done
                 ;;
         esac
     done
