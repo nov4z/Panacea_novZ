@@ -93,7 +93,9 @@ case "$wcode" in
     3) cond="Clouds"; icon="04d"; [ "$LANG_" = "ru" ] && desc="пасмурно" || { [ "$LANG_" = "es" ] && desc="nublado" || desc="overcast"; } ;;
     45|48) cond="Fog"; icon="50d"; [ "$LANG_" = "ru" ] && desc="туман" || { [ "$LANG_" = "es" ] && desc="niebla" || desc="fog"; } ;;
     51|53|55) cond="Drizzle"; icon="09d"; [ "$LANG_" = "ru" ] && desc="морось" || { [ "$LANG_" = "es" ] && desc="llovizna" || desc="drizzle"; } ;;
+    56|57) cond="Drizzle"; icon="09d"; [ "$LANG_" = "ru" ] && desc="замерзающая морось" || { [ "$LANG_" = "es" ] && desc="llovizna helada" || desc="freezing drizzle"; } ;;
     61|63|65) cond="Rain"; icon="10d"; [ "$LANG_" = "ru" ] && desc="дождь" || { [ "$LANG_" = "es" ] && desc="lluvia" || desc="rain"; } ;;
+    66|67) cond="Rain"; icon="10d"; [ "$LANG_" = "ru" ] && desc="ледяной дождь" || { [ "$LANG_" = "es" ] && desc="lluvia helada" || desc="freezing rain"; } ;;
     71|73|75|77) cond="Snow"; icon="13d"; [ "$LANG_" = "ru" ] && desc="снег" || { [ "$LANG_" = "es" ] && desc="nieve" || desc="snow"; } ;;
     80|81|82) cond="Rain"; icon="09d"; [ "$LANG_" = "ru" ] && desc="ливень" || { [ "$LANG_" = "es" ] && desc="chubascos" || desc="rain showers"; } ;;
     85|86) cond="Snow"; icon="13d"; [ "$LANG_" = "ru" ] && desc="снегопад" || { [ "$LANG_" = "es" ] && desc="chubascos de nieve" || desc="snow showers"; } ;;

@@ -71,8 +71,17 @@ Item {
             "mainly clear": { es: "Mayormente despejado", en: "Mainly clear", ru: "В основном ясно", tr: "Çoğunlukla açık" },
             "в основном ясно": { es: "Mayormente despejado", en: "Mainly clear", ru: "В основном ясно", tr: "Çoğunlukla açık" },
 
+            "few clouds": { es: "Poco nublado", en: "Few clouds", ru: "Малооблачно", tr: "Az bulutlu" },
+            "малооблачно": { es: "Poco nublado", en: "Few clouds", ru: "Малооблачно", tr: "Az bulutlu" },
+
+            "scattered clouds": { es: "Nubes dispersas", en: "Scattered clouds", ru: "Рассеянные облака", tr: "Parçalı bulutlu" },
+            "рассеянные облака": { es: "Nubes dispersas", en: "Scattered clouds", ru: "Рассеянные облака", tr: "Parçalı bulutlu" },
+
             "partly cloudy": { es: "Parcialmente nublado", en: "Partly cloudy", ru: "Переменная облачность", tr: "Parçalı bulutlu" },
             "переменная облачность": { es: "Parcialmente nublado", en: "Partly cloudy", ru: "Переменная облачность", tr: "Parçalı bulutlu" },
+
+            "broken clouds": { es: "Parcialmente nublado", en: "Broken clouds", ru: "Облачно с прояснениями", tr: "Çok bulutlu" },
+            "облачно с прояснениями": { es: "Parcialmente nublado", en: "Broken clouds", ru: "Облачно с прояснениями", tr: "Çok bulutlu" },
 
             "overcast": { es: "Nublado", en: "Overcast", ru: "Пасмурно", tr: "Kapalı" },
             "пасмурно": { es: "Nublado", en: "Overcast", ru: "Пасмурно", tr: "Kapalı" },
@@ -85,31 +94,66 @@ Item {
             "туман": { es: "Niebla", en: "Fog", ru: "Туман", tr: "Sisli" },
             "mist": { es: "Niebla", en: "Mist", ru: "Туман", tr: "Sisli" },
             "haze": { es: "Neblina", en: "Haze", ru: "Дымка", tr: "Puslu" },
+            "дымка": { es: "Neblina", en: "Haze", ru: "Дымка", tr: "Puslu" },
+            "smoke": { es: "Humo", en: "Smoke", ru: "Дым", tr: "Duman" },
+            "дым": { es: "Humo", en: "Smoke", ru: "Дым", tr: "Duman" },
+            "dust": { es: "Polvo", en: "Dust", ru: "Пыль", tr: "Toz" },
+            "пыль": { es: "Polvo", en: "Dust", ru: "Пыль", tr: "Toz" },
+            "sand": { es: "Arena", en: "Sand", ru: "Песок", tr: "Kum" },
+            "песок": { es: "Arena", en: "Sand", ru: "Песок", tr: "Kum" },
 
             "drizzle": { es: "Llovizna", en: "Drizzle", ru: "Морось", tr: "Çiseleme" },
             "light drizzle": { es: "Llovizna ligera", en: "Light drizzle", ru: "Небольшая морось", tr: "Hafif çiseleme" },
+            "dense drizzle": { es: "Llovizna densa", en: "Dense drizzle", ru: "Плотная морось", tr: "Yoğun çiseleme" },
+            "freezing drizzle": { es: "Llovizna helada", en: "Freezing drizzle", ru: "Замерзающая морось", tr: "Dondurucu çiseleme" },
+            "heavy drizzle": { es: "Llovizna fuerte", en: "Heavy drizzle", ru: "Сильная морось", tr: "Kuvvetli çiseleme" },
             "морось": { es: "Llovizna", en: "Drizzle", ru: "Морось", tr: "Çiseleme" },
 
             "rain": { es: "Lluvia", en: "Rain", ru: "Дождь", tr: "Yağmurlu" },
             "light rain": { es: "Lluvia ligera", en: "Light rain", ru: "Небольшой дождь", tr: "Hafif yağmurlu" },
             "heavy rain": { es: "Lluvia fuerte", en: "Heavy rain", ru: "Сильный дождь", tr: "Kuvvetli yağmurlu" },
             "moderate rain": { es: "Lluvia moderada", en: "Moderate rain", ru: "Умеренный дождь", tr: "Orta şiddetli yağmurlu" },
+            "freezing rain": { es: "Lluvia helada", en: "Freezing rain", ru: "Ледяной дождь", tr: "Dondurucu yağmur" },
+            "very heavy rain": { es: "Lluvia muy fuerte", en: "Very heavy rain", ru: "Очень сильный дождь", tr: "Çok şiddetli yağmur" },
+            "extreme rain": { es: "Lluvia torrencial", en: "Extreme rain", ru: "Экстремальный дождь", tr: "Aşırı yağmur" },
             "дождь": { es: "Lluvia", en: "Rain", ru: "Дождь", tr: "Yağmurlu" },
 
             "rain showers": { es: "Chubascos", en: "Rain showers", ru: "Ливень", tr: "Sağanak yağış" },
             "shower rain": { es: "Chubascos", en: "Shower rain", ru: "Ливень", tr: "Sağanak yağış" },
+            "light rain showers": { es: "Chubascos ligeros", en: "Light rain showers", ru: "Небольшой ливень", tr: "Hafif sağanak" },
+            "heavy rain showers": { es: "Chubascos fuertes", en: "Heavy rain showers", ru: "Сильный ливень", tr: "Kuvvetli sağanak" },
             "ливень": { es: "Chubascos", en: "Rain showers", ru: "Ливень", tr: "Sağanak yağış" },
+
+            "sleet": { es: "Aguanieve", en: "Sleet", ru: "Мокрый снег", tr: "Sulu kar" },
+            "shower sleet": { es: "Aguanieve", en: "Shower sleet", ru: "Мокрый снег", tr: "Sulu kar" },
+            "light shower sleet": { es: "Aguanieve ligera", en: "Light shower sleet", ru: "Небольшой мокрый снег", tr: "Hafif sulu kar" },
+            "мокрый снег": { es: "Aguanieve", en: "Sleet", ru: "Мокрый снег", tr: "Sulu kar" },
 
             "snow": { es: "Nieve", en: "Snow", ru: "Снег", tr: "Karlı" },
             "light snow": { es: "Nieve ligera", en: "Light snow", ru: "Небольшой снег", tr: "Hafif karlı" },
             "heavy snow": { es: "Nieve fuerte", en: "Heavy snow", ru: "Снегопад", tr: "Yoğun karlı" },
+            "snow grains": { es: "Granizo menudo", en: "Snow grains", ru: "Снежные зерна", tr: "Kar taneleri" },
             "снег": { es: "Nieve", en: "Snow", ru: "Снег", tr: "Karlı" },
 
             "snow showers": { es: "Chubascos de nieve", en: "Snow showers", ru: "Снегопад", tr: "Kar sağanağı" },
+            "light snow showers": { es: "Chubascos de nieve ligeros", en: "Light snow showers", ru: "Небольшой снегопад", tr: "Hafif kar sağanağı" },
+            "heavy snow showers": { es: "Chubascos de nieve fuertes", en: "Heavy snow showers", ru: "Сильный снегопад", tr: "Kuvvetli kar sağanağı" },
             "снегопад": { es: "Chubascos de nieve", en: "Snow showers", ru: "Снегопад", tr: "Kar sağanağı" },
 
             "thunderstorm": { es: "Tormenta", en: "Thunderstorm", ru: "Гроза", tr: "Gök gürültülü fırtına" },
-            "гроза": { es: "Tormenta", en: "Thunderstorm", ru: "Гроза", tr: "Gök gürültülü fırtına" }
+            "thunderstorm with light rain": { es: "Tormenta con lluvia ligera", en: "Thunderstorm with light rain", ru: "Гроза с небольшим дождём", tr: "Hafif yağmurlu fırtına" },
+            "thunderstorm with rain": { es: "Tormenta con lluvia", en: "Thunderstorm with rain", ru: "Гроза с дождём", tr: "Yağmurlu fırtına" },
+            "thunderstorm with heavy rain": { es: "Tormenta con lluvia fuerte", en: "Thunderstorm with heavy rain", ru: "Гроза с сильным дождём", tr: "Kuvvetli yağmurlu fırtına" },
+            "thunderstorm with hail": { es: "Tormenta con granizo", en: "Thunderstorm with hail", ru: "Гроза с градом", tr: "Dolu fırtınası" },
+            "гроза": { es: "Tormenta", en: "Thunderstorm", ru: "Гроза", tr: "Gök gürültülü fırtına" },
+
+            "squall": { es: "Chubasco", en: "Squall", ru: "Шквал", tr: "Bora" },
+            "squalls": { es: "Chubascos", en: "Squalls", ru: "Шквалы", tr: "Fırtına" },
+            "шквал": { es: "Chubasco", en: "Squall", ru: "Шквал", tr: "Bora" },
+            "шквалы": { es: "Chubascos", en: "Squalls", ru: "Шквалы", tr: "Fırtına" },
+
+            "tornado": { es: "Tornado", en: "Tornado", ru: "Торнадо", tr: "Hortum" },
+            "торнадо": { es: "Tornado", en: "Tornado", ru: "Торнадо", tr: "Hortum" }
         };
 
         var entry = map[d.toLowerCase()];
@@ -120,6 +164,8 @@ Item {
         if (view.sys && view.sys.tr) {
             var trRes = view.sys.tr(d);
             if (trRes && trRes !== d) return trRes;
+            var trLower = view.sys.tr(d.toLowerCase());
+            if (trLower && trLower !== d.toLowerCase()) return trLower;
         }
         return d;
     }

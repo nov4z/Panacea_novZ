@@ -54,6 +54,99 @@ Item {
     readonly property string remainDayText: Math.floor(remainDayMins / 60) + (view.sys && view.sys.isEn ? "h " : (view.sys && view.sys.isTr ? "sa " : (view.sys && view.sys.isEs ? "h " : "ч "))) + (remainDayMins % 60) + (view.sys && view.sys.isEn ? "m" : (view.sys && view.sys.isTr ? "dk" : (view.sys && view.sys.isEs ? "m" : "м")))
     readonly property int remainYearDays: Math.max(0, totalDaysInYear - curDayOfYear)
 
+    function weatherConditionTr(desc) {
+        if (!desc) return "—";
+        var d = String(desc).trim();
+        if (!d.length) return "—";
+
+        var lang = "es";
+        if (view.sys) {
+            if (view.sys.languageCode === "ru") lang = "ru";
+            else if (view.sys.languageCode === "en") lang = "en";
+            else if (view.sys.languageCode === "tr" || view.sys.isTr) lang = "tr";
+            else if (view.sys.isEs || view.sys.languageCode === "es") lang = "es";
+        }
+
+        var map = {
+            "clear sky": { es: "Cielo despejado", en: "Clear sky", ru: "Ясно", tr: "Açık" },
+            "clear": { es: "Cielo despejado", en: "Clear", ru: "Ясно", tr: "Açık" },
+            "ясно": { es: "Cielo despejado", en: "Clear sky", ru: "Ясно", tr: "Açık" },
+            "mainly clear": { es: "Mayormente despejado", en: "Mainly clear", ru: "В основном ясно", tr: "Çoğunlukla açık" },
+            "в основном ясно": { es: "Mayormente despejado", en: "Mainly clear", ru: "В основном ясно", tr: "Çoğunlukla açık" },
+            "few clouds": { es: "Poco nublado", en: "Few clouds", ru: "Малооблачно", tr: "Az bulutlu" },
+            "малооблачно": { es: "Poco nublado", en: "Few clouds", ru: "Малооблачно", tr: "Az bulutlu" },
+            "scattered clouds": { es: "Nubes dispersas", en: "Scattered clouds", ru: "Рассеянные облака", tr: "Parçalı bulutlu" },
+            "рассеянные облака": { es: "Nubes dispersas", en: "Scattered clouds", ru: "Рассеянные облака", tr: "Parçalı bulutlu" },
+            "partly cloudy": { es: "Parcialmente nublado", en: "Partly cloudy", ru: "Переменная облачность", tr: "Parçalı bulutlu" },
+            "переменная облачность": { es: "Parcialmente nublado", en: "Partly cloudy", ru: "Переменная облачность", tr: "Parçalı bulutlu" },
+            "broken clouds": { es: "Parcialmente nublado", en: "Broken clouds", ru: "Облачно с прояснениями", tr: "Çok bulutlu" },
+            "облачно с прояснениями": { es: "Parcialmente nublado", en: "Broken clouds", ru: "Облачно с прояснениями", tr: "Çok bulutlu" },
+            "overcast": { es: "Nublado", en: "Overcast", ru: "Пасмурно", tr: "Kapalı" },
+            "пасмурно": { es: "Nublado", en: "Overcast", ru: "Пасмурно", tr: "Kapalı" },
+            "cloudy": { es: "Nublado", en: "Cloudy", ru: "Облачно", tr: "Bulutlu" },
+            "clouds": { es: "Nublado", en: "Cloudy", ru: "Облачно", tr: "Bulutlu" },
+            "облачно": { es: "Nublado", en: "Cloudy", ru: "Облачно", tr: "Bulutlu" },
+            "fog": { es: "Niebla", en: "Fog", ru: "Туман", tr: "Sisli" },
+            "туман": { es: "Niebla", en: "Fog", ru: "Туман", tr: "Sisli" },
+            "mist": { es: "Niebla", en: "Mist", ru: "Туман", tr: "Sisli" },
+            "haze": { es: "Neblina", en: "Haze", ru: "Дымка", tr: "Puslu" },
+            "дымка": { es: "Neblina", en: "Haze", ru: "Дымка", tr: "Puslu" },
+            "smoke": { es: "Humo", en: "Smoke", ru: "Дым", tr: "Duman" },
+            "dust": { es: "Polvo", en: "Dust", ru: "Пыль", tr: "Toz" },
+            "sand": { es: "Arena", en: "Sand", ru: "Песок", tr: "Kum" },
+            "drizzle": { es: "Llovizna", en: "Drizzle", ru: "Морось", tr: "Çiseleme" },
+            "light drizzle": { es: "Llovizna ligera", en: "Light drizzle", ru: "Небольшая морось", tr: "Hafif çiseleme" },
+            "dense drizzle": { es: "Llovizna densa", en: "Dense drizzle", ru: "Плотная морось", tr: "Yoğun çiseleme" },
+            "freezing drizzle": { es: "Llovizna helada", en: "Freezing drizzle", ru: "Замерзающая морось", tr: "Dondurucu çiseleme" },
+            "heavy drizzle": { es: "Llovizna fuerte", en: "Heavy drizzle", ru: "Сильная морось", tr: "Kuvvetli çiseleme" },
+            "морось": { es: "Llovizna", en: "Drizzle", ru: "Морось", tr: "Çiseleme" },
+            "rain": { es: "Lluvia", en: "Rain", ru: "Дождь", tr: "Yağmurlu" },
+            "light rain": { es: "Lluvia ligera", en: "Light rain", ru: "Небольшой дождь", tr: "Hafif yağmurlu" },
+            "heavy rain": { es: "Lluvia fuerte", en: "Heavy rain", ru: "Сильный дождь", tr: "Kuvvetli yağmurlu" },
+            "moderate rain": { es: "Lluvia moderada", en: "Moderate rain", ru: "Умеренный дождь", tr: "Orta şiddetli yağmurlu" },
+            "freezing rain": { es: "Lluvia helada", en: "Freezing rain", ru: "Ледяной дождь", tr: "Dondurucu yağmur" },
+            "very heavy rain": { es: "Lluvia muy fuerte", en: "Very heavy rain", ru: "Очень сильный дождь", tr: "Çok şiddetli yağmur" },
+            "extreme rain": { es: "Lluvia torrencial", en: "Extreme rain", ru: "Экстремальный дождь", tr: "Aşırı yağmur" },
+            "дождь": { es: "Lluvia", en: "Rain", ru: "Дождь", tr: "Yağmurlu" },
+            "rain showers": { es: "Chubascos", en: "Rain showers", ru: "Ливень", tr: "Sağanak yağış" },
+            "shower rain": { es: "Chubascos", en: "Shower rain", ru: "Ливень", tr: "Sağanak yağış" },
+            "light rain showers": { es: "Chubascos ligeros", en: "Light rain showers", ru: "Небольшой ливень", tr: "Hafif sağanak" },
+            "heavy rain showers": { es: "Chubascos fuertes", en: "Heavy rain showers", ru: "Сильный ливень", tr: "Kuvvetli sağanak" },
+            "ливень": { es: "Chubascos", en: "Rain showers", ru: "Ливень", tr: "Sağanak yağış" },
+            "sleet": { es: "Aguanieve", en: "Sleet", ru: "Мокрый снег", tr: "Sulu kar" },
+            "shower sleet": { es: "Aguanieve", en: "Shower sleet", ru: "Мокрый снег", tr: "Sulu kar" },
+            "мокрый снег": { es: "Aguanieve", en: "Sleet", ru: "Мокрый снег", tr: "Sulu kar" },
+            "snow": { es: "Nieve", en: "Snow", ru: "Снег", tr: "Karlı" },
+            "light snow": { es: "Nieve ligera", en: "Light snow", ru: "Небольшой снег", tr: "Hafif karlı" },
+            "heavy snow": { es: "Nieve fuerte", en: "Heavy snow", ru: "Снегопад", tr: "Yoğun karlı" },
+            "snow grains": { es: "Granizo menudo", en: "Snow grains", ru: "Снежные зерна", tr: "Kar taneleri" },
+            "снег": { es: "Nieve", en: "Snow", ru: "Снег", tr: "Karlı" },
+            "snow showers": { es: "Chubascos de nieve", en: "Snow showers", ru: "Снегопад", tr: "Kar sağanağı" },
+            "light snow showers": { es: "Chubascos de nieve ligeros", en: "Light snow showers", ru: "Небольшой снегопад", tr: "Hafif kar sağanağı" },
+            "heavy snow showers": { es: "Chubascos de nieve fuertes", en: "Heavy snow showers", ru: "Сильный снегопад", tr: "Kuvvetli kar sağanağı" },
+            "снегопад": { es: "Chubascos de nieve", en: "Snow showers", ru: "Снегопад", tr: "Kar sağanağı" },
+            "thunderstorm": { es: "Tormenta", en: "Thunderstorm", ru: "Гроза", tr: "Gök gürültülü fırtına" },
+            "thunderstorm with light rain": { es: "Tormenta con lluvia ligera", en: "Thunderstorm with light rain", ru: "Гроза с небольшим дождём", tr: "Hafif yağmurlu fırtına" },
+            "thunderstorm with rain": { es: "Tormenta con lluvia", en: "Thunderstorm with rain", ru: "Гроза с дождём", tr: "Yağmurlu fırtına" },
+            "thunderstorm with heavy rain": { es: "Tormenta con lluvia fuerte", en: "Thunderstorm with heavy rain", ru: "Гроза с сильным дождём", tr: "Kuvvetli yağmurlu fırtına" },
+            "thunderstorm with hail": { es: "Tormenta con granizo", en: "Thunderstorm with hail", ru: "Гроза с градом", tr: "Dolu fırtınası" },
+            "гроза": { es: "Tormenta", en: "Thunderstorm", ru: "Гроза", tr: "Gök gürültülü fırtına" },
+            "squall": { es: "Chubasco", en: "Squall", ru: "Шквал", tr: "Bora" },
+            "squalls": { es: "Chubascos", en: "Squalls", ru: "Шквалы", tr: "Fırtına" },
+            "tornado": { es: "Tornado", en: "Tornado", ru: "Торнадо", tr: "Hortum" }
+        };
+
+        var entry = map[d.toLowerCase()];
+        if (entry && entry[lang]) return entry[lang];
+        if (view.sys && view.sys.tr) {
+            var trRes = view.sys.tr(d);
+            if (trRes && trRes !== d) return trRes;
+            var trLower = view.sys.tr(d.toLowerCase());
+            if (trLower && trLower !== d.toLowerCase()) return trLower;
+        }
+        return d;
+    }
+
     // Пульсация текущего сегмента времени в стиле глифов Nothing
     property real pulseOpacity: 1.0
     SequentialAnimation on pulseOpacity {
@@ -436,7 +529,7 @@ Item {
                     Item {
                         id: digitalClockWrap
                         Layout.alignment: Qt.AlignHCenter
-                        readonly property real maxWidth: Math.max(100, clockCard.width - 24)
+                        readonly property real maxWidth: (clockCard.width > 30 ? clockCard.width : view.col) - 24
                         readonly property real scaleFactor: (digitalClockNum.implicitWidth > maxWidth && digitalClockNum.implicitWidth > 0)
                                                             ? (maxWidth / digitalClockNum.implicitWidth)
                                                             : 1.0
@@ -450,6 +543,7 @@ Item {
                             transformOrigin: Item.Center
                             value: {
                                 if (!view.sys) return "";
+                                var _tick = view.sys.secText;
                                 if (view.is12) {
                                     var d12 = new Date();
                                     return Qt.formatDateTime(d12, (view.sys && view.sys.clockSeconds) ? "h:mm:ss" : "h:mm");
@@ -467,9 +561,9 @@ Item {
                         text: {
                             if (view.is12) {
                                 var d = new Date();
-                                return (d.getHours() >= 12 ? "PM" : "AM") + (view.sys && view.sys.clockSeconds ? " · " + d.getSeconds() : "");
+                                return d.getHours() >= 12 ? "PM" : "AM";
                             }
-                            return view.sys && view.sys.clockSeconds ? (new Date()).getSeconds() : "LOCAL";
+                            return "LOCAL";
                         }
                         color: view.sys ? view.sys.colMuted : "#888888"
                     }
@@ -592,8 +686,7 @@ Item {
                                         if (!view.sys || !view.sys.weatherReady) return "—";
                                         var rawDesc = view.sys.weatherDesc;
                                         if (!rawDesc) return "—";
-                                        if (view.sys.languageCode === "en") return rawDesc;
-                                        return view.sys.tr(rawDesc) || rawDesc;
+                                        return view.weatherConditionTr(rawDesc);
                                     }
                                     color: view.sys ? view.sys.colFg : "#ffffff"
                                     wrapMode: Text.WordWrap
@@ -862,10 +955,10 @@ Item {
                             if (view.sys.languageCode === "en") return view.progressMode === "day" ? "DAY PROGRESS" : "YEAR PROGRESS";
                             if (view.progressMode === "day") {
                                 var dTr = view.sys.tr("Прогресс дня");
-                                return (dTr && dTr !== "Прогресс дня") ? dTr.toUpperCase() : (view.sys.tr("ПРОГРЕСС ДНЯ") || "PROGRESO DEL DÍA");
+                                return (dTr && dTr !== "Прогресс дня") ? ((view.sys && view.sys.themeMaterial) ? dTr : dTr.toUpperCase()) : (view.sys.tr("ПРОГРЕСС ДНЯ") || "PROGRESO DEL DÍA");
                             } else {
                                 var yTr = view.sys.tr("Прогресс года");
-                                return (yTr && yTr !== "Прогресс года") ? yTr.toUpperCase() : (view.sys.tr("ПРОГРЕСС ГОДА") || "PROGRESO DEL AÑO");
+                                return (yTr && yTr !== "Прогресс года") ? ((view.sys && view.sys.themeMaterial) ? yTr : yTr.toUpperCase()) : (view.sys.tr("ПРОГРЕСС ГОДА") || "PROGRESO DEL AÑO");
                             }
                         }
                         font.bold: true

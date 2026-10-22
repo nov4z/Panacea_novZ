@@ -121,7 +121,9 @@ def wmo_desc(c):
     elif c == 3 then (if $lang == "ru" then "Пасмурно" elif $lang == "es" then "Nublado" else "Overcast" end)
     elif c == 45 or c == 48 then (if $lang == "ru" then "Туман" elif $lang == "es" then "Niebla" else "Fog" end)
     elif c == 51 or c == 53 or c == 55 then (if $lang == "ru" then "Морось" elif $lang == "es" then "Llovizna" else "Drizzle" end)
+    elif c == 56 or c == 57 then (if $lang == "ru" then "Замерзающая морось" elif $lang == "es" then "Llovizna helada" else "Freezing drizzle" end)
     elif c == 61 or c == 63 or c == 65 then (if $lang == "ru" then "Дождь" elif $lang == "es" then "Lluvia" else "Rain" end)
+    elif c == 66 or c == 67 then (if $lang == "ru" then "Ледяной дождь" elif $lang == "es" then "Lluvia helada" else "Freezing rain" end)
     elif c == 71 or c == 73 or c == 75 or c == 77 then (if $lang == "ru" then "Снег" elif $lang == "es" then "Nieve" else "Snow" end)
     elif c == 80 or c == 81 or c == 82 then (if $lang == "ru" then "Ливень" elif $lang == "es" then "Chubascos" else "Rain showers" end)
     elif c == 85 or c == 86 then (if $lang == "ru" then "Снегопад" elif $lang == "es" then "Chubascos de nieve" else "Snow showers" end)
@@ -135,8 +137,8 @@ def wmo_icon(c):
     elif c == 2 then "03d"
     elif c == 3 then "04d"
     elif c == 45 or c == 48 then "50d"
-    elif c == 51 or c == 53 or c == 55 then "09d"
-    elif c == 61 or c == 63 or c == 65 then "10d"
+    elif c == 51 or c == 53 or c == 55 or c == 56 or c == 57 then "09d"
+    elif c == 61 or c == 63 or c == 65 or c == 66 or c == 67 then "10d"
     elif c == 71 or c == 73 or c == 75 or c == 77 then "13d"
     elif c == 80 or c == 81 or c == 82 then "09d"
     elif c == 85 or c == 86 then "13d"
