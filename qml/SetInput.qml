@@ -2,10 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 
-// Мышь. Скоростью указателя и разгоном распоряжается libinput через
-// компоновщик, а не оболочка, — поэтому здесь только две ручки, зато те
-// самые, за которыми обычно лезут в конфиг руками.
-//
+// Mouse & Keyboard input configuration.
 // Keyboard layouts are stored in settings.json and generated into Hyprland's
 // configuration so they survive shell updates.
 ColumnLayout {
@@ -23,11 +20,152 @@ ColumnLayout {
         SetLabel { sys: page.sys; text: page.sys.tr("Раскладки клавиатуры") }
         Text {
             Layout.fillWidth: true
-            text: page.sys.tr("Коды XKB через запятую, например us,tr. Сочетания клавиш меняются отдельно по Super+/.")
+            text: page.sys.tr("Selecciona una configuración rápida recomendada o ingresa códigos XKB personalizados. El cambio se aplica en tiempo real.")
             color: page.sys.colMuted
             wrapMode: Text.WordWrap
             font { family: page.sys.fontBody; pixelSize: page.sys.fontSize - 4 }
         }
+
+        // Presets rápidos interactivos
+        GridLayout {
+            Layout.fillWidth: true
+            columns: 2
+            columnSpacing: 8
+            rowSpacing: 8
+
+            Repeater {
+                model: [
+                    { name: "Español (Latam) + US", layouts: "latam,us", variants: ",", icon: "󰌌" },
+                    { name: "Español (España) + US", layouts: "es,us", variants: ",", icon: "󰌌" },
+                    { name: "English (US) + Latam", layouts: "us,latam", variants: ",", icon: "󰌌" },
+                    { name: "English (US) + Ruso", layouts: "us,ru", variants: ",", icon: "󰌌" },
+                    { name: "Español + English + RU", layouts: "latam,us,ru", variants: ",,", icon: "󰌌" }
+                ]
+
+                Rectangle {
+                    id: presetBtn
+                    required property var modelData
+                    readonly property bool active: page.sys.cfg.keyboardLayouts === presetBtn.modelData.layouts
+
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 36
+                    radius: 10
+                    color: presetBtn.active
+                           ? Qt.rgba(page.sys.colOn.r, page.sys.colOn.g, page.sys.colOn.b, 0.22)
+                           : (btnMa.containsMouse ? Qt.rgba(page.sys.colFg.r, page.sys.colFg.g, page.sys.colFg.b, 0.12) : Qt.rgba(page.sys.colFg.r, page.sys.colFg.g, page.sys.colFg.b, 0.05))
+                    border.width: 1
+                    border.color: presetBtn.active
+                                  ? page.sys.colOn
+                                  : (btnMa.containsMouse ? Qt.rgba(page.sys.colFg.r, page.sys.colFg.g, page.sys.colFg.b, 0.18) : "transparent")
+
+                    Behavior on color { ColorAnimation { duration: 150 } }
+                    Behavior on border.color { ColorAnimation { duration: 150 } }
+
+                    RowLayout {
+                        anchors.fill: parent
+                        anchors.leftMargin: 10
+                        anchors.rightMargin: 10
+                        spacing: 8
+
+                        Text {
+                            text: presetBtn.modelData.icon
+                            color: presetBtn.active ? page.sys.colOn : page.sys.colMuted
+                            font { family: page.sys.fontFam; pixelSize: 13 }
+                        }
+                        Text {
+                            Layout.fillWidth: true
+                            text: page.sys.tr(presetBtn.modelData.name)
+                            color: presetBtn.active ? page.sys.colFg : page.sys.colMuted
+                            elide: Text.ElideRight
+                            font { family: page.sys.fontBody; pixelSize: page.sys.fontSize - 3; bold: presetBtn.active }
+                        }
+                    }
+
+                    MouseArea {
+                        id: btnMa
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: {
+                            layoutsField.text = presetBtn.modelData.layouts;
+                            variantsField.text = presetBtn.modelData.variants;
+                            page.sys.applyKeyboardLayouts(layoutsField.text, variantsField.text, optionsField.text);
+                            if (page.sys && page.sys.playSound) page.sys.playSound("tock");
+                        }
+                    }
+                }
+            }
+        }
+
+        // Atajo de cambio de idioma
+        Text {
+            Layout.fillWidth: true
+            Layout.topMargin: 4
+            text: page.sys.tr("Combinación para alternar teclado:")
+            color: page.sys.colFg
+            font { family: page.sys.fontBody; pixelSize: page.sys.fontSize - 3; bold: true }
+        }
+
+        RowLayout {
+            Layout.fillWidth: true
+            spacing: 8
+
+            Repeater {
+                model: [
+                    { name: "Alt + Shift", opt: "grp:alt_shift_toggle" },
+                    { name: "Super + Espacio", opt: "grp:win_space_toggle" },
+                    { name: "Ctrl + Shift", opt: "grp:ctrl_shift_toggle" },
+                    { name: "Caps Lock", opt: "grp:caps_toggle" }
+                ]
+
+                Rectangle {
+                    id: optChip
+                    required property var modelData
+                    readonly property bool active: page.sys.cfg.keyboardOptions === optChip.modelData.opt
+
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 30
+                    radius: 8
+                    color: optChip.active
+                           ? Qt.rgba(page.sys.colOn.r, page.sys.colOn.g, page.sys.colOn.b, 0.20)
+                           : (optMa.containsMouse ? Qt.rgba(page.sys.colFg.r, page.sys.colFg.g, page.sys.colFg.b, 0.10) : Qt.rgba(page.sys.colFg.r, page.sys.colFg.g, page.sys.colFg.b, 0.04))
+                    border.width: 1
+                    border.color: optChip.active ? page.sys.colOn : "transparent"
+
+                    Behavior on color { ColorAnimation { duration: 150 } }
+                    Behavior on border.color { ColorAnimation { duration: 150 } }
+
+                    Text {
+                        anchors.centerIn: parent
+                        text: page.sys.tr(optChip.modelData.name)
+                        color: optChip.active ? page.sys.colFg : page.sys.colMuted
+                        font { family: page.sys.fontBody; pixelSize: page.sys.fontSize - 4; bold: optChip.active }
+                    }
+
+                    MouseArea {
+                        id: optMa
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: {
+                            optionsField.text = optChip.modelData.opt;
+                            page.sys.applyKeyboardLayouts(layoutsField.text, variantsField.text, optionsField.text);
+                            if (page.sys && page.sys.playSound) page.sys.playSound("tock");
+                        }
+                    }
+                }
+            }
+        }
+
+        // Configuración manual XKB (avanzado)
+        Text {
+            Layout.fillWidth: true
+            Layout.topMargin: 6
+            text: page.sys.tr("Configuración manual XKB (avanzado):")
+            color: page.sys.colMuted
+            font { family: page.sys.fontBody; pixelSize: page.sys.fontSize - 4 }
+        }
+
         TextField {
             id: layoutsField
             Layout.fillWidth: true
@@ -84,9 +222,6 @@ ColumnLayout {
 
         SetLabel { sys: page.sys; text: page.sys.tr("Указатель") }
 
-        // Шкала libinput: -1 — самая медленная, 0 — как есть, 1 — самая
-        // быстрая. Это сдвиг кривой, а не умножение, поэтому шаг мелкий и
-        // ноль подписан отдельно — на него возвращаются чаще всего.
         SetSlider {
             sys: page.sys
             label: page.sys.tr("Скорость указателя")

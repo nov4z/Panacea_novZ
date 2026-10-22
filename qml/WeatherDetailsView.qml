@@ -12,7 +12,8 @@ Item {
     implicitWidth: 680
     implicitHeight: 560
 
-    readonly property bool isEn: view.sys ? (view.sys.languageCode ? view.sys.languageCode !== "ru" : view.sys.isEn) : true
+    readonly property bool isEn: view.sys ? (!view.sys.isEs && (view.sys.languageCode === "en" || view.sys.languageCode !== "ru")) : false
+    readonly property bool isEs: view.sys ? (view.sys.languageCode === "es" || view.sys.isEs) : true
     readonly property bool isTr: view.sys ? (view.sys.languageCode === "tr" || view.sys.isTr) : false
     readonly property bool isMaterial: !!(view.sys && view.sys.themeMaterial)
 

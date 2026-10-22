@@ -101,10 +101,10 @@ ColumnLayout {
         onExited: code => {
             page.isCompiling = false;
             if (code === 0) {
-                page.compileStatus = page.sys.isEn ? "Pack compiled and ready!" : "¡Pack generado con éxito!";
+                page.compileStatus = page.sys.tr("¡Pack generado con éxito!");
                 page.sys.playSound("connect", page.auditionPack);
             } else {
-                page.compileStatus = page.sys.isEn ? "Generation error." : "Error al sintetizar.";
+                page.compileStatus = page.sys.tr("Error al sintetizar.");
             }
             clearStatusTimer.restart();
         }
@@ -164,7 +164,7 @@ ColumnLayout {
     function generateCustomPack() {
         if (page.isCompiling) return;
         page.isCompiling = true;
-        page.compileStatus = page.sys.isEn ? "Synthesizing custom pack..." : "Sintetizando pack personalizado...";
+        page.compileStatus = page.sys.tr("Sintetizando pack personalizado...");
 
         var style = page.sys.cfg.soundCustomStyle || "marimba";
         var depth = page.sys.cfg.soundCustomDepth !== undefined ? page.sys.cfg.soundCustomDepth : 0.6;
@@ -209,16 +209,14 @@ ColumnLayout {
         spacing: 4
 
         Text {
-            text: page.sys.isEn ? "Sound Studio & Acoustic Synthesis" : "Estudio de Sonido & Síntesis Acústica"
+            text: page.sys.tr("Estudio de Sonido & Síntesis Acústica")
             color: page.sys.colFg
             font { family: page.sys.fontBody; pixelSize: page.sys.fontSize + 3; bold: true }
         }
 
         Text {
             Layout.fillWidth: true
-            text: page.sys.isEn
-                ? "Organized studio: configure independent sound themes per appearance, tweak expanded acoustic DSP parameters, or audition categorized audio groups."
-                : "Estudio organizado por módulos: asigna temas por apariencia, diseña timbres con parámetros DSP ampliados o audiciona grupos de sonidos categorizados."
+            text: page.sys.tr("Estudio organizado por módulos: asigna temas por apariencia, diseña timbres con parámetros DSP ampliados o audiciona grupos de sonidos categorizados.")
             color: page.sys.colMuted
             wrapMode: Text.WordWrap
             font { family: page.sys.fontBody; pixelSize: page.sys.fontSize - 3 }
@@ -253,13 +251,12 @@ ColumnLayout {
                 Layout.fillWidth: true
                 spacing: 2
                 Text {
-                    text: page.sys.isEn ? "System Audio Status" : "Estado del Audio del Sistema"
+                    text: page.sys.tr("Estado del Audio del Sistema")
                     color: page.sys.colFg
                     font { family: page.sys.fontBody; pixelSize: page.sys.fontSize - 1; bold: true }
                 }
                 Text {
-                    text: (page.sys.isEn ? "Active Playing Pack: " : "Pack Actualmente en Reproducción: ")
-                          + page.sys.activeSoundPack().toUpperCase()
+                    text: page.sys.tr("Pack Actualmente en Reproducción: ") + page.sys.activeSoundPack().toUpperCase()
                     color: page.sys.colOn
                     font { family: page.sys.fontBody; pixelSize: page.sys.fontSize - 4; bold: true }
                 }
@@ -280,7 +277,7 @@ ColumnLayout {
                     spacing: 6
                     Text { text: "󰐊"; color: page.sys.colOn; font { family: page.sys.fontFam; pixelSize: 11 } }
                     Text {
-                        text: page.sys.isEn ? "Test Sound" : "Probar Sonido"
+                        text: page.sys.tr("Probar Sonido")
                         color: page.sys.colFg
                         font { family: page.sys.fontBody; pixelSize: page.sys.fontSize - 4; bold: true }
                     }
@@ -298,10 +295,8 @@ ColumnLayout {
 
         SetToggle {
             sys: page.sys
-            label: page.sys.isEn ? "Master UI Sound Effects" : "Efectos de sonido de la interfaz"
-            sub: page.sys.isEn
-                ? "Master toggle for all notifications, battery alerts, sliders, and profile chimes."
-                : "Interruptor maestro para todos los avisos, alertas de batería, deslizadores y notch."
+            label: page.sys.tr("Efectos de sonido de la interfaz")
+            sub: page.sys.tr("Interruptor maestro para todos los avisos, alertas de batería, deslizadores y notch.")
             on: page.sys.cfg.uiSounds !== false
             onToggled: v => {
                 page.sys.cfg.uiSounds = v;
@@ -330,14 +325,12 @@ ColumnLayout {
                 Layout.fillWidth: true
                 spacing: 2
                 Text {
-                    text: page.sys.isEn ? "Sound Assignment per Visual Theme" : "Asignación de Sonidos por Tema Visual"
+                    text: page.sys.tr("Asignación de Sonidos por Tema Visual")
                     color: page.sys.colFg
                     font { family: page.sys.fontBody; pixelSize: page.sys.fontSize - 1; bold: true }
                 }
                 Text {
-                    text: page.sys.isEn
-                        ? "Choose whether sounds switch dynamically when changing desktop themes or stay fixed."
-                        : "Elige si los sonidos cambian automáticamente al alternar apariencias o permanecen fijos."
+                    text: page.sys.tr("Elige si los sonidos cambian automáticamente al alternar apariencias o permanecen fijos.")
                     color: page.sys.colMuted
                     font { family: page.sys.fontBody; pixelSize: page.sys.fontSize - 4 }
                 }
@@ -347,10 +340,10 @@ ColumnLayout {
         SetSelect {
             sys: page.sys
             visible: page.sys.cfg.uiSounds !== false
-            label: page.sys.isEn ? "Binding Mode" : "Modo de Selección de Pack"
+            label: page.sys.tr("Modo de Selección de Pack")
             options: [
-                { id: "auto",     text: page.sys.isEn ? "Dynamic by Appearance" : "Por Apariencia" },
-                { id: "override", text: page.sys.isEn ? "Global Fixed"          : "Fijo Global" }
+                { id: "auto",     text: page.sys.tr("Por Apariencia") },
+                { id: "override", text: page.sys.tr("Fijo Global") }
             ]
             value: page.sys.cfg.soundPack === "auto" ? "auto" : "override"
             onPicked: id => {
@@ -381,7 +374,7 @@ ColumnLayout {
 
                 SetSelect {
                     sys: page.sys
-                    label: page.sys.isEn ? "Fixed System Pack" : "Pack Fijo para Todo el Sistema"
+                    label: page.sys.tr("Pack Fijo para Todo el Sistema")
                     options: [
                         { id: "nothing",  text: "Nothing" },
                         { id: "material", text: "Material" },
@@ -425,7 +418,7 @@ ColumnLayout {
 
                     SetSelect {
                         sys: page.sys
-                        label: page.sys.isEn ? "Nothing OS Appearance Sound" : "Sonido para Apariencia Nothing OS"
+                        label: page.sys.tr("Sonido para Apariencia Nothing OS")
                         options: [
                             { id: "nothing",  text: "Nothing" },
                             { id: "material", text: "Material" },
@@ -463,7 +456,7 @@ ColumnLayout {
 
                     SetSelect {
                         sys: page.sys
-                        label: page.sys.isEn ? "Material You Appearance Sound" : "Sonido para Apariencia Material You"
+                        label: page.sys.tr("Sonido para Apariencia Material You")
                         options: [
                             { id: "material", text: "Material" },
                             { id: "nothing",  text: "Nothing" },
@@ -501,7 +494,7 @@ ColumnLayout {
 
                     SetSelect {
                         sys: page.sys
-                        label: page.sys.isEn ? "Classic Appearance Sound" : "Sonido para Apariencia Clásica"
+                        label: page.sys.tr("Sonido para Apariencia Clásica")
                         options: [
                             { id: "nothing",  text: "Nothing" },
                             { id: "material", text: "Material" },
@@ -542,14 +535,12 @@ ColumnLayout {
                 Layout.fillWidth: true
                 spacing: 2
                 Text {
-                    text: page.sys.isEn ? "Curated Sonic Presets" : "Colección de Presets Temáticos"
+                    text: page.sys.tr("Colección de Presets Temáticos")
                     color: page.sys.colFg
                     font { family: page.sys.fontBody; pixelSize: page.sys.fontSize - 1; bold: true }
                 }
                 Text {
-                    text: page.sys.isEn
-                        ? "Click any card to select for audition, or click play to preview its signature tone."
-                        : "Haz clic en una tarjeta para seleccionarla en el banco de pruebas o en el botón para escucharla."
+                    text: page.sys.tr("Haz clic en una tarjeta para seleccionarla en el banco de pruebas o en el botón para escucharla.")
                     color: page.sys.colMuted
                     font { family: page.sys.fontBody; pixelSize: page.sys.fontSize - 4 }
                 }
@@ -675,14 +666,12 @@ ColumnLayout {
                 Layout.fillWidth: true
                 spacing: 2
                 Text {
-                    text: page.sys.isEn ? "Physical Synthesizer (Custom Pack)" : "Sintetizador Físico (Pack Personalizado)"
+                    text: page.sys.tr("Sintetizador Físico (Pack Personalizado)")
                     color: page.sys.colFg
                     font { family: page.sys.fontBody; pixelSize: page.sys.fontSize - 1; bold: true }
                 }
                 Text {
-                    text: page.sys.isEn
-                        ? "Granular parameters divided into logical acoustic blocks: Timing, Pitch & Harmonics, Texture & Ambience, and Output."
-                        : "Parámetros acústicos divididos en bloques comprensibles: Envolvente, Tono y Armónicos, Textura y Espacialidad, y Nivel Master."
+                    text: page.sys.tr("Parámetros acústicos divididos en bloques comprensibles: Envolvente, Tono y Armónicos, Textura y Espacialidad, y Nivel Master.")
                     color: page.sys.colMuted
                     font { family: page.sys.fontBody; pixelSize: page.sys.fontSize - 4 }
                 }
@@ -707,7 +696,7 @@ ColumnLayout {
                     spacing: 6
                     Text { text: "⏱️"; font { pixelSize: 13 } }
                     Text {
-                        text: page.sys.isEn ? "1. Envelope & Timing" : "1. Envolvente & Dinámica Temporal"
+                        text: page.sys.tr("1. Envolvente & Dinámica Temporal")
                         color: page.sys.colFg
                         font { family: page.sys.fontBody; pixelSize: page.sys.fontSize - 3; bold: true }
                     }
@@ -720,7 +709,7 @@ ColumnLayout {
 
                     SetSlider {
                         sys: page.sys
-                        label: page.sys.isEn ? "Attack Softness (Transient shaping)" : "Suavidad de Ataque (Click percusivo vs Entrada suave)"
+                        label: page.sys.tr("Suavidad de Ataque (Click percusivo vs Entrada suave)")
                         from: 0; to: 100; step: 5; suffix: "%"
                         value: Math.round((page.sys.cfg.soundCustomAttack !== undefined ? page.sys.cfg.soundCustomAttack : 0.5) * 100)
                         onMoved: v => {
@@ -732,7 +721,7 @@ ColumnLayout {
 
                     SetSlider {
                         sys: page.sys
-                        label: page.sys.isEn ? "Decay & Resonance (Sustain multiplier)" : "Caída y Sostén (Duración natural de la nota)"
+                        label: page.sys.tr("Caída y Sostén (Duración natural de la nota)")
                         from: 40; to: 250; step: 5; suffix: "%"
                         value: Math.round((page.sys.cfg.soundCustomDecay !== undefined ? page.sys.cfg.soundCustomDecay : 1.0) * 100)
                         onMoved: v => {
@@ -763,7 +752,7 @@ ColumnLayout {
                     spacing: 6
                     Text { text: "🎵"; font { pixelSize: 13 } }
                     Text {
-                        text: page.sys.isEn ? "2. Pitch, Harmonics & Filter" : "2. Tono, Armónicos & Filtro Frecuencial"
+                        text: page.sys.tr("2. Tono, Armónicos & Filtro Frecuencial")
                         color: page.sys.colFg
                         font { family: page.sys.fontBody; pixelSize: page.sys.fontSize - 3; bold: true }
                     }
@@ -776,7 +765,7 @@ ColumnLayout {
 
                     SetSlider {
                         sys: page.sys
-                        label: page.sys.isEn ? "Pitch Transpose (General semitones)" : "Afinación General (Transposición tonal)"
+                        label: page.sys.tr("Afinación General (Transposición tonal)")
                         from: -12; to: 12; step: 1; suffix: " st"
                         value: Math.round(page.sys.cfg.soundCustomPitch !== undefined ? page.sys.cfg.soundCustomPitch : 0.0)
                         onMoved: v => {
@@ -788,7 +777,7 @@ ColumnLayout {
 
                     SetSlider {
                         sys: page.sys
-                        label: page.sys.isEn ? "Subharmonic Depth (Low-end body)" : "Profundidad de Graves (Subarmónicos f/2 y f/4)"
+                        label: page.sys.tr("Profundidad de Graves (Subarmónicos f/2 y f/4)")
                         from: 0; to: 100; step: 5; suffix: "%"
                         value: Math.round((page.sys.cfg.soundCustomDepth !== undefined ? page.sys.cfg.soundCustomDepth : 0.6) * 100)
                         onMoved: v => {
@@ -800,7 +789,7 @@ ColumnLayout {
 
                     SetSlider {
                         sys: page.sys
-                        label: page.sys.isEn ? "High Brightness (Upper overtones)" : "Brillo de Armónicos Altos (Agudos cristalinos)"
+                        label: page.sys.tr("Brillo de Armónicos Altos (Agudos cristalinos)")
                         from: 0; to: 100; step: 5; suffix: "%"
                         value: Math.round((page.sys.cfg.soundCustomBright !== undefined ? page.sys.cfg.soundCustomBright : 0.5) * 100)
                         onMoved: v => {
@@ -812,7 +801,7 @@ ColumnLayout {
 
                     SetSlider {
                         sys: page.sys
-                        label: page.sys.isEn ? "Low-pass Filter Cutoff (Dark vs Open)" : "Filtro Paso Bajo (Timbre oscuro vs abierto)"
+                        label: page.sys.tr("Filtro Paso Bajo (Timbre oscuro vs abierto)")
                         from: 20; to: 100; step: 5; suffix: "%"
                         value: Math.round((page.sys.cfg.soundCustomCutoff !== undefined ? page.sys.cfg.soundCustomCutoff : 1.0) * 100)
                         onMoved: v => {
@@ -843,7 +832,7 @@ ColumnLayout {
                     spacing: 6
                     Text { text: "✨"; font { pixelSize: 13 } }
                     Text {
-                        text: page.sys.isEn ? "3. Texture, Warmth & Spatial Reverb" : "3. Textura, Calidez & Espacialidad"
+                        text: page.sys.tr("3. Textura, Calidez & Espacialidad")
                         color: page.sys.colFg
                         font { family: page.sys.fontBody; pixelSize: page.sys.fontSize - 3; bold: true }
                     }
@@ -856,7 +845,7 @@ ColumnLayout {
 
                     SetSelect {
                         sys: page.sys
-                        label: page.sys.isEn ? "Oscillator Timbre Model" : "Modelo de Oscilador Base"
+                        label: page.sys.tr("Modelo de Oscilador Base")
                         options: [
                             { id: "marimba", text: "Marimba" },
                             { id: "glass",   text: "Cristal" },
@@ -874,7 +863,7 @@ ColumnLayout {
 
                     SetSlider {
                         sys: page.sys
-                        label: page.sys.isEn ? "Analog Warmth & Drive" : "Calidez Analógica (Saturación suave y armónicos)"
+                        label: page.sys.tr("Calidez Analógica (Saturación suave y armónicos)")
                         from: 0; to: 100; step: 5; suffix: "%"
                         value: Math.round((page.sys.cfg.soundCustomWarmth !== undefined ? page.sys.cfg.soundCustomWarmth : 0.2) * 100)
                         onMoved: v => {
@@ -886,7 +875,7 @@ ColumnLayout {
 
                     SetSlider {
                         sys: page.sys
-                        label: page.sys.isEn ? "Stereo Spatial Width (Lateral soundstage & diffusion)" : "Espacialidad Estéreo (Apertura y difusión lateral)"
+                        label: page.sys.tr("Espacialidad Estéreo (Apertura y difusión lateral)")
                         from: 0; to: 100; step: 5; suffix: "%"
                         value: Math.round((page.sys.cfg.soundCustomSpatialWidth !== undefined ? page.sys.cfg.soundCustomSpatialWidth : 0.50) * 100)
                         onMoved: v => {
@@ -898,7 +887,7 @@ ColumnLayout {
 
                     SetSlider {
                         sys: page.sys
-                        label: page.sys.isEn ? "Acoustic Reverb Tail (Room reflections & decay duration)" : "Cola de Reverb Acústica (Reflexiones de sala y caída)"
+                        label: page.sys.tr("Cola de Reverb Acústica (Reflexiones de sala y caída)")
                         from: 0; to: 100; step: 5; suffix: "%"
                         value: Math.round((page.sys.cfg.soundCustomReverb !== undefined ? page.sys.cfg.soundCustomReverb : 0.15) * 100)
                         onMoved: v => {
@@ -910,7 +899,7 @@ ColumnLayout {
 
                     SetSlider {
                         sys: page.sys
-                        label: page.sys.isEn ? "Subtle Vibrato Modulation" : "Modulación de Vibrato (Oscilación sutil de tono)"
+                        label: page.sys.tr("Modulación de Vibrato (Oscilación sutil de tono)")
                         from: 0; to: 100; step: 5; suffix: "%"
                         value: Math.round((page.sys.cfg.soundCustomVibrato !== undefined ? page.sys.cfg.soundCustomVibrato : 0.0) * 100)
                         onMoved: v => {
@@ -941,7 +930,7 @@ ColumnLayout {
                     spacing: 6
                     Text { text: "🔊"; font { pixelSize: 13 } }
                     Text {
-                        text: page.sys.isEn ? "4. Master Gain & Actions" : "4. Ganancia Master & Acciones"
+                        text: page.sys.tr("4. Ganancia Master & Acciones")
                         color: page.sys.colFg
                         font { family: page.sys.fontBody; pixelSize: page.sys.fontSize - 3; bold: true }
                     }
@@ -954,7 +943,7 @@ ColumnLayout {
 
                     SetSlider {
                         sys: page.sys
-                        label: page.sys.isEn ? "Master Output Gain" : "Ganancia de Salida Master"
+                        label: page.sys.tr("Ganancia de Salida Master")
                         from: 50; to: 150; step: 5; suffix: "%"
                         value: Math.round((page.sys.cfg.soundCustomGain !== undefined ? page.sys.cfg.soundCustomGain : 1.0) * 100)
                         onMoved: v => {
@@ -998,7 +987,7 @@ ColumnLayout {
                                     Behavior on scale { NumberAnimation { duration: 160; easing.type: Easing.OutBack } }
                                 }
                                 Text {
-                                    text: page.sys.isEn ? "Audition Tone" : "Probar Acorde en Vivo"
+                                    text: page.sys.tr("Probar Acorde en Vivo")
                                     color: page.sys.colFg
                                     font { family: page.sys.fontBody; pixelSize: page.sys.fontSize - 3; bold: true }
                                 }
@@ -1049,8 +1038,8 @@ ColumnLayout {
                                 }
                                 Text {
                                     text: page.isCompiling
-                                        ? (page.sys.isEn ? "Synthesizing suite..." : "Sintetizando colección...")
-                                        : (page.sys.isEn ? "Compile 'Custom' Pack (20 Studio Sounds)" : "Compilar Pack 'Custom' (20 Sonidos de Estudio)")
+                                        ? page.sys.tr("Sintetizando colección...")
+                                        : page.sys.tr("Compilar Pack 'Custom' (20 Sonidos de Estudio)")
                                     color: Qt.color("#000000")
                                     font { family: page.sys.fontBody; pixelSize: page.sys.fontSize - 3; bold: true }
                                 }
@@ -1099,14 +1088,12 @@ ColumnLayout {
                 Layout.fillWidth: true
                 spacing: 2
                 Text {
-                    text: page.sys.isEn ? "Audition Board (Divided by Categories)" : "Banco de Pruebas (Dividido por Categorías)"
+                    text: page.sys.tr("Banco de Pruebas (Dividido por Categorías)")
                     color: page.sys.colFg
                     font { family: page.sys.fontBody; pixelSize: page.sys.fontSize - 1; bold: true }
                 }
                 Text {
-                    text: page.sys.isEn
-                        ? "Categorized sound triggers. Click any button to play its acoustic sample immediately."
-                        : "Sonidos organizados por categoría. Haz clic en cualquiera para escuchar su disparo acústico."
+                    text: page.sys.tr("Sonidos organizados por categoría. Haz clic en cualquiera para escuchar su disparo acústico.")
                     color: page.sys.colMuted
                     font { family: page.sys.fontBody; pixelSize: page.sys.fontSize - 4 }
                 }
@@ -1134,8 +1121,8 @@ ColumnLayout {
                     }
                     Text {
                         text: page.allSoundTimer.running
-                            ? (page.sys.isEn ? "Stop" : "Detener")
-                            : (page.sys.isEn ? "Play Entire Pack" : "Reproducir Todo")
+                            ? page.sys.tr("Detener")
+                            : page.sys.tr("Reproducir Todo")
                         color: page.allSoundTimer.running ? page.sys.colOn : page.sys.colFg
                         font { family: page.sys.fontBody; pixelSize: page.sys.fontSize - 4; bold: true }
                     }
@@ -1163,7 +1150,7 @@ ColumnLayout {
         // Selector del pack a audicionar
         SetSelect {
             sys: page.sys
-            label: page.sys.isEn ? "Pack Being Auditioned" : "Pack Seleccionado para Pruebas"
+            label: page.sys.tr("Pack Seleccionado para Pruebas")
             options: [
                 { id: "nothing",  text: "Nothing OS" },
                 { id: "material", text: "Material You" },
@@ -1186,7 +1173,7 @@ ColumnLayout {
             spacing: 6
 
             Text {
-                text: page.sys.isEn ? "🔔 System & Navigation" : "🔔 Sistema & Navegación"
+                text: page.sys.tr("🔔 Sistema & Navegación")
                 color: page.sys.colFg
                 font { family: page.sys.fontBody; pixelSize: page.sys.fontSize - 3; bold: true }
             }
@@ -1211,7 +1198,7 @@ ColumnLayout {
             Layout.topMargin: 4
 
             Text {
-                text: page.sys.isEn ? "⚡ Battery & Performance Profiles" : "⚡ Energía & Perfiles de Rendimiento"
+                text: page.sys.tr("⚡ Energía & Perfiles de Rendimiento")
                 color: page.sys.colFg
                 font { family: page.sys.fontBody; pixelSize: page.sys.fontSize - 3; bold: true }
             }
@@ -1236,7 +1223,7 @@ ColumnLayout {
             Layout.topMargin: 4
 
             Text {
-                text: page.sys.isEn ? "🔒 Security & Voice Input" : "🔒 Seguridad & Asistente de Voz"
+                text: page.sys.tr("🔒 Seguridad & Asistente de Voz")
                 color: page.sys.colFg
                 font { family: page.sys.fontBody; pixelSize: page.sys.fontSize - 3; bold: true }
             }
@@ -1261,7 +1248,7 @@ ColumnLayout {
             Layout.topMargin: 4
 
             Text {
-                text: page.sys.isEn ? "⌨️ Connectivity & Touch Haptics" : "⌨️ Conectividad & Respuesta Táctil"
+                text: page.sys.tr("⌨️ Conectividad & Respuesta Táctil")
                 color: page.sys.colFg
                 font { family: page.sys.fontBody; pixelSize: page.sys.fontSize - 3; bold: true }
             }

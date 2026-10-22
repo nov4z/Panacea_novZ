@@ -37,7 +37,7 @@ Rectangle {
             }
 
             Text {
-                text: "CONFIGURACIÓN // " + head.title.toUpperCase()
+                text: (head.sys && typeof head.sys.tr === "function" ? head.sys.tr("CONFIGURACIÓN") : "CONFIGURACIÓN") + " // " + head.title.toUpperCase()
                 color: Qt.rgba(head.sys.colFg.r, head.sys.colFg.g, head.sys.colFg.b, 0.45)
                 font {
                     family: head.sys.fontBody

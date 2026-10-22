@@ -44,5 +44,15 @@ mv -f "$lua_tmp" "$lua_out"
 mv -f "$conf_tmp" "$conf_out"
 
 if [ "${PANACEA_DRYRUN:-0}" != "1" ] && [ -n "${HYPRLAND_INSTANCE_SIGNATURE:-}" ]; then
+    eval_lua="hl.config({ input = { kb_layout = \"$layouts\", kb_variant = \"$variants\", kb_options = \"$options\" } })"
+    out="$(hyprctl eval "$eval_lua" 2>&1 || true)"
+    case "$out" in
+        ok*) ;;
+        *)
+            hyprctl keyword input:kb_layout "$layouts" >/dev/null 2>&1 || true
+            hyprctl keyword input:kb_variant "$variants" >/dev/null 2>&1 || true
+            hyprctl keyword input:kb_options "$options" >/dev/null 2>&1 || true
+            ;;
+    esac
     hyprctl reload >/dev/null 2>&1 || true
 fi

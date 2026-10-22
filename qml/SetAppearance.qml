@@ -17,11 +17,17 @@ ColumnLayout {
         running: true
         stdout: StdioCollector {
             onStreamFinished: {
-                var options = [];
+                var options = [
+                    { id: "es", text: "Español" },
+                    { id: "en", text: "English" },
+                    { id: "ru", text: "Русский" },
+                    { id: "tr", text: "Türkçe" }
+                ];
                 var lines = String(text).trim().split("\n");
                 for (var i = 0; i < lines.length; i++) {
                     var parts = lines[i].split("|");
                     if (parts.length !== 2 || !parts[0].length) continue;
+                    if (parts[0] === "es" || parts[0] === "en" || parts[0] === "ru" || parts[0] === "tr") continue;
                     var locale = Qt.locale(parts[0]);
                     var nativeName = locale && locale.name !== "C" ? locale.nativeLanguageName : "";
                     options.push({ id: parts[0], text: nativeName ? nativeName + " · " + parts[0] : parts[1] });
@@ -197,8 +203,7 @@ ColumnLayout {
         Text {
             Layout.fillWidth: true
             visible: page.sys.cfg.themeId === "material3"
-            text: page.sys.isEn ? "Material Design 3 (Material You): Expressive fluid curves, tonal surfaces, and animated squiggly wave playback in Super + M."
-                                : "Material Design 3 (Material You): Curvas fluidas expresivas, superficies tonales y barra de reproducción ondulada animada en Super + M."
+            text: page.sys.tr("Material Design 3 (Material You): Expresivas curvas fluidas, superficies tonales y barra de reproducción animada en Super + M.")
             color: page.sys.colOn
             wrapMode: Text.WordWrap
             font { family: page.sys.fontBody; pixelSize: page.sys.fontSize - 4 }
@@ -212,11 +217,11 @@ ColumnLayout {
 
             SetSelect {
                 sys: page.sys
-                label: page.sys.isEn ? "Material 3 Color Source" : "Origen de Color Material 3"
+                label: page.sys.tr("Origen de Color Material 3")
                 options: [
-                    { id: "wallpaper", text: page.sys.isEn ? "Wallpaper" : "Fondo" },
-                    { id: "music",     text: page.sys.isEn ? "Music Art"  : "Portada Música" },
-                    { id: "manual",    text: page.sys.isEn ? "Manual"     : "Manual" }
+                    { id: "wallpaper", text: page.sys.tr("Fondo") },
+                    { id: "music",     text: page.sys.tr("Portada Música") },
+                    { id: "manual",    text: page.sys.tr("Manual") }
                 ]
                 value: page.sys.cfg.m3ColorMode || "wallpaper"
                 onPicked: id => {
@@ -229,9 +234,7 @@ ColumnLayout {
             Text {
                 Layout.fillWidth: true
                 visible: (page.sys.cfg.m3ColorMode || "wallpaper") === "wallpaper"
-                text: page.sys.isEn
-                    ? "Wallpaper Mode: Dynamic color extraction matching your desktop wallpaper."
-                    : "Modo Fondo: Extrae los tonos armónicos dinámicamente de tu fondo de pantalla."
+                text: page.sys.tr("Modo Fondo: Extrae los tonos armónicos dinámicamente de tu fondo de pantalla.")
                 color: page.sys.colMuted
                 wrapMode: Text.WordWrap
                 font { family: page.sys.fontBody; pixelSize: page.sys.fontSize - 4 }
@@ -240,9 +243,7 @@ ColumnLayout {
             Text {
                 Layout.fillWidth: true
                 visible: page.sys.cfg.m3ColorMode === "music"
-                text: page.sys.isEn
-                    ? "Music Cover Mode: Extracts colors from the playing track (Spotify/MPRIS) with soft tonal saturation (Spicetify style) so artwork and waves stand out."
-                    : "Modo Portada Música: Aplica el color de la portada activa (Spotify/MPRIS) atenuado estilo Spicetify para que la portada y las ondas sigan destacando."
+                text: page.sys.tr("Modo Portada Música: Aplica el color de la portada activa (Spotify/MPRIS) atenuado estilo Spicetify para que la portada y las ondas sigan destacando.")
                 color: page.sys.colMuted
                 wrapMode: Text.WordWrap
                 font { family: page.sys.fontBody; pixelSize: page.sys.fontSize - 4 }
@@ -251,10 +252,8 @@ ColumnLayout {
             SetColor {
                 visible: page.sys.cfg.m3ColorMode === "manual"
                 sys: page.sys
-                label: page.sys.isEn ? "Material 3 Color Gamut" : "Gama de Colores Material 3"
-                sub: page.sys.isEn
-                    ? "Matugen will generate the full harmonic Material You palette from this seed color."
-                    : "Matugen generará toda la paleta armónica Material You a partir de este color base."
+                label: page.sys.tr("Gama de Colores Material 3")
+                sub: page.sys.tr("Matugen generará toda la paleta armónica Material You a partir de este color base.")
                 value: page.sys.cfg.m3ManualColor || "#e08096"
                 defaultColor: "#e08096"
                 presets: [
@@ -272,9 +271,7 @@ ColumnLayout {
 
             Text {
                 Layout.fillWidth: true
-                text: page.sys.isEn
-                    ? "Tip: You can also choose custom colors for Bluetooth, Wi-Fi, battery, and toggles below in 'System Colors'."
-                    : "Consejo: También puedes elegir colores personalizados para Bluetooth, Wi-Fi, batería y ajustes más abajo en 'Colores del Sistema'."
+                text: page.sys.tr("Consejo: También puedes elegir colores personalizados para Bluetooth, Wi-Fi, batería y ajustes más abajo en \"Colores del Sistema\".")
                 color: page.sys.colMuted
                 wrapMode: Text.WordWrap
                 font { family: page.sys.fontBody; pixelSize: page.sys.fontSize - 4 }
@@ -294,10 +291,10 @@ ColumnLayout {
         SetSelect {
             visible: page.sys.cfg.featWidgets && !page.sys.themeMaterial
             sys: page.sys
-            label: page.sys.isEs ? "Modo del reloj" : (page.sys.isEn ? "Clock mode" : "Режим часов")
+            label: page.sys.tr("Modo del reloj")
             options: [
-                { id: "analog",  text: page.sys.isEs ? "Analógico" : (page.sys.isEn ? "Analog" : "Стрелочные") },
-                { id: "digital", text: page.sys.isEs ? "Digital"   : (page.sys.isEn ? "Digital" : "Цифровые") }
+                { id: "analog",  text: page.sys.tr("Analógico") },
+                { id: "digital", text: page.sys.tr("Digital") }
             ]
             value: page.sys.cfg.widgetClockMode || "analog"
             onPicked: id => { page.sys.cfg.widgetClockMode = id; page.sys.saveCfg(); }
@@ -306,10 +303,10 @@ ColumnLayout {
         SetSelect {
             visible: page.sys.cfg.featWidgets && !page.sys.themeMaterial
             sys: page.sys
-            label: page.sys.isEs ? "Widget secundario" : (page.sys.isEn ? "Secondary widget" : "Вспомогательный виджет")
+            label: page.sys.tr("Widget secundario")
             options: [
-                { id: "weather", text: page.sys.isEs ? "Clima"   : (page.sys.isEn ? "Weather" : "Погода") },
-                { id: "system",  text: page.sys.isEs ? "Sistema" : (page.sys.isEn ? "System"  : "Система") }
+                { id: "weather", text: page.sys.tr("Clima") },
+                { id: "system",  text: page.sys.tr("Sistema") }
             ]
             value: page.sys.cfg.widgetRightMode || "weather"
             onPicked: id => { page.sys.cfg.widgetRightMode = id; page.sys.saveCfg(); }
@@ -318,10 +315,10 @@ ColumnLayout {
         SetSelect {
             visible: page.sys.cfg.featWidgets && !page.sys.themeMaterial
             sys: page.sys
-            label: page.sys.isEs ? "Barra de progreso" : (page.sys.isEn ? "Progress bar" : "Шкала прогресса")
+            label: page.sys.tr("Barra de progreso")
             options: [
-                { id: "day",  text: page.sys.isEs ? "Día (24H)" : (page.sys.isEn ? "Day (24H)" : "День (24H)") },
-                { id: "year", text: page.sys.isEs ? "Año (365D)" : (page.sys.isEn ? "Year (365D)" : "Год (365D)") }
+                { id: "day",  text: page.sys.tr("Día (24H)") },
+                { id: "year", text: page.sys.tr("Año (365D)") }
             ]
             value: page.sys.cfg.widgetProgressMode || "day"
             onPicked: id => { page.sys.cfg.widgetProgressMode = id; page.sys.saveCfg(); }
@@ -431,14 +428,12 @@ ColumnLayout {
             onPicked: hex => { page.sys.cfg.colFg = hex; page.sys.saveCfg(); }
         }
 
-        SetLabel { sys: page.sys; text: page.sys.isEn ? "Connectivity & Quick Tiles Colors" : "Colores de Conectividad y Ajustes Rápidos" }
+        SetLabel { sys: page.sys; text: page.sys.tr("Colores de Conectividad y Ajustes Rápidos") }
 
         SetColor {
             sys: page.sys
             label: "Bluetooth"
-            sub: page.sys.isEn
-                ? "Tile in Control Center, toasts, and dynamic island ripples (default: sky blue)."
-                : "Tarjeta en Centro de Control, alertas e isla dinámica al conectar dispositivos (por defecto: celeste)."
+            sub: page.sys.tr("Tarjeta en Centro de Control, alertas e isla dinámica al conectar dispositivos (por defecto: celeste).")
             value: (page.sys && page.sys.cfg && page.sys.cfg.colBt) ? page.sys.cfg.colBt : "#0ea5e9"
             defaultColor: "#0ea5e9"
             presets: [
@@ -457,10 +452,8 @@ ColumnLayout {
 
         SetColor {
             sys: page.sys
-            label: page.sys.isEn ? "Wi-Fi & Network" : "Wi-Fi y Red"
-            sub: page.sys.isEn
-                ? "Tile in Control Center and indicators when connected to network."
-                : "Tarjeta en Centro de Control e indicadores al conectarse a la red."
+            label: page.sys.tr("Wi-Fi y Red")
+            sub: page.sys.tr("Tarjeta en Centro de Control e indicadores al conectarse a la red.")
             value: (page.sys && page.sys.cfg && page.sys.cfg.colWifi) ? page.sys.cfg.colWifi : ((page.sys && page.sys.cfg && page.sys.cfg.colOn) ? page.sys.cfg.colOn : "#3b82f6")
             defaultColor: "#3b82f6"
             presets: [
@@ -479,10 +472,8 @@ ColumnLayout {
 
         SetColor {
             sys: page.sys
-            label: page.sys.isEn ? "Voice Dictation / Mic" : "Dictado por Voz / Micrófono"
-            sub: page.sys.isEn
-                ? "Microphone indicator and listening wave bars in the dynamic island / top bar."
-                : "Indicador de micrófono y ondas de escucha en la isla dinámica / barra superior."
+            label: page.sys.tr("Dictado por Voz / Micrófono")
+            sub: page.sys.tr("Indicador de micrófono y ondas de escucha en la isla dinámica / barra superior.")
             value: (page.sys && page.sys.cfg && page.sys.cfg.colVox) ? page.sys.cfg.colVox : "#60a5fa"
             defaultColor: "#60a5fa"
             presets: [
@@ -499,10 +490,8 @@ ColumnLayout {
 
         SetColor {
             sys: page.sys
-            label: page.sys.isEn ? "Screen Recording" : "Grabación de Pantalla"
-            sub: page.sys.isEn
-                ? "Active recording button and indicator color."
-                : "Color del botón y estado activo al grabar pantalla o capturar audio."
+            label: page.sys.tr("Grabación de Pantalla")
+            sub: page.sys.tr("Color del botón y estado activo al grabar pantalla o capturar audio.")
             value: (page.sys && page.sys.cfg && page.sys.cfg.colRec) ? page.sys.cfg.colRec : "#ff453a"
             defaultColor: "#ff453a"
             presets: [
@@ -760,9 +749,9 @@ ColumnLayout {
         SetSelect {
             sys: page.sys
             visible: page.sys.cfg.uiSounds !== false
-            label: page.sys.isEn ? "Sound Theme" : "Tema de Sonido"
+            label: page.sys.tr("Tema de Sonido")
             options: [
-                { id: "auto",     text: page.sys.isEn ? "Automatic (Sync with appearance)" : "Automático (según apariencia)" },
+                { id: "auto",     text: page.sys.tr("Automático (según apariencia)") },
                 { id: "nothing",  text: "Nothing OS (Digital / Minimalista)" },
                 { id: "material", text: "Material You (Profundo / Acústico)" }
             ]
@@ -781,9 +770,7 @@ ColumnLayout {
 
             Text {
                 Layout.fillWidth: true
-                text: page.sys.isEn
-                    ? "• Active soundpack: " + page.sys.activeSoundPack().toUpperCase() + " (curated per appearance or studio preset)."
-                    : "• Pack de sonido activo: " + page.sys.activeSoundPack().toUpperCase() + " (asignado por apariencia o preset)."
+                text: page.sys.tr("• Pack de sonido activo: ") + page.sys.activeSoundPack().toUpperCase() + page.sys.tr(" (asignado por apariencia o preset).")
                 color: page.sys.colOn
                 wrapMode: Text.WordWrap
                 font { family: page.sys.fontBody; pixelSize: page.sys.fontSize - 4 }
@@ -807,7 +794,7 @@ ColumnLayout {
                         font { family: page.sys.fontFam; pixelSize: 12 }
                     }
                     Text {
-                        text: page.sys.isEn ? "Open Sound Studio" : "Abrir Estudio de Sonido"
+                        text: page.sys.tr("Abrir Estudio de Sonido")
                         color: page.sys.colFg
                         font { family: page.sys.fontBody; pixelSize: page.sys.fontSize - 4; bold: true }
                     }

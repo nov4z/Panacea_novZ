@@ -1,0 +1,1907 @@
+{
+  "0% (Apagado)": [
+    "0% (Apagado)",
+    "0% (Off)",
+    "0% (Выкл)"
+  ],
+  "50% (Medio)": [
+    "50% (Medio)",
+    "50% (Medium)",
+    "50% (Средняя)"
+  ],
+  "100% (Máximo)": [
+    "100% (Máximo)",
+    "100% (Maximum)",
+    "100% (Макс)"
+  ],
+  "A papelera": [
+    "A papelera",
+    "To trash",
+    "В корзину"
+  ],
+  "A papelera: ": [
+    "A papelera: ",
+    "To trash: ",
+    "В корзину: "
+  ],
+  "Abre el explorador como ventana flotante de Hyprland en vez de en el notch.": [
+    "Abre el explorador como ventana flotante de Hyprland en vez de en el notch.",
+    "Opens file manager as a floating Hyprland window instead of in the notch.",
+    "Открывает проводник отдельным плавающим окном вместо острова."
+  ],
+  "Abrir con...": [
+    "Abrir con...",
+    "Open with...",
+    "Открыть с помощью..."
+  ],
+  "Abrir en Thunar": [
+    "Abrir en Thunar",
+    "Open in Thunar",
+    "Открыть в Thunar"
+  ],
+  "Abrir terminal": [
+    "Abrir terminal",
+    "Open terminal",
+    "Открыть терминал"
+  ],
+  "Acceso a clips de texto e imágenes copiadas (Super+V).": [
+    "Acceso a clips de texto e imágenes copiadas (Super+V).",
+    "Access copied text snippets and images (Super+V).",
+    "Доступ к скопированному тексту и изображениям (Super+V)."
+  ],
+  "Acento del sistema": [
+    "Acento del sistema",
+    "System Accent",
+    "Системный акцент"
+  ],
+  "Acrílico vibrante": [
+    "Acrílico vibrante",
+    "Vibrant acrylic",
+    "Яркий акрил"
+  ],
+  "Activa las curvas de transición orgánica (uñas) a los costados del notch al acoplarse a la pantalla.": [
+    "Activa las curvas de transición orgánica (uñas) a los costados del notch al acoplarse a la pantalla.",
+    "Enables organic curved flares on the sides of the notch when docked.",
+    "Включает плавные наплывы по бокам острова при стыковке с экраном."
+  ],
+  "Activar lanzador de aplicaciones": [
+    "Activar lanzador de aplicaciones",
+    "Activate application launcher",
+    "Запустить лаунчер приложений"
+  ],
+  "Agenda, fecha y reloj de zona horaria.": [
+    "Agenda, fecha y reloj de zona horaria.",
+    "Calendar, date, and timezone clock.",
+    "Календарь, дата и часы часового пояса."
+  ],
+  "Agentes IA": [
+    "Agentes IA",
+    "AI Agents",
+    "ИИ-агенты"
+  ],
+  "Agudos": [
+    "Agudos",
+    "Treble",
+    "Высокие частоты"
+  ],
+  "Ajusta la geometría, el modo de adherencia a la pantalla y el comportamiento general del notch o cápsula flotante en tiempo real:": [
+    "Ajusta la geometría, el modo de adherencia a la pantalla y el comportamiento general del notch o cápsula flotante en tiempo real:",
+    "Adjust geometry, screen docking mode, and floating notch behavior in real time:",
+    "Настройте геометрию, режим пристыковки и поведение острова в реальном времени:"
+  ],
+  "Al pasar el cursor sobre el notch en reposo, revela suavemente el icono y nombre de la aplicación actualmente en foco.": [
+    "Al pasar el cursor sobre el notch en reposo, revela suavemente el icono y nombre de la aplicación actualmente en foco.",
+    "Hovering over the idle notch reveals the icon and title of the active application.",
+    "При наведении на остров отображается значок и название активного приложения."
+  ],
+  "Alerta 100%: Aviso verde con brillo deslizante en el nivel de batería al completar la carga.": [
+    "Alerta 100%: Aviso verde con brillo deslizante en el nivel de batería al completar la carga.",
+    "100% Alert: Green notification with sliding glow on battery level when fully charged.",
+    "Оповещение 100%: Зелёное уведомление со скользящим свечением при полном заряде."
+  ],
+  "Alerta 15%: Aviso rojo crítico con onda de choque pulsante continua.": [
+    "Alerta 15%: Aviso rojo crítico con onda de choque pulsante continua.",
+    "15% Alert: Critical red alert with continuous pulsing shockwave.",
+    "Оповещение 15%: Критическое красное предупреждение с пульсирующей волной."
+  ],
+  "Alerta 20%: Advertencia ámbar/naranja de batería baja con onda pulsante.": [
+    "Alerta 20%: Advertencia ámbar/naranja de batería baja con onda pulsante.",
+    "20% Alert: Amber/orange low battery warning with pulsing wave.",
+    "Оповещение 20%: Предупреждение о низком заряде янтаря/оранжевого цвета с пульсацией."
+  ],
+  "Alerta 80%: Aviso verde de carga óptima recomendada para cuidar la salud de la batería.": [
+    "Alerta 80%: Aviso verde de carga óptima recomendada para cuidar la salud de la batería.",
+    "80% Alert: Green recommended charging alert to protect battery health.",
+    "Оповещение 80%: Рекомендуемый зелёный уровень заряда для защиты аккумулятора."
+  ],
+  "Alerta Dynamic Island al alcanzar el 80% para proteger la vida útil de la batería.": [
+    "Alerta Dynamic Island al alcanzar el 80% para proteger la vida útil de la batería.",
+    "Dynamic Island alert at 80% to protect battery lifespan.",
+    "Уведомление Dynamic Island при 80% для защиты ресурса батареи."
+  ],
+  "Alerta Dynamic Island con animación de llenado y destello al llegar al 100%.": [
+    "Alerta Dynamic Island con animación de llenado y destello al llegar al 100%.",
+    "Dynamic Island alert with fill animation and sparkle at 100%.",
+    "Уведомление Dynamic Island с анимацией заполнения и вспышкой при 100%."
+  ],
+  "Alerta de conexión AC: Rayo pulsante con ondas concéntricas y porcentaje.": [
+    "Alerta de conexión AC: Rayo pulsante con ondas concéntricas y porcentaje.",
+    "AC connection alert: Pulsing lightning with concentric waves and percentage.",
+    "Оповещение о сети AC: Пульсирующая молния с концентрическими волнами и процентом."
+  ],
+  "Alertas Dynamic Island & Vista Previa": [
+    "Alertas Dynamic Island & Vista Previa",
+    "Dynamic Island Alerts & Preview",
+    "Оповещения Dynamic Island и предпросмотр"
+  ],
+  "Alternar (Fn+Q)": [
+    "Alternar (Fn+Q)",
+    "Toggle (Fn+Q)",
+    "Переключить (Fn+Q)"
+  ],
+  "Alternar (Fn+Space)": [
+    "Alternar (Fn+Space)",
+    "Toggle (Fn+Space)",
+    "Переключить (Fn+Space)"
+  ],
+  "Alternar Estado Onda": [
+    "Alternar Estado Onda",
+    "Toggle Wave State",
+    "Переключить состояние волны"
+  ],
+  "Alternar normal / musical": [
+    "Alternar normal / musical",
+    "Toggle Normal / Music",
+    "Переключить обычный / музыкальный"
+  ],
+  "Altura de la barra (Bar height)": [
+    "Altura de la barra (Bar height)",
+    "Bar height",
+    "Высота панели"
+  ],
+  "Altura de paneles e isla expandida (Expanded height)": [
+    "Altura de paneles e isla expandida (Expanded height)",
+    "Panels and expanded island height",
+    "Высота панелей и раскрытого острова"
+  ],
+  "Altura objetivo del visor de letras": [
+    "Altura objetivo del visor de letras",
+    "Target height for lyrics viewer",
+    "Целевая высота окна текста песен"
+  ],
+  "Ambas": [
+    "Ambas",
+    "Both",
+    "Оба"
+  ],
+  "Ancho del Centro de Control": [
+    "Ancho del Centro de Control",
+    "Control Center Width",
+    "Ширина Центра управления"
+  ],
+  "Ancho en reposo (Collapsed width)": [
+    "Ancho en reposo (Collapsed width)",
+    "Collapsed width",
+    "Ширина свёрнутого острова"
+  ],
+  "Animaciones en iconos de apagado": [
+    "Animaciones en iconos de apagado",
+    "Power icons animations",
+    "Анимации значков питания"
+  ],
+  "Animación Dynamic Island de batería baja": [
+    "Animación Dynamic Island de batería baja",
+    "Dynamic Island low battery animation",
+    "Анимация низкого заряда в Dynamic Island"
+  ],
+  "Animación de batería completa al 100%": [
+    "Animación de batería completa al 100%",
+    "100% full battery animation",
+    "Анимация 100% заряда батареи"
+  ],
+  "Animación de marea líquida cuando el equipo se está cargando.": [
+    "Animación de marea líquida cuando el equipo se está cargando.",
+    "Liquid wave animation while charging.",
+    "Анимация жидкой волны во время зарядки."
+  ],
+  "Animación de rayo y sonido de carga": [
+    "Animación de rayo y sonido de carga",
+    "Lightning animation and charging sound",
+    "Анимация молнии и звук зарядки"
+  ],
+  "Aplica tus colores elegidos sobre cualquier tema, ignorando la paleta predeterminada.": [
+    "Aplica tus colores elegidos sobre cualquier tema, ignorando la paleta predeterminada.",
+    "Apply your custom colors to any theme, overriding default palette.",
+    "Применять свои цвета поверх любой темы вместо стандартной палитры."
+  ],
+  "Aspecto y Micro-interacciones": [
+    "Aspecto y Micro-interacciones",
+    "Appearance & Micro-interactions",
+    "Оформление и микро-взаимодействия"
+  ],
+  "Audición de Efectos Acústicos": [
+    "Audición de Efectos Acústicos",
+    "Acoustic Effects Audition",
+    "Прослушивание звуковых эффектов"
+  ],
+  "Aumento de luminosidad en la pista de volumen y brillo al interactuar con el puntero.": [
+    "Aumento de luminosidad en la pista de volumen y brillo al interactuar con el puntero.",
+    "Glow effect on volume and brightness tracks on hover/interaction.",
+    "Подсветка дорожек громкости и яркости при наведении указателя."
+  ],
+  "Autocultar notch": [
+    "Autocultar notch",
+    "Autohide notch",
+    "Автоскрытие острова"
+  ],
+  "Automático si hay letras": [
+    "Automático si hay letras",
+    "Automatic if lyrics available",
+    "Автоматически при наличии текста"
+  ],
+  "Aviso de retroiluminación en Dynamic Island": [
+    "Aviso de retroiluminación en Dynamic Island",
+    "Keyboard backlight notification on Dynamic Island",
+    "Уведомление о подсветке клавиатуры в Dynamic Island"
+  ],
+  "Aviso emergente de Portapapeles (Clipboard Flash)": [
+    "Aviso emergente de Portapapeles (Clipboard Flash)",
+    "Clipboard Flash popup notice",
+    "Всплывающее уведомление буфера обмена"
+  ],
+  "Avisos en el notch": [
+    "Avisos en el notch",
+    "Notch notifications",
+    "Уведомления на острове"
+  ],
+  "Bandeja al día": [
+    "Bandeja al día",
+    "Inbox up to date",
+    "Всё прочитано"
+  ],
+  "Barra de filtros por categoría": [
+    "Barra de filtros por categoría",
+    "Category filter bar",
+    "Панель фильтров категорий"
+  ],
+  "Brillo Medio": [
+    "Brillo Medio",
+    "Medium Brightness",
+    "Средняя яркость"
+  ],
+  "Brillo Máximo": [
+    "Brillo Máximo",
+    "Maximum Brightness",
+    "Максимальная яркость"
+  ],
+  "Brillo dinámico en deslizadores": [
+    "Brillo dinámico en deslizadores",
+    "Dynamic glow on sliders",
+    "Динамическое свечение ползунков"
+  ],
+  "Buscar aplicaciones, herramientas o cálculo…": [
+    "Buscar aplicaciones, herramientas o cálculo…",
+    "Search apps, tools, or calculation…",
+    "Поиск приложений, утилит или вычисления…"
+  ],
+  "Buscar en configuración...": [
+    "Buscar en configuración...",
+    "Search in settings...",
+    "Поиск в настройках..."
+  ],
+  "Buscar en el portapapeles...": [
+    "Buscar en el portapapeles...",
+    "Search clipboard...",
+    "Поиск в буфере обмена..."
+  ],
+  "Bóveda cifrada para almacenar claves de forma segura.": [
+    "Bóveda cifrada para almacenar claves de forma segura.",
+    "Encrypted vault to store passwords securely.",
+    "Зашифрованное хранилище для безопасного хранения паролей."
+  ],
+  "Búsqueda instantánea de aplicaciones y accesos directos (Super+Espacio).": [
+    "Búsqueda instantánea de aplicaciones y accesos directos (Super+Espacio).",
+    "Instant search for applications and shortcuts (Super+Space).",
+    "Мгновенный поиск приложений и ярлыков (Super+Пробел)."
+  ],
+  "Calcula operaciones y fórmulas directamente desde la barra de búsqueda.": [
+    "Calcula operaciones y fórmulas directamente desde la barra de búsqueda.",
+    "Calculate operations and formulas directly from the search bar.",
+    "Вычисляйте формулы прямо из строки поиска."
+  ],
+  "Captura inteligente de contraseñas": [
+    "Captura inteligente de contraseñas",
+    "Smart password capture",
+    "Умный перехват паролей"
+  ],
+  "Carátula": [
+    "Carátula",
+    "Cover art",
+    "Обложка"
+  ],
+  "Carátula Reactiva & Color de Onda": [
+    "Carátula Reactiva & Color de Onda",
+    "Reactive Cover Art & Wave Color",
+    "Реактивная обложка и цвет волны"
+  ],
+  "Centro de Control y Tarjetas": [
+    "Centro de Control y Tarjetas",
+    "Control Center and Cards",
+    "Центр управления и карточки"
+  ],
+  "Circular": [
+    "Circular",
+    "Circular",
+    "Круглая"
+  ],
+  "Color Modo Ahorro": [
+    "Color Modo Ahorro",
+    "Power Saver Mode Color",
+    "Цвет режима энергосбережения"
+  ],
+  "Color Modo Equilibrado": [
+    "Color Modo Equilibrado",
+    "Balanced Mode Color",
+    "Цвет сбалансированного режима"
+  ],
+  "Color Modo Rendimiento": [
+    "Color Modo Rendimiento",
+    "Performance Mode Color",
+    "Цвет режима производительности"
+  ],
+  "Color crítico": [
+    "Color crítico",
+    "Critical color",
+    "Критический цвет"
+  ],
+  "Color de Acento": [
+    "Color de Acento",
+    "Accent Color",
+    "Цвет акцента"
+  ],
+  "Color de Carga / 100%": [
+    "Color de Carga / 100%",
+    "Charging / 100% Color",
+    "Цвет зарядки / 100%"
+  ],
+  "Color de Texto Principal": [
+    "Color de Texto Principal",
+    "Primary Text Color",
+    "Основной цвет текста"
+  ],
+  "Color de advertencia": [
+    "Color de advertencia",
+    "Warning color",
+    "Цвет предупреждения"
+  ],
+  "Color de carga y nivel": [
+    "Color de carga y nivel",
+    "Charge and level color",
+    "Цвет зарядки и уровня"
+  ],
+  "Color de carátula": [
+    "Color de carátula",
+    "Cover art color",
+    "Цвет обложки"
+  ],
+  "Color de la alerta al 15% y estado crítico.": [
+    "Color de la alerta al 15% y estado crítico.",
+    "Color of 15% alert and critical state.",
+    "Цвет оповещения при 15% и критическом состоянии."
+  ],
+  "Color de la alerta al 20% y del indicador en barra.": [
+    "Color de la alerta al 20% y del indicador en barra.",
+    "Color of 20% alert and bar indicator.",
+    "Цвет оповещения при 20% и индикатора на панели."
+  ],
+  "Color de la batería interior, borde y porcentaje en alertas de carga.": [
+    "Color de la batería interior, borde y porcentaje en alertas de carga.",
+    "Color of inner battery, border, and percentage on charge alerts.",
+    "Цвет батареи, рамки и процента при оповещениях зарядки."
+  ],
+  "Color de la ola en el widget, menú de batería y notificación.": [
+    "Color de la ola en el widget, menú de batería y notificación.",
+    "Wave color in widget, battery menu, and notification.",
+    "Цвет волны в виджете, меню батареи и уведомлении."
+  ],
+  "Color de la ola y botón en perfil balanceado.": [
+    "Color de la ola y botón en perfil balanceado.",
+    "Wave and button color in balanced profile.",
+    "Цвет волны и кнопки в сбалансированном профиле."
+  ],
+  "Color de la ola y botón en perfil de bajo consumo.": [
+    "Color de la ola y botón en perfil de bajo consumo.",
+    "Wave and button color in power saver profile.",
+    "Цвет волны и кнопки в энергосберегающем профиле."
+  ],
+  "Color de la ola y botón en perfil de máximo rendimiento.": [
+    "Color de la ola y botón en perfil de máximo rendimiento.",
+    "Wave and button color in performance profile.",
+    "Цвет волны и кнопки в профиле максимальной производительности."
+  ],
+  "Color de la onda / Acento puro": [
+    "Color de la onda / Acento puro",
+    "Wave Color / Pure Accent",
+    "Цвет волны / Чистый акцент"
+  ],
+  "Color de la onda de audio": [
+    "Color de la onda de audio",
+    "Audio wave color",
+    "Цвет звуковой волны"
+  ],
+  "Color del rayo de carga y de las alertas de carga completada.": [
+    "Color del rayo de carga y de las alertas de carga completada.",
+    "Color of charging lightning bolt and full charge alerts.",
+    "Цвет молнии зарядки и оповещений о завершении заряда."
+  ],
+  "Colores de Batería y Alertas": [
+    "Colores de Batería y Alertas",
+    "Battery & Alert Colors",
+    "Цвета батареи и оповещений"
+  ],
+  "Colores de Modos de Energía (Ola & Botones)": [
+    "Colores de Modos de Energía (Ola & Botones)",
+    "Power Mode Colors (Wave & Buttons)",
+    "Цвета режимов питания (Волна и кнопки)"
+  ],
+  "Colores de Modos de Energía (Ola de Batería)": [
+    "Colores de Modos de Energía (Ola de Batería)",
+    "Power Mode Colors (Battery Wave)",
+    "Цвета режимов питания (Волна батареи)"
+  ],
+  "Colores del Sistema": [
+    "Colores del Sistema",
+    "System Colors",
+    "Цвета системы"
+  ],
+  "Combinación para alternar teclado:": [
+    "Combinación para alternar teclado:",
+    "Keyboard toggle shortcut:",
+    "Комбинация переключения раскладки:"
+  ],
+  "Comportamiento de apertura de letras": [
+    "Comportamiento de apertura de letras",
+    "Lyrics opening behavior",
+    "Поведение открытия текста песен"
+  ],
+  "Configura cómo reacciona la carátula al ritmo musical y la posición y color de las ondas de audio:": [
+    "Configura cómo reacciona la carátula al ritmo musical y la posición y color de las ondas de audio:",
+    "Configure how cover art reacts to music rhythm, and audio wave position and color:",
+    "Настройте реакцию обложки на ритм музыки, а также положение и цвет звуковых волн:"
+  ],
+  "Configuración de Batería Baja": [
+    "Configuración de Batería Baja",
+    "Low Battery Configuration",
+    "Настройка низкого заряда"
+  ],
+  "Configuración de Carga": [
+    "Configuración de Carga",
+    "Charging Configuration",
+    "Настройка зарядки"
+  ],
+  "Configuración manual XKB (avanzado):": [
+    "Configuración manual XKB (avanzado):",
+    "Manual XKB configuration (advanced):",
+    "Ручная настройка XKB (для опытных):"
+  ],
+  "Consejo: También puedes elegir colores personalizados para Bluetooth, Wi-Fi, batería y ajustes más abajo en \"Colores del Sistema\".": [
+    "Consejo: También puedes elegir colores personalizados para Bluetooth, Wi-Fi, batería y ajustes más abajo en \"Colores del Sistema\".",
+    "Tip: You can also choose custom colors for Bluetooth, Wi-Fi, battery, and settings below in \"System Colors\".",
+    "Совет: Вы также можете выбрать свои цвета для Bluetooth, Wi-Fi, батареи и настроек ниже в «Цветах системы»."
+  ],
+  "Control en tiempo real, pruebas acústicas y avisos visuales en el Dynamic Island para los niveles de brillo del teclado (0%, 50%, 100%):": [
+    "Control en tiempo real, pruebas acústicas y avisos visuales en el Dynamic Island para los niveles de brillo del teclado (0%, 50%, 100%):",
+    "Real-time control, acoustic tests, and visual notices on Dynamic Island for keyboard brightness levels (0%, 50%, 100%):",
+    "Управление в реальном времени, звуковые тесты и визуальные уведомления в Dynamic Island для яркости клавиатуры (0%, 50%, 100%):"
+  ],
+  "Copiado": [
+    "Copiado",
+    "Copied",
+    "Скопировано"
+  ],
+  "Copiados archivos: ": [
+    "Copiados archivos: ",
+    "Files copied: ",
+    "Скопировано файлов: "
+  ],
+  "Cortados archivos: ": [
+    "Cortados archivos: ",
+    "Files cut: ",
+    "Вырезано файлов: "
+  ],
+  "Curvatura de esquinas / Uñas (Notch flare)": [
+    "Curvatura de esquinas / Uñas (Notch flare)",
+    "Corner curvature / Notch flare",
+    "Скругление углов / Наплыв выреза"
+  ],
+  "Deslizamiento lateral kinético al seleccionar elementos.": [
+    "Deslizamiento lateral kinético al seleccionar elementos.",
+    "Kinetic lateral slide when selecting items.",
+    "Кинетическое боковое смещение при выборе элементов."
+  ],
+  "Desplazamiento horizontal fluido (+2px) del chevron al posar el cursor en tarjetas con submenú.": [
+    "Desplazamiento horizontal fluido (+2px) del chevron al posar el cursor en tarjetas con submenú.",
+    "Smooth horizontal nudge (+2px) of the chevron on cards with submenus on hover.",
+    "Плавный сдвиг стрелки (+2px) при наведении на карточки с подменю."
+  ],
+  "Desplazamiento lateral en listas": [
+    "Desplazamiento lateral en listas",
+    "Lateral sliding in lists",
+    "Боковое смещение в списках"
+  ],
+  "Desplazamiento responsivo en listas": [
+    "Desplazamiento responsivo en listas",
+    "Responsive list sliding",
+    "Отзывчивое смещение в списках"
+  ],
+  "Despliega la cápsula horizontal con indicador LED al presionar Fn+Space.": [
+    "Despliega la cápsula horizontal con indicador LED al presionar Fn+Space.",
+    "Expands horizontal capsule with LED indicator when pressing Fn+Space.",
+    "Разворачивает капсулу с LED-индикатором при нажатии Fn+Пробел."
+  ],
+  "Detener prueba": [
+    "Detener prueba",
+    "Stop test",
+    "Остановить тест"
+  ],
+  "Determina la coloración del fondo del notch y sus esquinas al reproducir música.": [
+    "Determina la coloración del fondo del notch y sus esquinas al reproducir música.",
+    "Determines notch background and corner coloring during music playback.",
+    "Определяет цвет фона и углов острова при воспроизведении музыки."
+  ],
+  "Dimensiones, Forma y Modo del Notch": [
+    "Dimensiones, Forma y Modo del Notch",
+    "Notch Dimensions, Shape & Mode",
+    "Размеры, форма и режим острова"
+  ],
+  "Dimensión vertical asignada al contenedor de SpicyLyrics al desplegarse.": [
+    "Dimensión vertical asignada al contenedor de SpicyLyrics al desplegarse.",
+    "Vertical height assigned to SpicyLyrics container when expanded.",
+    "Высота контейнера SpicyLyrics при раскрытии."
+  ],
+  "Disparar alerta en pantalla": [
+    "Disparar alerta en pantalla",
+    "Trigger on-screen alert",
+    "Запустить оповещение на экране"
+  ],
+  "Duración del aviso de modo de energía": [
+    "Duración del aviso de modo de energía",
+    "Power mode notice duration",
+    "Длительность уведомления о режиме питания"
+  ],
+  "Duración del aviso de teclado": [
+    "Duración del aviso de teclado",
+    "Keyboard notice duration",
+    "Длительность уведомления клавиатуры"
+  ],
+  "Ecualizador de ondas activo": [
+    "Ecualizador de ondas activo",
+    "Active wave equalizer",
+    "Активный волновой эквалайзер"
+  ],
+  "Efecto de onda luminosa pulsante en el borde inferior durante la reproducción.": [
+    "Efecto de onda luminosa pulsante en el borde inferior durante la reproducción.",
+    "Pulsing light wave effect on bottom edge during playback.",
+    "Эффект пульсирующей световой волны на нижней кромке при воспроизведении."
+  ],
+  "Efecto de onda luminosa pulsante y armónica en el borde inferior del notch durante la reproducción de música.": [
+    "Efecto de onda luminosa pulsante y armónica en el borde inferior del notch durante la reproducción de música.",
+    "Pulsing harmonic light wave on bottom edge of notch during music playback.",
+    "Пульсирующая гармоническая световая волна на нижней кромке острова при прослушивании музыки."
+  ],
+  "Efectos & Micro-animaciones": [
+    "Efectos & Micro-animaciones",
+    "Effects & Micro-animations",
+    "Эффекты и микроанимации"
+  ],
+  "Efectos Visuales de Portada & Ondas": [
+    "Efectos Visuales de Portada & Ondas",
+    "Cover Art Visual Effects & Waves",
+    "Визуальные эффекты обложки и волн"
+  ],
+  "Efectos acústicos coordinados para acciones del notch, carga de energía y avisos:": [
+    "Efectos acústicos coordinados para acciones del notch, carga de energía y avisos:",
+    "Coordinated acoustic effects for notch actions, charging, and alerts:",
+    "Звуковые эффекты для действий острова, зарядки и уведомлений:"
+  ],
+  "El contenido que copies aparecerá aquí automáticamente": [
+    "El contenido que copies aparecerá aquí automáticamente",
+    "Content you copy will appear here automatically",
+    "Скопированный текст появится здесь автоматически"
+  ],
+  "El notch flota sobre las ventanas sin reservar barra fija superior; las ventanas no saltan ni se encogen.": [
+    "El notch flota sobre las ventanas sin reservar barra fija superior; las ventanas no saltan ni se encogen.",
+    "Notch floats above windows without reserving a fixed top bar; windows do not jump or resize.",
+    "Остров парит над окнами без резервирования верхней полосы; окна не прыгают и не меняют размер."
+  ],
+  "El notch permanece visible en reposo mientras los paneles y páginas se abren en una tarjeta flotante inferior.": [
+    "El notch permanece visible en reposo mientras los paneles y páginas se abren en una tarjeta flotante inferior.",
+    "Notch remains visible at rest while panels and pages open in a lower floating card.",
+    "Остров остаётся виден в покое, а панели открываются плавающей карточкой снизу."
+  ],
+  "El notch se acopla a la parte superior de la pantalla con esquinas fluidas cóncavas. Si se desactiva, pasa a ser una cápsula flotante con margen.": [
+    "El notch se acopla a la parte superior de la pantalla con esquinas fluidas cóncavas. Si se desactiva, pasa a ser una cápsula flotante con margen.",
+    "Notch docks to top of screen with fluid concave corners. If disabled, becomes a floating pill with margin.",
+    "Остров пристыкован к верху экрана с плавными углами. При отключении становится плавающей капсулой с отступом."
+  ],
+  "El notch se oculta automáticamente para dejar la pantalla completamente libre y reaparece al pasar el cursor por el borde superior.": [
+    "El notch se oculta automáticamente para dejar la pantalla completamente libre y reaparece al pasar el cursor por el borde superior.",
+    "Notch automatically hides to keep screen clear, reappearing when cursor touches top edge.",
+    "Остров автоматически скрывается, освобождая экран, и появляется при наведении на верхний край."
+  ],
+  "Elevación sutil de tarjetas (3D Lift)": [
+    "Elevación sutil de tarjetas (3D Lift)",
+    "Subtle 3D card elevation (3D Lift)",
+    "Тонкий 3D-подъём карточек"
+  ],
+  "Elevación vertical (-2px) y respuesta táctil en botones de acción y controles.": [
+    "Elevación vertical (-2px) y respuesta táctil en botones de acción y controles.",
+    "Vertical elevation (-2px) and tactile feedback on action buttons and controls.",
+    "Вертикальный подъём (-2px) и тактильный отклик на кнопках действий."
+  ],
+  "Emite anillos de ondas acústicas que reaccionan con precisión al golpe y ritmo de la canción.": [
+    "Emite anillos de ondas acústicas que reaccionan con precisión al golpe y ritmo de la canción.",
+    "Emits acoustic wave rings reacting accurately to the beat and rhythm of the track.",
+    "Излучает круги акустических волн, точно реагирующих на ритм трека."
+  ],
+  "Emite anillos luminosos reactivos alrededor de la portada durante la reproducción.": [
+    "Emite anillos luminosos reactivos alrededor de la portada durante la reproducción.",
+    "Emits reactive glowing rings around the cover art during playback.",
+    "Излучает реактивные световые кольца вокруг обложки во время воспроизведения."
+  ],
+  "En reposo el notch muestra escritorios virtuales a la izquierda, la hora en formato Nothing en el centro y el porcentaje de batería a la derecha.": [
+    "En reposo el notch muestra escritorios virtuales a la izquierda, la hora en formato Nothing en el centro y el porcentaje de batería a la derecha.",
+    "At rest, the notch shows virtual workspaces on the left, Nothing-style time in center, and battery percentage on right.",
+    "В покое остров показывает рабочие столы слева, часы Nothing в центре и процент батареи справа."
+  ],
+  "Equilibrio estándar": [
+    "Equilibrio estándar",
+    "Standard balance",
+    "Стандартный баланс"
+  ],
+  "Esquinas fluidas cóncavas del notch": [
+    "Esquinas fluidas cóncavas del notch",
+    "Fluid concave notch corners",
+    "Плавные вогнутые углы острова"
+  ],
+  "Esquivar ventanas maximizadas": [
+    "Esquivar ventanas maximizadas",
+    "Dodge maximized windows",
+    "Уступать место развёрнутым окнам"
+  ],
+  "Estado Actual:": [
+    "Estado Actual:",
+    "Current State:",
+    "Текущее состояние:"
+  ],
+  "Evaluación matemática instantánea": [
+    "Evaluación matemática instantánea",
+    "Instant math evaluation",
+    "Мгновенные математические вычисления"
+  ],
+  "Evasión de Ventanas (Brave & Pantalla Completa)": [
+    "Evasión de Ventanas (Brave & Pantalla Completa)",
+    "Window Avoidance (Brave & Fullscreen)",
+    "Уклонение от окон (Brave и полноэкранный режим)"
+  ],
+  "Explorador de Archivos": [
+    "Explorador de Archivos",
+    "File Manager",
+    "Проводник файлов"
+  ],
+  "Explorador en ventana independiente": [
+    "Explorador en ventana independiente",
+    "File manager in standalone window",
+    "Проводник в отдельном окне"
+  ],
+  "Fidelidad de Animaciones del Dynamic Island": [
+    "Fidelidad de Animaciones del Dynamic Island",
+    "Dynamic Island Animation Fidelity",
+    "Плавность анимаций Dynamic Island"
+  ],
+  "Filas visibles máximas": [
+    "Filas visibles máximas",
+    "Maximum visible rows",
+    "Максимум видимых строк"
+  ],
+  "Filtrar archivos...": [
+    "Filtrar archivos...",
+    "Filter files...",
+    "Фильтр файлов..."
+  ],
+  "Filtros rápidos (Todas, Recientes, Internet, Multimedia, Sistema).": [
+    "Filtros rápidos (Todas, Recientes, Internet, Multimedia, Sistema).",
+    "Quick filters (All, Recent, Internet, Media, System).",
+    "Быстрые фильтры (Все, Недавние, Интернет, Медиа, Система)."
+  ],
+  "Flotación en Suspender, empuje en Cerrar sesión, giro de 360° en Reiniciar y latido en Apagar.": [
+    "Flotación en Suspender, empuje en Cerrar sesión, giro de 360° en Reiniciar y latido en Apagar.",
+    "Floating on Suspend, push on Log out, 360° spin on Restart, and pulse on Shut down.",
+    "Парение при сне, толчок при выходе, вращение 360° при перезагрузке и пульс при выключении."
+  ],
+  "Fondo del notch en música": [
+    "Fondo del notch en música",
+    "Notch background during music",
+    "Фон острова при воспроизведении музыки"
+  ],
+  "Fondos de Pantalla y Temas": [
+    "Fondos de Pantalla y Temas",
+    "Wallpapers and Themes",
+    "Обои и темы"
+  ],
+  "Forma de la onda tras la carátula": [
+    "Forma de la onda tras la carátula",
+    "Wave shape behind cover art",
+    "Форма волны позади обложки"
+  ],
+  "Forzar colores personalizados": [
+    "Forzar colores personalizados",
+    "Force custom colors",
+    "Принудительные свои цвета"
+  ],
+  "Frase de confirmación en el Dynamic Island al enchufar el cargador.": [
+    "Frase de confirmación en el Dynamic Island al enchufar el cargador.",
+    "Confirmation phrase in Dynamic Island when plugging in charger.",
+    "Фраза подтверждения в Dynamic Island при подключении зарядного устройства."
+  ],
+  "Frase mostrada al alcanzar el 80% de batería conectada.": [
+    "Frase mostrada al alcanzar el 80% de batería conectada.",
+    "Phrase shown upon reaching 80% battery while plugged in.",
+    "Фраза при достижении 80% заряда при подключении к сети."
+  ],
+  "Frase mostrada al caer al umbral crítico de batería.": [
+    "Frase mostrada al caer al umbral crítico de batería.",
+    "Phrase shown when dropping to critical battery threshold.",
+    "Фраза при падении до критического уровня батареи."
+  ],
+  "Frase mostrada al llegar al 100% de carga de batería.": [
+    "Frase mostrada al llegar al 100% de carga de batería.",
+    "Phrase shown upon reaching 100% full charge.",
+    "Фраза при достижении 100% заряда батареи."
+  ],
+  "Frase mostrada tras caer por debajo del umbral de advertencia.": [
+    "Frase mostrada tras caer por debajo del umbral de advertencia.",
+    "Phrase shown after dropping below warning threshold.",
+    "Фраза при падении ниже порога предупреждения."
+  ],
+  "Frecuencias de onda derecha (barras)": [
+    "Frecuencias de onda derecha (barras)",
+    "Right wave frequencies (bars)",
+    "Частоты правой волны (полосы)"
+  ],
+  "Frecuencias de onda tras carátula": [
+    "Frecuencias de onda tras carátula",
+    "Wave frequencies behind cover art",
+    "Частоты волны позади обложки"
+  ],
+  "Funciones Inteligentes & Extensiones del Dynamic Island": [
+    "Funciones Inteligentes & Extensiones del Dynamic Island",
+    "Smart Features & Dynamic Island Extensions",
+    "Умные функции и расширения Dynamic Island"
+  ],
+  "Gestor de Contraseñas (Vault)": [
+    "Gestor de Contraseñas (Vault)",
+    "Password Manager (Vault)",
+    "Менеджер паролей (Сейф)"
+  ],
+  "Giro suave de 90° con escala al pasar el ratón sobre el botón de tres puntos de las tarjetas.": [
+    "Giro suave de 90° con escala al pasar el ratón sobre el botón de tres puntos de las tarjetas.",
+    "Smooth 90° rotation with scale when hovering three-dot button on cards.",
+    "Плавный поворот на 90° с масштабированием при наведении на троеточие."
+  ],
+  "Graves": [
+    "Graves",
+    "Bass",
+    "Низкие"
+  ],
+  "Hardware: El interruptor físico de cámara (e-shutter) y la tecla AltGr operan a nivel de kernel/firmware sin interferir con la isla.": [
+    "Hardware: El interruptor físico de cámara (e-shutter) y la tecla AltGr operan a nivel de kernel/firmware sin interferir con la isla.",
+    "Hardware: Physical camera e-shutter and AltGr key operate at kernel/firmware level without interfering with the island.",
+    "Аппаратное: Физическая шторка камеры и клавиша AltGr работают на уровне ядра/прошивки, не затрагивая остров."
+  ],
+  "Hardware: Modos de Rendimiento (Fn+Q)": [
+    "Hardware: Modos de Rendimiento (Fn+Q)",
+    "Hardware: Performance Modes (Fn+Q)",
+    "Аппаратное: Режимы производительности (Fn+Q)"
+  ],
+  "Hardware: Retroiluminación de Teclado (Fn+Space)": [
+    "Hardware: Retroiluminación de Teclado (Fn+Space)",
+    "Hardware: Keyboard Backlight (Fn+Space)",
+    "Аппаратное: Подсветка клавиатуры (Fn+Space)"
+  ],
+  "Haz clic en cualquier combinación para modificarla. × desactiva el atajo.": [
+    "Haz clic en cualquier combinación para modificarla. × desactiva el atajo.",
+    "Click any combination to change it. × disables the shortcut.",
+    "Нажмите на любое сочетание для изменения. × отключает горячую клавишу."
+  ],
+  "Haz clic en una tarjeta para seleccionarla en el banco de pruebas o en el botón para escucharla.": [
+    "Haz clic en una tarjeta para seleccionarla en el banco de pruebas o en el botón para escucharla.",
+    "Click a card to select it in test bench or on button to hear it.",
+    "Нажмите на карточку для выбора или на кнопку для прослушивания."
+  ],
+  "Hexadecimal (#RRGGBB)": [
+    "Hexadecimal (#RRGGBB)",
+    "Hexadecimal (#RRGGBB)",
+    "Шестнадцатеричный (#RRGGBB)"
+  ],
+  "Historial de aplicaciones recientes": [
+    "Historial de aplicaciones recientes",
+    "Recent applications history",
+    "История недавних приложений"
+  ],
+  "Historial del Portapapeles": [
+    "Historial del Portapapeles",
+    "Clipboard History",
+    "История буфера обмена"
+  ],
+  "Iluminación suave en las barras de volumen y brillo.": [
+    "Iluminación suave en las barras de volumen y brillo.",
+    "Soft illumination on volume and brightness bars.",
+    "Мягкая подсветка на шкалах громкости и яркости."
+  ],
+  "Imagen binaria copiada": [
+    "Imagen binaria copiada",
+    "Binary image copied",
+    "Скопировано изображение"
+  ],
+  "Indicadores de navegación (󰅂)": [
+    "Indicadores de navegación (󰅂)",
+    "Navigation indicators (󰅂)",
+    "Индикаторы навигации (󰅂)"
+  ],
+  "Intensidad del latido de la carátula": [
+    "Intensidad del latido de la carátula",
+    "Cover art pulse intensity",
+    "Интенсивность пульсации обложки"
+  ],
+  "Intensidad del resplandor ambiental": [
+    "Intensidad del resplandor ambiental",
+    "Ambient glow intensity",
+    "Интенсивность окружающего свечения"
+  ],
+  "Intenta con otro término o limpia los filtros": [
+    "Intenta con otro término o limpia los filtros",
+    "Try another search term or clear filters",
+    "Попробуйте другой запрос или сбросьте фильтры"
+  ],
+  "Isla 100%": [
+    "Isla 100%",
+    "Island 100%",
+    "Остров 100%"
+  ],
+  "Isla 15%": [
+    "Isla 15%",
+    "Island 15%",
+    "Остров 15%"
+  ],
+  "Isla 20%": [
+    "Isla 20%",
+    "Island 20%",
+    "Остров 20%"
+  ],
+  "Isla 80%": [
+    "Isla 80%",
+    "Island 80%",
+    "Остров 80%"
+  ],
+  "La carátula late y pulsa al compás del ritmo y las frecuencias graves del audio.": [
+    "La carátula late y pulsa al compás del ritmo y las frecuencias graves del audio.",
+    "Cover art pulses in sync with the beat and bass frequencies of the audio.",
+    "Обложка пульсирует в такт ритму и низким частотам аудио."
+  ],
+  "La carátula reacciona dinámicamente al ritmo y graves de la música.": [
+    "La carátula reacciona dinámicamente al ritmo y graves de la música.",
+    "Cover art dynamically reacts to the beat and bass of the music.",
+    "Обложка динамически реагирует на ритм и басы музыки."
+  ],
+  "Lanzador de Aplicaciones": [
+    "Lanzador de Aplicaciones",
+    "Application Launcher",
+    "Лаунчер приложений"
+  ],
+  "Las notificaciones emergentes permanecerán silenciadas": [
+    "Las notificaciones emergentes permanecerán silenciadas",
+    "Popup notifications will stay muted",
+    "Всплывающие уведомления останутся без звука"
+  ],
+  "Limpiar": [
+    "Limpiar",
+    "Clear",
+    "Очистить"
+  ],
+  "Listas, Deslizadores y Estados": [
+    "Listas, Deslizadores y Estados",
+    "Lists, Sliders, and States",
+    "Списки, ползунки и состояния"
+  ],
+  "Límites de Claude, Gemini y herramientas IA": [
+    "Límites de Claude, Gemini y herramientas IA",
+    "Limits for Claude, Gemini, and AI tools",
+    "Лимиты Claude, Gemini и инструментов ИИ"
+  ],
+  "Mantener notch visible al abrir": [
+    "Mantener notch visible al abrir",
+    "Keep notch visible on open",
+    "Оставлять остров видимым при открытии"
+  ],
+  "Manual (botón 󰎆)": [
+    "Manual (botón 󰎆)",
+    "Manual (󰎆 button)",
+    "Вручную (кнопка 󰎆)"
+  ],
+  "Margen con el borde superior (Edge gap)": [
+    "Margen con el borde superior (Edge gap)",
+    "Top edge gap (Edge gap)",
+    "Отступ от верхнего края"
+  ],
+  "Medios": [
+    "Medios",
+    "Media",
+    "Медиа"
+  ],
+  "Menú de Apagado": [
+    "Menú de Apagado",
+    "Power Menu",
+    "Меню выключения"
+  ],
+  "Menú extendido de música": [
+    "Menú extendido de música",
+    "Extended music menu",
+    "Расширенное меню музыки"
+  ],
+  "Micro-desplazamiento suave (+2px/+3px) al posar el cursor en audio, portapapeles, lanzador y redes.": [
+    "Micro-desplazamiento suave (+2px/+3px) al posar el cursor en audio, portapapeles, lanzador y redes.",
+    "Subtle micro-shift (+2px/+3px) on hover in audio, clipboard, launcher, and networks.",
+    "Плавный микро-сдвиг (+2px/+3px) при наведении на аудио, буфер, лаунчер и сети."
+  ],
+  "Micro-elevación en bloques rápidos": [
+    "Micro-elevación en bloques rápidos",
+    "Micro-elevation on quick tiles",
+    "Микро-подъём быстрых плиток"
+  ],
+  "Micro-elevación en hover de tarjetas": [
+    "Micro-elevación en hover de tarjetas",
+    "Micro-elevation on card hover",
+    "Микро-подъём карточек при наведении"
+  ],
+  "Micro-escala en tarjetas de audio, brillo y reproductor.": [
+    "Micro-escala en tarjetas de audio, brillo y reproductor.",
+    "Micro-scaling on audio, brightness, and player cards.",
+    "Микро-масштабирование карточек звука, яркости и плеера."
+  ],
+  "Micro-escala en tarjetas principales": [
+    "Micro-escala en tarjetas principales",
+    "Micro-scale on main cards",
+    "Микро-масштаб основных карточек"
+  ],
+  "Modo 4: Dinámico minimalista (solo carátula y onda de audio, sin centro).": [
+    "Modo 4: Dinámico minimalista (solo carátula y onda de audio, sin centro).",
+    "Mode 4: Dynamic minimalist (only cover art and audio wave, no center).",
+    "Режим 4: Динамический минималистичный (только обложка и звуковая волна, без центра)."
+  ],
+  "Modo No Molestar Activo": [
+    "Modo No Molestar Activo",
+    "Do Not Disturb Active",
+    "Режим «Не беспокоить» активен"
+  ],
+  "Modo Notch adherido al borde": [
+    "Modo Notch adherido al borde",
+    "Notch mode attached to edge",
+    "Режим выреза, прикреплённого к краю"
+  ],
+  "Modo Reposo del Notch:": [
+    "Modo Reposo del Notch:",
+    "Notch Idle Mode:",
+    "Режим покоя острова:"
+  ],
+  "Modo flotante / Overlay": [
+    "Modo flotante / Overlay",
+    "Floating / Overlay Mode",
+    "Плавающий режим / Оверлей"
+  ],
+  "Modos de Alerta Dynamic Island (1:1 Réplica Real):": [
+    "Modos de Alerta Dynamic Island (1:1 Réplica Real):",
+    "Dynamic Island Alert Modes (1:1 Real Replica):",
+    "Режимы оповещений Dynamic Island (Точная копия):"
+  ],
+  "Muestra las alertas Dynamic Island con porcentaje e icono ajustado al borde sin huecos.": [
+    "Muestra las alertas Dynamic Island con porcentaje e icono ajustado al borde sin huecos.",
+    "Shows Dynamic Island alerts with percentage and edge-fitted icon without gaps.",
+    "Показывает уведомления Dynamic Island с процентом и значком без зазоров."
+  ],
+  "Muestra las aplicaciones utilizadas con mayor frecuencia antes de buscar.": [
+    "Muestra las aplicaciones utilizadas con mayor frecuencia antes de buscar.",
+    "Shows most frequently used apps before searching.",
+    "Показывает частые приложения до начала поиска."
+  ],
+  "Muestra las barras de audio animadas al reproducir música.": [
+    "Muestra las barras de audio animadas al reproducir música.",
+    "Shows animated audio bars during music playback.",
+    "Показывает анимированные звуковые полосы при проигрывании музыки."
+  ],
+  "Muestra una cápsula animada en el notch con vista previa elegante del texto al copiar datos al portapapeles.": [
+    "Muestra una cápsula animada en el notch con vista previa elegante del texto al copiar datos al portapapeles.",
+    "Shows animated notch capsule with elegant preview when copying to clipboard.",
+    "Показывает красивую анимацию капсулы с превью текста при копировании в буфер."
+  ],
+  "Márgenes & Espaciados del Notch": [
+    "Márgenes & Espaciados del Notch",
+    "Notch Margins & Spacing",
+    "Отступы и интервалы острова"
+  ],
+  "Máximo rendimiento": [
+    "Máximo rendimiento",
+    "Maximum performance",
+    "Максимальная производительность"
+  ],
+  "Navegador de archivos Nothing OS integrado (Super+E).": [
+    "Navegador de archivos Nothing OS integrado (Super+E).",
+    "Built-in Nothing OS file manager (Super+E).",
+    "Встроенный проводник Nothing OS (Super+E)."
+  ],
+  "No se encontraron aplicaciones": [
+    "No se encontraron aplicaciones",
+    "No applications found",
+    "Приложения не найдены"
+  ],
+  "No se encontraron coincidencias": [
+    "No se encontraron coincidencias",
+    "No matches found",
+    "Совпадений не найдено"
+  ],
+  "No tienes avisos ni notificaciones pendientes": [
+    "No tienes avisos ni notificaciones pendientes",
+    "No pending alerts or notifications",
+    "Нет ожидающих оповещений и уведомлений"
+  ],
+  "Notch y Rendimiento": [
+    "Notch y Rendimiento",
+    "Notch & Performance",
+    "Остров и производительность"
+  ],
+  "Nuevas capacidades visuales y reactivas para el notch. Cada función puede activarse o desactivarse de forma independiente según tus preferencias:": [
+    "Nuevas capacidades visuales y reactivas para el notch. Cada función puede activarse o desactivarse de forma independiente según tus preferencias:",
+    "New visual and reactive notch capabilities. Each feature can be toggled independently:",
+    "Новые визуальные возможности острова. Каждую функцию можно включить отдельно:"
+  ],
+  "Oculta automáticamente el notch cuando una ventana se maximiza para no tapar pestañas.": [
+    "Oculta automáticamente el notch cuando una ventana se maximiza para no tapar pestañas.",
+    "Automatically hides the notch when a window is maximized so tabs remain accessible.",
+    "Автоматически скрывает остров при развёртывании окна, чтобы не закрывать вкладки."
+  ],
+  "Ocultar / mostrar notch": [
+    "Ocultar / mostrar notch",
+    "Hide / show notch",
+    "Скрыть / показать остров"
+  ],
+  "Ofrecer guardar automáticamente claves copiadas en el portapapeles.": [
+    "Ofrecer guardar automáticamente claves copiadas en el portapapeles.",
+    "Offer to automatically save keys copied to clipboard.",
+    "Предлагать сохранять скопированные пароли в буфере."
+  ],
+  "Onda acústica debajo de la portada": [
+    "Onda acústica debajo de la portada",
+    "Acoustic wave under cover art",
+    "Звуковая волна под обложкой"
+  ],
+  "Onda acústica tras la carátula (Cover Ripple)": [
+    "Onda acústica tras la carátula (Cover Ripple)",
+    "Acoustic wave behind cover art (Cover Ripple)",
+    "Звуковая волна за обложкой (Cover Ripple)"
+  ],
+  "Onda fluida en tarjeta de batería": [
+    "Onda fluida en tarjeta de batería",
+    "Fluid wave in battery card",
+    "Плавная волна в карточке батареи"
+  ],
+  "Ondas circulares desvaneciéndose en el icono de batería mientras se carga.": [
+    "Ondas circulares desvaneciéndose en el icono de batería mientras se carga.",
+    "Fading circular waves on battery icon while charging.",
+    "Угасающие круговые волны на значке батареи во время зарядки."
+  ],
+  "Ondas pulsantes (Ripple) en el rayo": [
+    "Ondas pulsantes (Ripple) en el rayo",
+    "Pulsing lightning ripple",
+    "Пульсирующие волны на молнии"
+  ],
+  "PROBAR VISTA PREVIA:": [
+    "PROBAR VISTA PREVIA:",
+    "TEST PREVIEW:",
+    "ПРЕДПРОСМОТР ТЕСТА:"
+  ],
+  "Padding lateral reloj / tiempo": [
+    "Padding lateral reloj / tiempo",
+    "Clock / weather lateral padding",
+    "Боковой отступ часов / погоды"
+  ],
+  "Parámetros acústicos divididos en bloques comprensibles: Envolvente, Tono y Armónicos, Textura y Espacialidad, y Nivel Master.": [
+    "Parámetros acústicos divididos en bloques comprensibles: Envolvente, Tono y Armónicos, Textura y Espacialidad, y Nivel Master.",
+    "Acoustic parameters split into intuitive blocks: Envelope, Tone & Harmonics, Texture & Spatiality, and Master Level.",
+    "Звуковые параметры разделены на блоки: Огибающая, Тон и гармоники, Текстура и пространство, Мастер-уровень."
+  ],
+  "Pegar aquí": [
+    "Pegar aquí",
+    "Paste here",
+    "Вставить сюда"
+  ],
+  "Perfil de Rendimiento (Lenovo Fn+Q)": [
+    "Perfil de Rendimiento (Lenovo Fn+Q)",
+    "Performance Profile (Lenovo Fn+Q)",
+    "Профиль производительности (Lenovo Fn+Q)"
+  ],
+  "Persistencia de onda derecha (caída)": [
+    "Persistencia de onda derecha (caída)",
+    "Right wave persistence (decay)",
+    "Затухание правой волны"
+  ],
+  "Persistencia de onda tras carátula": [
+    "Persistencia de onda tras carátula",
+    "Wave persistence behind cover art",
+    "Затухание волны за обложкой"
+  ],
+  "Personaliza la altura y el comportamiento de despliegue del visor de letras sincronizadas SpicyLyrics en la Isla Dinámica (Super+M):": [
+    "Personaliza la altura y el comportamiento de despliegue del visor de letras sincronizadas SpicyLyrics en la Isla Dinámica (Super+M):",
+    "Customize height and expand behavior of SpicyLyrics synchronized lyrics viewer in Dynamic Island (Super+M):",
+    "Настройте высоту и раскрытие синхронизированных текстов SpicyLyrics в Dynamic Island (Super+M):"
+  ],
+  "Personaliza las animaciones opcionales de los elementos de la interfaz. Todas vienen activadas por defecto para una experiencia suave y orgánica.": [
+    "Personaliza las animaciones opcionales de los elementos de la interfaz. Todas vienen activadas por defecto para una experiencia suave y orgánica.",
+    "Customize optional interface animations. Enabled by default for a smooth, organic experience.",
+    "Настройте анимации интерфейса. По умолчанию включены для плавного отклика."
+  ],
+  "Personaliza las frases y mensajes mostrados en el Dynamic Island al cargar o advertir nivel de batería:": [
+    "Personaliza las frases y mensajes mostrados en el Dynamic Island al cargar o advertir nivel de batería:",
+    "Customize phrases and messages displayed on Dynamic Island for charging and battery alerts:",
+    "Настройте фразы и сообщения в Dynamic Island при зарядке и предупреждениях батареи:"
+  ],
+  "Pop acústico sutil característico al expandirse la isla dinámica.": [
+    "Pop acústico sutil característico al expandirse la isla dinámica.",
+    "Subtle signature pop sound when expanding the dynamic island.",
+    "Тонкий фирменный щелчок при раскрытии острова."
+  ],
+  "Por defecto": [
+    "Por defecto",
+    "Default",
+    "По умолчанию"
+  ],
+  "Porcentaje de brillo y opacidad del resplandor luminoso bajo el notch.": [
+    "Porcentaje de brillo y opacidad del resplandor luminoso bajo el notch.",
+    "Glow brightness and opacity percentage below the notch.",
+    "Яркость и прозрачность свечения под островом."
+  ],
+  "Presencia visual y brillo de borde al posar el cursor sobre Wi-Fi, Bluetooth y accesos rápidos.": [
+    "Presencia visual y brillo de borde al posar el cursor sobre Wi-Fi, Bluetooth y accesos rápidos.",
+    "Visual presence and edge glow on hover over Wi-Fi, Bluetooth, and quick shortcuts.",
+    "Подсветка рамки при наведении на Wi-Fi, Bluetooth и быстрые переключатели."
+  ],
+  "Presione una combinación…": [
+    "Presione una combinación…",
+    "Press a shortcut…",
+    "Нажмите комбинацию…"
+  ],
+  "Probar Giro 3D Carátula": [
+    "Probar Giro 3D Carátula",
+    "Test 3D Cover Flip",
+    "Тест 3D-вращения обложки"
+  ],
+  "Probar animación de carga": [
+    "Probar animación de carga",
+    "Test charging animation",
+    "Тест анимации зарядки"
+  ],
+  "Probar aviso de batería baja": [
+    "Probar aviso de batería baja",
+    "Test low battery alert",
+    "Тест низкого заряда"
+  ],
+  "Probar batería 100%": [
+    "Probar batería 100%",
+    "Test 100% battery",
+    "Тест 100% батареи"
+  ],
+  "Propiedades de carpeta": [
+    "Propiedades de carpeta",
+    "Folder properties",
+    "Свойства папки"
+  ],
+  "Proyecta un halo de luz reactivo y difuso debajo del notch sobre el fondo de escritorio.": [
+    "Proyecta un halo de luz reactivo y difuso debajo del notch sobre el fondo de escritorio.",
+    "Projects a diffuse reactive light halo beneath the notch onto wallpaper.",
+    "Проецирует мягкий рассеянный ореол света под островом на обои."
+  ],
+  "Prueba en tiempo real las transiciones del notch: giro 3D continuo de portadas (FlipArt) y ondulación fluida de barras (WaveBars):": [
+    "Prueba en tiempo real las transiciones del notch: giro 3D continuo de portadas (FlipArt) y ondulación fluida de barras (WaveBars):",
+    "Test notch transitions live: continuous 3D cover flip (FlipArt) and fluid wave bars (WaveBars):",
+    "Проверьте анимации острова: 3D-вращение обложек (FlipArt) и плавные звуковые полосы (WaveBars):"
+  ],
+  "Prueba escribiendo otra palabra o selecciona otra categoría": [
+    "Prueba escribiendo otra palabra o selecciona otra categoría",
+    "Try typing another word or select another category",
+    "Попробуйте другое слово или выберите другую категорию"
+  ],
+  "Pulsación continua y suave en indicadores de grabación activa y estado del sistema.": [
+    "Pulsación continua y suave en indicadores de grabación activa y estado del sistema.",
+    "Gentle continuous pulse on active recording and system status indicators.",
+    "Мягкая непрерывная пульсация индикаторов записи и статуса."
+  ],
+  "Pulsación de carátula (Cover Bounce)": [
+    "Pulsación de carátula (Cover Bounce)",
+    "Cover art pulse (Cover Bounce)",
+    "Пульсация обложки (Cover Bounce)"
+  ],
+  "Páginas y Herramientas Integradas": [
+    "Páginas y Herramientas Integradas",
+    "Built-in Pages and Tools",
+    "Встроенные страницы и инструменты"
+  ],
+  "Radio de curvatura de la carátula": [
+    "Radio de curvatura de la carátula",
+    "Cover art corner radius",
+    "Радиус скругления обложки"
+  ],
+  "Radio de cápsula flotante (Capsule radius)": [
+    "Radio de cápsula flotante (Capsule radius)",
+    "Floating capsule radius",
+    "Радиус скругления капсулы"
+  ],
+  "Radio de difusión del resplandor": [
+    "Radio de difusión del resplandor",
+    "Glow diffusion radius",
+    "Радиус рассеивания свечения"
+  ],
+  "Radio de dispersión y apertura horizontal del resplandor bajo el notch.": [
+    "Radio de dispersión y apertura horizontal del resplandor bajo el notch.",
+    "Spread radius and horizontal glow span beneath the notch.",
+    "Радиус рассеивания и ширина ореола свечения под островом."
+  ],
+  "Reacción de la portada con la música": [
+    "Reacción de la portada con la música",
+    "Cover art music reaction",
+    "Реакция обложки на музыку"
+  ],
+  "Recordar último estado": [
+    "Recordar último estado",
+    "Remember last state",
+    "Запомнить последнее состояние"
+  ],
+  "Recta": [
+    "Recta",
+    "Straight",
+    "Прямая"
+  ],
+  "Reduce motion": [
+    "Reducir movimiento",
+    "Reduce motion",
+    "Уменьшить анимацию"
+  ],
+  "Reiniciar en ": [
+    "Reiniciar en ",
+    "Restart into ",
+    "Перезагрузить в "
+  ],
+  "Reproduce tono sutil de batería al 80/100% y aviso armónico al alcanzar nivel bajo de batería.": [
+    "Reproduce tono sutil de batería al 80/100% y aviso armónico al alcanzar nivel bajo de batería.",
+    "Plays subtle battery tone at 80/100% and harmonic alert on low battery.",
+    "Воспроизводит мягкий сигнал при 80/100% и гармонический звук при низком заряде."
+  ],
+  "Reproduce un efecto armónico al enchufar la alimentación eléctrica.": [
+    "Reproduce un efecto armónico al enchufar la alimentación eléctrica.",
+    "Plays a harmonic chime when connecting AC power.",
+    "Воспроизводит гармоничный звон при подключении питания."
+  ],
+  "Reproduce un suave \\x27pip\\x27 procedural sincronizado con el nivel de volumen como referencia acústica.": [
+    "Reproduce un suave \\x27pip\\x27 procedural sincronizado con el nivel de volumen como referencia acústica.",
+    "Plays a gentle procedural pip synchronized with volume level as acoustic reference.",
+    "Воспроизводит мягкий щелчок на каждый уровень громкости."
+  ],
+  "Resaltado de botones, deslizadores, bordes activos y elementos clave.": [
+    "Resaltado de botones, deslizadores, bordes activos y elementos clave.",
+    "Highlights buttons, sliders, active borders, and key elements.",
+    "Подсветка кнопок, ползунков, активных границ и ключевых элементов."
+  ],
+  "Respiración en puntos de estado": [
+    "Respiración en puntos de estado",
+    "Breathing animation on status dots",
+    "Пульсация точек статуса"
+  ],
+  "Resplandor ambiental del notch (Ambient Glow)": [
+    "Resplandor ambiental del notch (Ambient Glow)",
+    "Notch ambient glow (Ambient Glow)",
+    "Окружающее свечение острова (Ambient Glow)"
+  ],
+  "Resplandor dinámico en controles deslizantes": [
+    "Resplandor dinámico en controles deslizantes",
+    "Dynamic glow on slider controls",
+    "Динамическое свечение ползунков"
+  ],
+  "Respuesta táctil y elevación reactiva al pasar el cursor.": [
+    "Respuesta táctil y elevación reactiva al pasar el cursor.",
+    "Tactile response and reactive lift on hover.",
+    "Тактильный отклик и реактивный подъём при наведении."
+  ],
+  "Restaurar todos los colores": [
+    "Restaurar todos los colores",
+    "Restore all colors",
+    "Восстановить все цвета"
+  ],
+  "Retorno tras esquivar": [
+    "Retorno tras esquivar",
+    "Return after dodge",
+    "Возврат после уклонения"
+  ],
+  "Rotación en botón de opciones (󰇙)": [
+    "Rotación en botón de opciones (󰇙)",
+    "Options button rotation (󰇙)",
+    "Вращение кнопки параметров (󰇙)"
+  ],
+  "Rotar información del centro": [
+    "Rotar información del centro",
+    "Rotate center information",
+    "Чередовать информацию в центре"
+  ],
+  "Selecciona una configuración rápida recomendada o ingresa códigos XKB personalizados. El cambio se aplica en tiempo real.": [
+    "Selecciona una configuración rápida recomendada o ingresa códigos XKB personalizados. El cambio se aplica en tiempo real.",
+    "Select a recommended quick preset or enter custom XKB codes. Changes apply in real time.",
+    "Выберите рекомендуемый пресет или укажите свои коды XKB. Изменения применяются мгновенно."
+  ],
+  "Selector visual con extracción de paletas dinámicas.": [
+    "Selector visual con extracción de paletas dinámicas.",
+    "Visual picker with dynamic palette extraction.",
+    "Визуальный выбор с извлечением динамической палитры."
+  ],
+  "Sensibilidad de ola extendida": [
+    "Sensibilidad de ola extendida",
+    "Extended wave sensitivity",
+    "Чувствительность расширенной волны"
+  ],
+  "Sensibilidad de onda derecha (barras)": [
+    "Sensibilidad de onda derecha (barras)",
+    "Right wave sensitivity (bars)",
+    "Чувствительность правой волны (полосы)"
+  ],
+  "Sensibilidad de onda tras carátula": [
+    "Sensibilidad de onda tras carátula",
+    "Wave sensitivity behind cover art",
+    "Чувствительность волны за обложкой"
+  ],
+  "Separación entre secciones": [
+    "Separación entre secciones",
+    "Section spacing",
+    "Разделитель секций"
+  ],
+  "Separación icono de batería": [
+    "Separación icono de batería",
+    "Battery icon spacing",
+    "Отступ значка батареи"
+  ],
+  "Shape & depth": [
+    "Forma y profundidad",
+    "Shape & depth",
+    "Форма и глубина"
+  ],
+  "Silencioso": [
+    "Silencioso",
+    "Quiet",
+    "Тихий"
+  ],
+  "Silueta": [
+    "Silueta",
+    "Silhouette",
+    "Силуэт"
+  ],
+  "Sistema de archivos": [
+    "Sistema de archivos",
+    "File system",
+    "Файловая система"
+  ],
+  "Small radius": [
+    "Radio pequeño",
+    "Small radius",
+    "Малый радиус"
+  ],
+  "Sonido Pop de apertura Dynamic Island": [
+    "Sonido Pop de apertura Dynamic Island",
+    "Dynamic Island opening Pop sound",
+    "Звук щелчка при открытии Dynamic Island"
+  ],
+  "Sonido acústico diferenciado según el modo de rendimiento seleccionado.": [
+    "Sonido acústico diferenciado según el modo de rendimiento seleccionado.",
+    "Distinct acoustic sound depending on chosen performance mode.",
+    "Особый звуковой сигнал для каждого режима производительности."
+  ],
+  "Sonido al alternar perfiles de energía (Fn+Q)": [
+    "Sonido al alternar perfiles de energía (Fn+Q)",
+    "Sound when toggling power profiles (Fn+Q)",
+    "Звук переключения профилей питания (Fn+Q)"
+  ],
+  "Sonido al conectar cargador": [
+    "Sonido al conectar cargador",
+    "Sound when plugging charger",
+    "Звук подключения зарядного устройства"
+  ],
+  "Sonido de referencia al cambiar volumen": [
+    "Sonido de referencia al cambiar volumen",
+    "Reference sound when changing volume",
+    "Звук ориентира при изменении громкости"
+  ],
+  "Sonido en avisos de batería (Baja / 80% / 100%)": [
+    "Sonido en avisos de batería (Baja / 80% / 100%)",
+    "Battery alert sounds (Low / 80% / 100%)",
+    "Звуки оповещений батареи (Низкий / 80% / 100%)"
+  ],
+  "Sonido en retroiluminación de teclado (Fn+Space)": [
+    "Sonido en retroiluminación de teclado (Fn+Space)",
+    "Keyboard backlight sound (Fn+Space)",
+    "Звук подсветки клавиатуры (Fn+Space)"
+  ],
+  "Sonidos del Sistema & Dynamic Island": [
+    "Sonidos del Sistema & Dynamic Island",
+    "System & Dynamic Island Sounds",
+    "Звуки системы и Dynamic Island"
+  ],
+  "Sonidos organizados por categoría. Haz clic en cualquiera para escuchar su disparo acústico.": [
+    "Sonidos organizados por categoría. Haz clic en cualquiera para escuchar su disparo acústico.",
+    "Sounds organized by category. Click any to play acoustic preview.",
+    "Звуки распределены по категориям. Нажмите для прослушивания."
+  ],
+  "Sonidos para el notch, batería, capturas de pantalla, notificaciones y Bluetooth.": [
+    "Sonidos para el notch, batería, capturas de pantalla, notificaciones y Bluetooth.",
+    "Sounds for notch, battery, screenshots, notifications, and Bluetooth.",
+    "Звуки для острова, батареи, скриншотов, уведомлений и Bluetooth."
+  ],
+  "Spacing unit": [
+    "Unidad de espaciado",
+    "Spacing unit",
+    "Единица отступа"
+  ],
+  "Tamaño de carátula en notch": [
+    "Tamaño de carátula en notch",
+    "Cover art size in notch",
+    "Размер обложки в острове"
+  ],
+  "Teclado": [
+    "Teclado",
+    "Keyboard",
+    "Клавиатура"
+  ],
+  "Texto / Blanco": [
+    "Texto / Blanco",
+    "Text / White",
+    "Текст / Белый"
+  ],
+  "Texto advertencia batería baja (Naranja)": [
+    "Texto advertencia batería baja (Naranja)",
+    "Low battery warning text (Orange)",
+    "Текст предупреждения о низком заряде (Оранжевый)"
+  ],
+  "Texto al conectar cargador": [
+    "Texto al conectar cargador",
+    "Text on charger connect",
+    "Текст при подключении зарядки"
+  ],
+  "Texto aviso 100% (Carga completa)": [
+    "Texto aviso 100% (Carga completa)",
+    "100% alert text (Full charge)",
+    "Текст оповещения 100% (Полный заряд)"
+  ],
+  "Texto aviso 80% (Carga saludable)": [
+    "Texto aviso 80% (Carga saludable)",
+    "80% alert text (Healthy charge)",
+    "Текст оповещения 80% (Оптимальный заряд)"
+  ],
+  "Texto batería crítica (Rojo)": [
+    "Texto batería crítica (Rojo)",
+    "Critical battery text (Red)",
+    "Текст критического заряда (Красный)"
+  ],
+  "Texto general, números y etiquetas de la interfaz.": [
+    "Texto general, números y etiquetas de la interfaz.",
+    "General text, numbers, and interface labels.",
+    "Основной текст, цифры и подписи интерфейса."
+  ],
+  "Textos Personalizados de Alertas": [
+    "Textos Personalizados de Alertas",
+    "Custom Alert Texts",
+    "Пользовательские тексты оповещений"
+  ],
+  "Tinte de portada (Spotify / M3)": [
+    "Tinte de portada (Spotify / M3)",
+    "Cover art tint (Spotify / M3)",
+    "Оттенок обложки (Spotify / M3)"
+  ],
+  "Tock": [
+    "Tock",
+    "Tock",
+    "Щелчок"
+  ],
+  "Tonos armónicos dedicados para 0%, 50% y 100% al regular la luz del teclado.": [
+    "Tonos armónicos dedicados para 0%, 50% y 100% al regular la luz del teclado.",
+    "Dedicated harmonic tones for 0%, 50%, and 100% when adjusting keyboard light.",
+    "Специальные гармонические тона для 0%, 50% и 100% при регулировке подсветки."
+  ],
+  "Título de ventana activa al pasar el cursor (Hover Peek)": [
+    "Título de ventana activa al pasar el cursor (Hover Peek)",
+    "Active window title on hover (Hover Peek)",
+    "Заголовок активного окна при наведении (Hover Peek)"
+  ],
+  "Ubicación de la onda": [
+    "Ubicación de la onda",
+    "Wave position",
+    "Положение волны"
+  ],
+  "Umbral crítico (Rojo)": [
+    "Umbral crítico (Rojo)",
+    "Critical threshold (Red)",
+    "Критический порог (Красный)"
+  ],
+  "Umbral de advertencia (Naranja)": [
+    "Umbral de advertencia (Naranja)",
+    "Warning threshold (Orange)",
+    "Порог предупреждения (Оранжевый)"
+  ],
+  "Vinculado al hardware (Fn+Q o Super+Alt+P). Cambia en tiempo real entre Modo Ahorro (Silencioso), Modo Equilibrado y Modo Rendimiento con aviso animado en el Dynamic Island.": [
+    "Vinculado al hardware (Fn+Q o Super+Alt+P). Cambia en tiempo real entre Modo Ahorro (Silencioso), Modo Equilibrado y Modo Rendimiento con aviso animado en el Dynamic Island.",
+    "Hardware linked (Fn+Q or Super+Alt+P). Switch in real-time between Power Saver (Quiet), Balanced, and Performance modes with animated Dynamic Island alert.",
+    "Связано с оборудованием (Fn+Q или Super+Alt+P). Переключайтесь в реальном времени между тихим, сбалансированным и производительным режимами с анимацией в Dynamic Island."
+  ],
+  "Visor de Letras & Expansión de la Isla": [
+    "Visor de Letras & Expansión de la Isla",
+    "Lyrics Viewer & Island Expansion",
+    "Окно текстов песен и расширение острова"
+  ],
+  "Visualiza y prueba las alertas de batería y carga directamente en este recuadro interactivo sin que se cierre el menú de ajustes:": [
+    "Visualiza y prueba las alertas de batería y carga directamente en este recuadro interactivo sin que se cierre el menú de ajustes:",
+    "Preview and test battery and charge alerts directly in this interactive card without closing settings:",
+    "Проверяйте оповещения батареи и зарядки прямо в этой карточке, не закрывая настройки:"
+  ],
+  "Wi-Fi · Bluetooth": [
+    "Wi-Fi · Bluetooth",
+    "Wi-Fi · Bluetooth",
+    "Wi-Fi · Bluetooth"
+  ],
+  "clear": [
+    "despejado",
+    "clear",
+    "ясно"
+  ],
+  "por altura (redondeado)": [
+    "por altura (redondeado)",
+    "by height (rounded)",
+    "по высоте (скруглённый)"
+  ],
+  "¿Deseas probar en la isla real en la parte superior?": [
+    "¿Deseas probar en la isla real en la parte superior?",
+    "Would you like to test on the real island at the top?",
+    "Хотите протестировать на настоящем острове вверху экрана?"
+  ],
+  "Español (Latam) + US": [
+    "Español (Latam) + US",
+    "Spanish (Latam) + US",
+    "Испанский (Латам) + США"
+  ],
+  "Español (España) + US": [
+    "Español (España) + US",
+    "Spanish (Spain) + US",
+    "Испанский (Испания) + США"
+  ],
+  "English (US) + Latam": [
+    "English (US) + Latam",
+    "English (US) + Latam",
+    "Английский (США) + Латам"
+  ],
+  "English (US) + Русский": [
+    "English (US) + Ruso",
+    "English (US) + Russian",
+    "Английский (США) + Русский"
+  ],
+  "Español + English + RU": [
+    "Español + English + RU",
+    "Spanish + English + RU",
+    "Испанский + Английский + Русский"
+  ],
+  "Super + Espacio": [
+    "Super + Espacio",
+    "Super + Space",
+    "Super + Пробел"
+  ],
+  "Alt + Shift": [
+    "Alt + Shift",
+    "Alt + Shift",
+    "Alt + Shift"
+  ],
+  "Ctrl + Shift": [
+    "Ctrl + Shift",
+    "Ctrl + Shift",
+    "Ctrl + Shift"
+  ],
+  "Caps Lock": [
+    "Bloq Mayús",
+    "Caps Lock",
+    "Caps Lock"
+  ],
+  "Открытие Super+I": [
+    "Abrir Super+I",
+    "Open Super+I",
+    "Открытие Super+I"
+  ],
+  "Подключиться": [
+    "Conectar",
+    "Connect",
+    "Подключиться"
+  ],
+  "Подсветка LOQ": [
+    "Retroiluminación LOQ",
+    "LOQ Backlight",
+    "Подсветка LOQ"
+  ],
+  "Подсветка клавиатуры": [
+    "Retroiluminación del teclado",
+    "Keyboard Backlight",
+    "Подсветка клавиатуры"
+  ],
+  "Предпрослушивание эффектов:": [
+    "Vista previa de efectos:",
+    "Preview sound effects:",
+    "Предпрослушивание эффектов:"
+  ],
+  "Производительный режим": [
+    "Modo Rendimiento",
+    "Performance mode",
+    "Производительный режим"
+  ],
+  "Разблокировка": [
+    "Desbloquear",
+    "Unlock",
+    "Разблокировка"
+  ],
+  "Разорвать текущее соединение": [
+    "Desconectar conexión actual",
+    "Disconnect current connection",
+    "Разорвать текущее соединение"
+  ],
+  "English (US) + Ruso": [
+    "English (US) + Ruso",
+    "English (US) + Russian",
+    "Английский (США) + Русский"
+  ],
+  "Barra & Notch": [
+    "Barra & Notch",
+    "Bar & Notch",
+    "Панель и остров"
+  ],
+  "Notch & Isla Dinámica": [
+    "Notch & Isla Dinámica",
+    "Notch & Dynamic Island",
+    "Вырез и Dynamic Island"
+  ],
+  "Multimedia": [
+    "Multimedia",
+    "Media",
+    "Медиа"
+  ],
+  "Reloj & Fecha": [
+    "Reloj & Fecha",
+    "Clock & Date",
+    "Часы и дата"
+  ],
+  "Apariencia": [
+    "Apariencia",
+    "Appearance",
+    "Оформление"
+  ],
+  "Clima": [
+    "Clima",
+    "Weather",
+    "Погода"
+  ],
+  "Movimiento": [
+    "Movimiento",
+    "Motion",
+    "Движение"
+  ],
+  "Micro-animaciones": [
+    "Micro-animaciones",
+    "Micro-animations",
+    "Микро-анимации"
+  ],
+  "Estudio de Sonido": [
+    "Estudio de Sonido",
+    "Sound Studio",
+    "Акустическая студия"
+  ],
+  "Lanzador": [
+    "Lanzador",
+    "Launcher",
+    "Лаунчер"
+  ],
+  "Dock": [
+    "Dock",
+    "Dock",
+    "Док"
+  ],
+  "Notificaciones": [
+    "Notificaciones",
+    "Notifications",
+    "Уведомления"
+  ],
+  "Centro de Control": [
+    "Centro de Control",
+    "Control Center",
+    "Центр управления"
+  ],
+  "Pantalla de Bloqueo": [
+    "Pantalla de Bloqueo",
+    "Lock Screen",
+    "Экран блокировки"
+  ],
+  "Pantallas": [
+    "Pantallas",
+    "Displays",
+    "Экраны"
+  ],
+  "Ratón & Touchpad": [
+    "Ratón & Touchpad",
+    "Mouse & Touchpad",
+    "Мышь и тачпад"
+  ],
+  "Sistema": [
+    "Sistema",
+    "System",
+    "Система"
+  ],
+  "Cómo se sitúa el notch en el borde y cómo se despliega.": [
+    "Cómo se sitúa el notch en el borde y cómo se despliega.",
+    "How the notch docks to the edge and expands.",
+    "Положение острова у кромки и его раскрытие."
+  ],
+  "Ajustes personalizados del notch, avisos, animaciones y música.": [
+    "Ajustes personalizados del notch, avisos, animaciones y música.",
+    "Custom notch settings, alerts, animations, and music.",
+    "Настройки острова, оповещения, анимации и музыка."
+  ],
+  "Reproductor, carátulas y visualización en el notch contraído.": [
+    "Reproductor, carátulas y visualización en el notch contraído.",
+    "Player, cover art, and collapsed notch display.",
+    "Плеер, обложки и вид свёрнутого острова."
+  ],
+  "Formato de hora, zona horaria y fecha mostrada.": [
+    "Formato de hora, zona horaria y fecha mostrada.",
+    "Time format, timezone, and displayed date.",
+    "Формат часов, часовой пояс и дата."
+  ],
+  "Tema visual, fuentes y geometría de la interfaz.": [
+    "Tema visual, fuentes y geometría de la interfaz.",
+    "Visual theme, fonts, and interface geometry.",
+    "Тема, шрифты и геометрия интерфейса."
+  ],
+  "Clave API, ciudad y unidades del pronóstico del tiempo.": [
+    "Clave API, ciudad y unidades del pronóstico del tiempo.",
+    "API key, city, and weather units.",
+    "Ключ API, город и единицы прогноза."
+  ],
+  "Velocidad de animaciones, rebotes y transiciones.": [
+    "Velocidad de animaciones, rebotes y transiciones.",
+    "Animation speed, bounce, and transitions.",
+    "Скорость анимаций, отскок и переходы."
+  ],
+  "Efectos visuales y micro-interacciones en iconos, botones y menús.": [
+    "Efectos visuales y micro-interacciones en iconos, botones y menús.",
+    "Visual effects and micro-interactions on icons, buttons, and menus.",
+    "Визуальные эффекты и микро-взаимодействия иконок, кнопок и меню."
+  ],
+  "Generador de sonidos, sintetizador interactivo y asignación por apariencia.": [
+    "Generador de sonidos, sintetizador interactivo y asignación por apariencia.",
+    "Sound generator, interactive synthesizer, and theme mapping.",
+    "Генератор звуков, синтезатор и привязка к темам."
+  ],
+  "Búsqueda de aplicaciones, archivos y accesos directos.": [
+    "Búsqueda de aplicaciones, archivos y accesos directos.",
+    "Search for applications, files, and shortcuts.",
+    "Поиск приложений, файлов и ярлыков."
+  ],
+  "Configuración de la barra inferior, aplicaciones y visibilidad.": [
+    "Configuración de la barra inferior, aplicaciones y visibilidad.",
+    "Bottom bar settings, applications, and visibility.",
+    "Настройки нижней панели, приложения и видимость."
+  ],
+  "Gestión de notificaciones, modo no molestar y avisos emergentes.": [
+    "Gestión de notificaciones, modo no molestar y avisos emergentes.",
+    "Notification management, do not disturb mode, and popups.",
+    "Уведомления, режим «не беспокоить» и всплывающие карточки."
+  ],
+  "Distribución y orden de los accesos rápidos del centro de control.": [
+    "Distribución y orden de los accesos rápidos del centro de control.",
+    "Layout and arrangement of quick control tiles.",
+    "Раскладка и порядок быстрых плиток центра управления."
+  ],
+  "Configuración de la pantalla de bloqueo, tiempo de espera y desenfoque.": [
+    "Configuración de la pantalla de bloqueo, tiempo de espera y desenfoque.",
+    "Lock screen settings, timeout, and blur.",
+    "Экран блокировки, время ожидания и размытие."
+  ],
+  "Resolución, tasa de refresco y escala de las pantallas conectadas.": [
+    "Resolución, tasa de refresco y escala de las pantallas conectadas.",
+    "Resolution, refresh rate, and scale for connected displays.",
+    "Разрешение, частота и масштаб подключённых экранов."
+  ],
+  "Sensibilidad, aceleración y respuesta del ratón y touchpad.": [
+    "Sensibilidad, aceleración y respuesta del ratón y touchpad.",
+    "Sensitivity, acceleration, and mouse and touchpad response.",
+    "Чувствительность, ускорение и отклик мыши и тачпада."
+  ],
+  "Información del equipo, procesador, memoria RAM y procesos activos.": [
+    "Información del equipo, procesador, memoria RAM y procesos activos.",
+    "Hardware information, CPU, RAM, and active processes.",
+    "Оборудование, процессор, оперативная память и процессы."
+  ],
+  "AJUSTES": [
+    "AJUSTES",
+    "SETTINGS",
+    "НАСТРОЙКИ"
+  ],
+  "CONFIGURACIÓN": [
+    "CONFIGURACIÓN",
+    "CONFIGURATION",
+    "ПАРАМЕТРЫ"
+  ],
+  "PANACEA  //  AJUSTES": [
+    "PANACEA  //  AJUSTES",
+    "PANACEA  //  SETTINGS",
+    "PANACEA  //  НАСТРОЙКИ"
+  ],
+  "Material Design 3 (Material You): Expresivas curvas fluidas, superficies tonales y barra de reproducción animada en Super + M.": [
+    "Material Design 3 (Material You): Expresivas curvas fluidas, superficies tonales y barra de reproducción animada en Super + M.",
+    "Material Design 3 (Material You): Expressive fluid curves, tonal surfaces, and animated playback bar on Super + M.",
+    "Material Design 3 (Material You): Плавные выразительные формы, тональные поверхности и анимация плеера на Super + M."
+  ],
+  "Origen de Color Material 3": [
+    "Origen de Color Material 3",
+    "Material 3 Color Source",
+    "Источник цвета Material 3"
+  ],
+  "Modo Portada Música: Aplica el color de la portada activa (Spotify/MPRIS) atenuado estilo Spicetify para que la portada y las ondas sigan destacando.": [
+    "Modo Portada Música: Aplica el color de la portada activa (Spotify/MPRIS) atenuado estilo Spicetify para que la portada y las ondas sigan destacando.",
+    "Music Cover Mode: Applies active cover color (Spotify/MPRIS) Spicetify-style so cover art and waves remain distinct.",
+    "Режим обложки: Применяет цвет активного трека в стиле Spicetify, чтобы обложка и волны выделялись."
+  ],
+  "Fondo": [
+    "Fondo",
+    "Wallpaper",
+    "Обои"
+  ],
+  "Portada Música": [
+    "Portada Música",
+    "Music Cover",
+    "Обложка музыки"
+  ],
+  "Manual": [
+    "Manual",
+    "Manual",
+    "Вручную"
+  ],
+  "Widgets de escritorio": [
+    "Widgets de escritorio",
+    "Desktop widgets",
+    "Виджеты рабочего стола"
+  ],
+  "Tarjetas sobre el fondo: fecha, clima y reloj. Adoptan el diseño del tema activo.": [
+    "Tarjetas sobre el fondo: fecha, clima y reloj. Adoptan el diseño del tema activo.",
+    "Wallpaper cards: date, weather, and clock. Styled according to the active theme.",
+    "Карточки на обоях: дата, погода и часы. Начертание берут у выбранной темы."
+  ],
+  "Introduce la clave y ciudad en la pestaña Clima, o la tarjeta de clima permanecerá vacía.": [
+    "Introduce la clave y ciudad en la pestaña Clima, o la tarjeta de clima permanecerá vacía.",
+    "Enter API key and city in Weather tab, or the weather card stays empty.",
+    "Укажите ключ и город во вкладке «Погода», иначе карточка погоды останется пустой."
+  ],
+  "Transparencia del terminal": [
+    "Transparencia del terminal",
+    "Terminal transparency",
+    "Прозрачность терминала"
+  ],
+  "1.00 — fondo opaco. Se aplica de inmediato; si no, el terminal conserva la configuración de la sesión anterior y requiere reiniciar su servidor.": [
+    "1.00 — fondo opaco. Se aplica de inmediato; si no, el terminal conserva la configuración de la sesión anterior y requiere reiniciar su servidor.",
+    "1.00 — opaque background. Takes effect immediately; otherwise terminal server needs a restart.",
+    "1.00 — сплошной фон. Действует сразу; если нет — терминал держит свои настройки с прошлого входа, и его серверу нужен перезапуск."
+  ]
+}

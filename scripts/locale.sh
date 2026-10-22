@@ -33,7 +33,7 @@ want_locale() {
 }
 
 cmd_list() {
-    printf 'en|English\nru|Русский\ntr|Türkçe\nes|Español\n'
+    printf 'es|Español\nen|English\nru|Русский\ntr|Türkçe\n'
     if [ -r "$GEN" ]; then
         awk '$1 ~ /^#?[a-z]{2,3}_[A-Z]{2}\.UTF-8$/ && $2 == "UTF-8" {
             sub(/^#/, "", $1); sub(/\.UTF-8$/, "", $1); print $1 "|" $1

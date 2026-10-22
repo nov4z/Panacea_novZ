@@ -2808,7 +2808,7 @@ ColumnLayout {
                             font { family: page.sys.fontFam; pixelSize: 13 }
                         }
                         Text {
-                            text: modelData.label
+                            text: page.sys.tr(modelData.label)
                             color: sndTestMa.containsMouse ? page.sys.colFg : page.sys.colMuted
                             font { family: page.sys.fontBody; pixelSize: page.sys.fontSize - 4 }
                             elide: Text.ElideRight

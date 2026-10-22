@@ -12,6 +12,7 @@ Item {
     id: root
 
     property var sys: null
+    function tr(k) { return (root.sys && root.sys.tr) ? root.sys.tr(k) : k; }
     property var player: null
     property bool active: false
 
@@ -419,7 +420,7 @@ Item {
 
             Text {
                 Layout.alignment: Qt.AlignHCenter
-                text: "Buscando letras en LRCLIB..."
+                text: root.tr("Buscando letras en LRCLIB...")
                 font.family: root.lyricsFontFam
                 font.pixelSize: 12
                 font.bold: true
@@ -445,7 +446,7 @@ Item {
 
             Text {
                 Layout.alignment: Qt.AlignHCenter
-                text: "Pista instrumental"
+                text: root.tr("Pista instrumental")
                 font.family: root.lyricsFontFam
                 font.pixelSize: 13
                 font.bold: true
@@ -456,7 +457,7 @@ Item {
 
             Text {
                 Layout.alignment: Qt.AlignHCenter
-                text: "Disfruta de la música sin interrupciones"
+                text: root.tr("Disfruta de la música sin interrupciones")
                 font.family: root.lyricsFontFam
                 font.pixelSize: 11
                 font.weight: Font.Medium
@@ -504,7 +505,7 @@ Item {
                     anchors.centerIn: parent
                     spacing: 6
                     Text { text: "󰑐"; font.family: root.fontFam; font.pixelSize: 11; color: root.colFg }
-                    Text { text: "Reintentar"; font.family: root.fontFam; font.pixelSize: 11; font.bold: true; color: root.colFg }
+                    Text { text: root.tr("Reintentar"); font.family: root.fontFam; font.pixelSize: 11; font.bold: true; color: root.colFg }
                 }
 
                 HoverHandler { id: retryHover; cursorShape: Qt.PointingHandCursor }
@@ -843,7 +844,7 @@ Item {
                 RowLayout {
                     spacing: 6
                     Text { text: "󰎆"; font.family: root.fontFam; font.pixelSize: 11; color: root.colMuted }
-                    Text { text: "Letras estáticas (no sincronizadas)"; font.family: root.fontFam; font.pixelSize: 11; color: root.colMuted }
+                    Text { text: root.tr("Letras estáticas (no sincronizadas)"); font.family: root.fontFam; font.pixelSize: 11; color: root.colMuted }
                 }
 
                 Text {

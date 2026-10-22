@@ -114,7 +114,7 @@ ColumnLayout {
 
         Text {
             Layout.fillWidth: true
-            text: "Arrastra y suelta cualquier tarjeta para reubicarla en la cuadrícula, o usa los controles inferiores para cambiar su proporción y orden."
+            text: page.sys.tr("Arrastra y suelta cualquier tarjeta para reubicarla en la cuadrícula, o usa los controles inferiores para cambiar su proporción y orden.")
             color: page.sys.colMuted
             wrapMode: Text.WordWrap
             font { family: page.sys.fontBody; pixelSize: page.sys.fontSize - 4 }
@@ -125,7 +125,7 @@ ColumnLayout {
             spacing: 8
             
             Text {
-                text: "Plantillas:"
+                text: page.sys.tr("Plantillas:")
                 color: page.sys.colOn
                 font { family: page.sys.fontFam; pixelSize: page.sys.fontSize - 3; bold: true }
             }
@@ -141,7 +141,7 @@ ColumnLayout {
                 Text {
                     id: p1Text
                     anchors.centerIn: parent
-                    text: "Clásica (Base)"
+                    text: page.sys.tr("Clásica (Base)")
                     color: page.sys.colOn
                     font { family: page.sys.fontFam; pixelSize: 12 }
                 }
@@ -168,7 +168,7 @@ ColumnLayout {
                 Text {
                     id: p2Text
                     anchors.centerIn: parent
-                    text: "Compacta"
+                    text: page.sys.tr("Compacta")
                     color: page.sys.colOn
                     font { family: page.sys.fontFam; pixelSize: 12 }
                 }
@@ -432,11 +432,11 @@ ColumnLayout {
     SetCard {
         sys: page.sys
 
-        SetLabel { sys: page.sys; text: "Organización y Tamaño de Widgets" }
+        SetLabel { sys: page.sys; text: page.sys.tr("Organización y Tamaño de Widgets") }
 
         Text {
             Layout.fillWidth: true
-            text: "Personaliza las proporciones de cada widget (1/3, 1/2 o Completo) y ordénalos con precisión. Dos widgets de 1/2 o tres de 1/3 se alinean automáticamente lado a lado."
+            text: page.sys.tr("Personaliza las proporciones de cada widget (1/3, 1/2 o Completo) y ordénalos con precisión. Dos widgets de 1/2 o tres de 1/3 se alinean automáticamente lado a lado.")
             color: page.sys.colMuted
             wrapMode: Text.WordWrap
             font { family: page.sys.fontBody; pixelSize: page.sys.fontSize - 4 }
@@ -544,7 +544,7 @@ ColumnLayout {
                                 model: [
                                     { id: "1/3", label: "1/3" },
                                     { id: "1/2", label: "1/2" },
-                                    { id: "1",   label: "Completo" }
+                                    { id: "1",   label: page.sys.tr("Completo") }
                                 ]
 
                                 Rectangle {
@@ -587,7 +587,7 @@ ColumnLayout {
                         // Etiqueta fija para no redimensionables
                         Text {
                             visible: !rowItem.meta.canResize
-                            text: "Completo"
+                            text: page.sys.tr("Completo")
                             color: page.sys.colMuted
                             font { family: page.sys.fontFam; pixelSize: 10 }
                         }

@@ -56,7 +56,7 @@ Item {
         if (id === "panacea:settings") {
             return {
                 id: id,
-                name: "AJUSTES",
+                name: (dock.sys && dock.sys.tr ? dock.sys.tr("AJUSTES") : "AJUSTES"),
                 icon: "",
                 glyph: "󰒓",
                 glyphColor: (dock.sys && dock.sys.themeMaterial) ? dock.sys.colFg : "#ffffff",
@@ -67,7 +67,7 @@ Item {
         if (id === "panacea:files") {
             return {
                 id: id,
-                name: "ARCHIVOS",
+                name: (dock.sys && dock.sys.tr ? dock.sys.tr("ARCHIVOS") : "ARCHIVOS"),
                 icon: "",
                 glyph: "󰉋",
                 glyphColor: (dock.sys && dock.sys.themeMaterial) ? dock.sys.colFg : "#ffffff",
@@ -78,7 +78,7 @@ Item {
         if (id === "panacea:controls") {
             return {
                 id: id,
-                name: "CONTROL",
+                name: (dock.sys && dock.sys.tr ? dock.sys.tr("CONTROL") : "CONTROL"),
                 icon: "",
                 glyph: "󰕮",
                 glyphColor: "#ffffff",
@@ -89,7 +89,7 @@ Item {
         if (id === "panacea:overview") {
             return {
                 id: id,
-                name: "VISTA GENERAL",
+                name: (dock.sys && dock.sys.tr ? dock.sys.tr("VISTA GENERAL") : "VISTA GENERAL"),
                 icon: "",
                 glyph: "󰕰",
                 glyphColor: "#ffffff",

@@ -23,6 +23,56 @@ Item {
     // keys — ключевые слова для поиска: по ним раздел находится, даже если
     // в названии нужного слова нет («темы» → Appearance, «wifi» → Control
     // Center).
+    function getSectionTitle(id) {
+        if (!view.sys) return id;
+        var _s = view.sys.langChangeSeq;
+        switch(id) {
+            case "bar": return view.sys.tr("Barra & Notch");
+            case "customnotch": return view.sys.tr("Notch & Isla Dinámica");
+            case "media": return view.sys.tr("Multimedia");
+            case "clock": return view.sys.tr("Reloj & Fecha");
+            case "look": return view.sys.tr("Apariencia");
+            case "weather": return view.sys.tr("Clima");
+            case "motion": return view.sys.tr("Movimiento");
+            case "effects": return view.sys.tr("Micro-animaciones");
+            case "sounds": return view.sys.tr("Estudio de Sonido");
+            case "launch": return view.sys.tr("Lanzador");
+            case "dock": return view.sys.tr("Dock");
+            case "notif": return view.sys.tr("Notificaciones");
+            case "cc": return view.sys.tr("Centro de Control");
+            case "lock": return view.sys.tr("Pantalla de Bloqueo");
+            case "display": return view.sys.tr("Pantallas");
+            case "input": return view.sys.tr("Ratón & Touchpad");
+            case "system": return view.sys.tr("Sistema");
+            default: return id;
+        }
+    }
+
+    function getSectionSub(id) {
+        if (!view.sys) return "";
+        var _s = view.sys.langChangeSeq;
+        switch(id) {
+            case "bar": return view.sys.tr("Cómo se sitúa el notch en el borde y cómo se despliega.");
+            case "customnotch": return view.sys.tr("Ajustes personalizados del notch, avisos, animaciones y música.");
+            case "media": return view.sys.tr("Reproductor, carátulas y visualización en el notch contraído.");
+            case "clock": return view.sys.tr("Formato de hora, zona horaria y fecha mostrada.");
+            case "look": return view.sys.tr("Tema visual, fuentes y geometría de la interfaz.");
+            case "weather": return view.sys.tr("Clave API, ciudad y unidades del pronóstico del tiempo.");
+            case "motion": return view.sys.tr("Velocidad de animaciones, rebotes y transiciones.");
+            case "effects": return view.sys.tr("Efectos visuales y micro-interacciones en iconos, botones y menús.");
+            case "sounds": return view.sys.tr("Generador de sonidos, sintetizador interactivo y asignación por apariencia.");
+            case "launch": return view.sys.tr("Búsqueda de aplicaciones, archivos y accesos directos.");
+            case "dock": return view.sys.tr("Configuración de la barra inferior, aplicaciones y visibilidad.");
+            case "notif": return view.sys.tr("Gestión de notificaciones, modo no molestar y avisos emergentes.");
+            case "cc": return view.sys.tr("Distribución y orden de los accesos rápidos del centro de control.");
+            case "lock": return view.sys.tr("Configuración de la pantalla de bloqueo, tiempo de espera y desenfoque.");
+            case "display": return view.sys.tr("Resolución, tasa de refresco y escala de las pantallas conectadas.");
+            case "input": return view.sys.tr("Sensibilidad, aceleración y respuesta del ratón y touchpad.");
+            case "system": return view.sys.tr("Información del equipo, procesador, memoria RAM y procesos activos.");
+            default: return "";
+        }
+    }
+
     readonly property var sections: [
         { id: "bar",     title: "Barra & Notch",  g: 0xF12E1, page: "SetBarIsland.qml",
           sub: view.sys.tr("Cómo se sitúa el notch en el borde y cómo se despliega."),
@@ -189,7 +239,7 @@ Item {
                 }
 
                 Text {
-                    text: "PANACEA  //  AJUSTES"
+                    text: (view.sys && typeof view.sys.tr === "function" ? view.sys.tr("PANACEA  //  AJUSTES") : "PANACEA  //  AJUSTES")
                     color: Qt.rgba(view.sys.colFg.r, view.sys.colFg.g, view.sys.colFg.b, 0.42)
                     font {
                         family: view.sys.fontBody
@@ -378,7 +428,7 @@ Item {
 
                             Text {
                                 Layout.fillWidth: true
-                                text: navDel.modelData.title
+                                text: view.getSectionTitle(navDel.modelData.id)
                                 color: navItem.active ? view.sys.colFg : (navMa.containsMouse ? view.sys.colFg : view.sys.colMuted)
                                 elide: Text.ElideRight
                                 font { family: view.sys.fontBody; pixelSize: view.sys.fontSize - 1; bold: navItem.active }
@@ -485,7 +535,7 @@ Item {
                     }
 
                     Text {
-                        text: "AJUSTES  //  " + view.section.title.toUpperCase()
+                        text: view.sys.tr("AJUSTES") + "  //  " + view.getSectionTitle(view.section.id).toUpperCase()
                         color: Qt.rgba(view.sys.colFg.r, view.sys.colFg.g, view.sys.colFg.b, 0.38)
                         font {
                             family: view.sys.fontBody
@@ -548,8 +598,8 @@ Item {
                     SetHeader {
                         sys: view.sys
                         glyph: String.fromCodePoint(view.section.g)
-                        title: view.section.title
-                        sub: view.section.sub
+                        title: view.getSectionTitle(view.section.id)
+                        sub: view.getSectionSub(view.section.id)
                     }
 
                     // Страницу поднимаем через setSource с готовым `sys`:
@@ -591,6 +641,11 @@ Item {
                         Connections {
                             target: view
                             function onTabChanged() { pageLoader.reload(); }
+                        }
+                        Connections {
+                            target: view.sys
+                            function onLanguageCodeChanged() { pageLoader.reload(); }
+                            function onLocaleIdChanged() { pageLoader.reload(); }
                         }
                     }
 

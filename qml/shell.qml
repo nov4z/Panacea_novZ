@@ -216,7 +216,7 @@ PanelWindow {
             property bool   launcherCategories: true
             property bool   ccGlowSliders: true
             property bool   ccShowBatteryWave: true
-            property string lang: "en"        // "en" | "ru", по умолчанию английский
+            property string lang: "es"        // "es" | "en" | "ru", por defecto español
             property bool   clock12: false    // 12-часовой формат с AM/PM
             // запись экрана
             property int    recFps: 60
@@ -824,14 +824,24 @@ PanelWindow {
     // all other system locales fall back to English until a translation is added.
     readonly property Translations i18n: Translations {}
 
-    readonly property string localeId: String(cfg.lang || "en")
+    property int langChangeSeq: 0
+    readonly property string localeId: { var _s = root.langChangeSeq; return String((root.cfg && root.cfg.lang) || "es"); }
     readonly property string languageCode: localeId.split(/[_-]/)[0].toLowerCase()
     readonly property bool isEn: languageCode === "en"
     readonly property bool isTr: languageCode === "tr"
     readonly property bool isEs: languageCode === "es" || (!isEn && languageCode !== "ru" && !isTr)
     function tr(k) {
-        if (root.languageCode === "ru") return k;
-        if ((root.languageCode === "es" || root.isEs) && i18n.es && i18n.es[k] !== undefined) return i18n.es[k];
+        if (!k) return "";
+        var _seq = root.langChangeSeq;
+        if (root.languageCode === "ru") {
+            if (i18n.ru && i18n.ru[k] !== undefined) return i18n.ru[k];
+            return k;
+        }
+        if (root.languageCode === "es" || root.isEs) {
+            if (i18n.es && i18n.es[k] !== undefined) return i18n.es[k];
+            if (i18n.en && i18n.en[k] !== undefined) return i18n.en[k];
+            return k;
+        }
         if (root.languageCode === "tr" && i18n.tr && i18n.tr[k] !== undefined) return i18n.tr[k];
         if (i18n.en && i18n.en[k] !== undefined) return i18n.en[k];
         return k;
@@ -1046,6 +1056,7 @@ PanelWindow {
         // системного языка не касается, и ждать здесь нечего.
         root.cfg.lang = code;
         root.saveCfg();
+        root.langChangeSeq++;
 
         root.sysLangPending = true;
         pLocaleSet.command = ["pkexec", Quickshell.env("HOME") + "/.config/panacea/scripts/locale.sh", "set", code];
@@ -1080,6 +1091,7 @@ PanelWindow {
     // переключает сразу, а это одно осталось бы на прежнем языке до
     // следующего опроса, то есть до четверти часа.
     onLocaleIdChanged: {
+        root.langChangeSeq++;
         root.syncGreeterLocale();
         if (root.cfg.featWidgets || root.cfg.weatherOnIsland) root.refreshWeather();
     }
@@ -5317,6 +5329,7 @@ PanelWindow {
                 }
             }
         }
+        function setLang(code: string): void { root.setLang(code); }
         function settingsScroll(y: string): void {
             if (root.page !== "settings" || !root.expanded) {
                 root.openSub("settings");
@@ -6818,7 +6831,7 @@ PanelWindow {
                     spacing: 1
 
                     Text {
-                        text: ((root.cfg.chargeText && root.cfg.chargeText.length > 0) ? root.cfg.chargeText : (root.isEs ? "Cargando" : (root.isEn ? "Charging" : root.tr("Заряжается"))))
+                        text: ((root.cfg.chargeText && root.cfg.chargeText.length > 0) ? root.cfg.chargeText : root.tr("Заряжается"))
                         color: root.colFg
                         font {
                             family: root.fontFam
@@ -6828,7 +6841,7 @@ PanelWindow {
                     }
 
                     Text {
-                        text: root.isEs ? "Alimentación de red" : (root.isEn ? "AC Power Connected" : root.tr("Питание от сети"))
+                        text: root.tr("Питание от сети")
                         color: Qt.rgba(root.colFg.r, root.colFg.g, root.colFg.b, 0.60)
                         font {
                             family: root.fontFam

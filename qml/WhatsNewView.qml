@@ -433,9 +433,16 @@ Item {
     }
 
     function changeText(subject) {
-        if (view.sys.isEn) return subject;
-        var t = view.dictRu[subject];
-        return t !== undefined ? t : subject;
+        if (view.sys && view.sys.languageCode === "ru") {
+            var r = view.dictRu[subject];
+            return r !== undefined ? r : subject;
+        }
+        if (view.sys && (view.sys.isEs || view.sys.languageCode === "es")) {
+            var s = view.sys.tr(subject);
+            if (s && s !== subject) return s;
+            return subject;
+        }
+        return subject;
     }
 
     anchors.fill: parent

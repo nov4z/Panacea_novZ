@@ -29,7 +29,7 @@ Item {
             label: view.sys.tr("Suspender"),
             cmd: "systemctl suspend",
             accent: view.sys.tint("#38bdf8"),
-            hint: "Suspender en RAM"
+            hint: view.sys.tr("Suspender en RAM")
         },
         {
             id: "logout",
@@ -39,7 +39,7 @@ Item {
                + "niri msg action quit --skip-confirmation; "
                + "else out=$(hyprctl dispatch 'hl.dsp.exit()' 2>&1); case \"$out\" in ok*) ;; *) hyprctl dispatch exit ;; esac; fi",
             accent: view.sys.tint("#fbbf24"),
-            hint: "Cerrar sesión activa"
+            hint: view.sys.tr("Cerrar sesión activa")
         },
         {
             id: "reboot",
@@ -47,7 +47,7 @@ Item {
             label: view.sys.tr("Reiniciar"),
             cmd: "systemctl reboot",
             accent: view.sys.tint("#fb923c"),
-            hint: "Reiniciar sistema"
+            hint: view.sys.tr("Reiniciar sistema")
         },
         {
             id: "poweroff",
@@ -55,7 +55,7 @@ Item {
             label: view.sys.tr("Apagar"),
             cmd: "systemctl poweroff",
             accent: view.sys.tint("#f43f5e"),
-            hint: "Apagar el equipo"
+            hint: view.sys.tr("Apagar el equipo")
         }
     ]
 
@@ -174,7 +174,7 @@ Item {
                         font { family: view.sys.fontFam; pixelSize: 9; bold: true }
                     }
                     Text {
-                        text: "cerrar"
+                        text: view.sys.tr("cerrar")
                         color: Qt.rgba(view.sys.colFg.r, view.sys.colFg.g, view.sys.colFg.b, 0.40)
                         font { family: view.sys.fontFam; pixelSize: 9 }
                     }
@@ -413,7 +413,7 @@ Item {
                     color: Qt.rgba(view.sys.colFg.r, view.sys.colFg.g, view.sys.colFg.b, 0.08)
                     Text { anchors.centerIn: parent; text: "→"; color: view.sys.colMuted; font { family: view.sys.fontFam; pixelSize: 9 } }
                 }
-                Text { text: "navegar"; color: Qt.rgba(view.sys.colFg.r, view.sys.colFg.g, view.sys.colFg.b, 0.35); font { family: view.sys.fontFam; pixelSize: 9 } }
+                Text { text: view.sys.tr("navegar"); color: Qt.rgba(view.sys.colFg.r, view.sys.colFg.g, view.sys.colFg.b, 0.35); font { family: view.sys.fontFam; pixelSize: 9 } }
             }
 
             RowLayout {
@@ -423,7 +423,7 @@ Item {
                     color: Qt.rgba(view.sys.colFg.r, view.sys.colFg.g, view.sys.colFg.b, 0.08)
                     Text { anchors.centerIn: parent; text: "↵"; color: view.sys.colMuted; font { family: view.sys.fontFam; pixelSize: 10 } }
                 }
-                Text { text: "ejecutar"; color: Qt.rgba(view.sys.colFg.r, view.sys.colFg.g, view.sys.colFg.b, 0.35); font { family: view.sys.fontFam; pixelSize: 9 } }
+                Text { text: view.sys.tr("ejecutar"); color: Qt.rgba(view.sys.colFg.r, view.sys.colFg.g, view.sys.colFg.b, 0.35); font { family: view.sys.fontFam; pixelSize: 9 } }
             }
 
             Item { Layout.fillWidth: true }
