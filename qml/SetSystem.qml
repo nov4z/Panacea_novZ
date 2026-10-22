@@ -35,6 +35,7 @@ ColumnLayout {
 
     function stepName(st) {
         return st === "download"   ? page.sys.tr("скачивание")
+             : st === "clean"      ? page.sys.tr("очистка")
              : st === "selfupdate" ? page.sys.tr("обновление обновлятора")
              : st === "backup"   ? page.sys.tr("сохранение настроек")
              : st === "install"  ? page.sys.tr("установка")
@@ -46,6 +47,37 @@ ColumnLayout {
     // кнопка сброса взведена и ждёт подтверждения
     property bool armed: false
     Timer { id: disarm; interval: 4000; onTriggered: page.armed = false }
+
+    // Состояние чистой переустановки: 0 - покой, 1 - первое подтверждение, 2 - второе подтверждение
+    property int reinstallStep: 0
+    property int reinstallCooldown: 0
+
+    Timer {
+        id: reinstallTimer
+        interval: 1000
+        repeat: true
+        running: page.reinstallCooldown > 0
+        onTriggered: {
+            if (page.reinstallCooldown > 0)
+                page.reinstallCooldown -= 1;
+        }
+    }
+
+    Timer {
+        id: reinstallDisarmTimer
+        interval: 35000
+        repeat: false
+        running: page.reinstallStep > 0 && !page.sys.updBusy
+        onTriggered: page.cancelReinstall()
+    }
+
+    function cancelReinstall() {
+        page.reinstallStep = 0;
+        page.reinstallCooldown = 0;
+        reinstallDisarmTimer.stop();
+    }
+
+    Component.onDestruction: page.cancelReinstall()
 
     Layout.fillWidth: true
     spacing: 12
@@ -903,7 +935,7 @@ ColumnLayout {
                 Text {
                     Layout.fillWidth: true
                     text: page.sys.updBusy
-                          ? page.sys.tr("Обновление…") + " " + page.stepName(page.sys.updStep)
+                          ? (page.sys.updIsReinstall ? page.sys.tr("Переустановка…") : page.sys.tr("Обновление…")) + " " + page.stepName(page.sys.updStep)
                           : page.sys.updChecking ? page.sys.tr("Проверка…")
                           : page.sys.updateAvailable ? page.sys.tr("Доступна новая версия")
                           : page.sys.updStatus === "current" ? page.sys.tr("Установлена последняя версия")
@@ -928,12 +960,9 @@ ColumnLayout {
                 }
             }
 
-            // Проверить · Обновить. Вторая появляется только когда есть что
-            // ставить: кнопка, которая иногда ничего не делает, хуже её отсутствия.
+            // Проверить · Reinstalar · Обновить
             Rectangle {
-                // Ширина по содержимому, но не уже прежней: надпись задана числом
-                // только на глаз, и на другом языке или крупном шрифте она вылезала
-                // за края плашки.
+                // Ширина по содержимому, но не уже прежней
                 Layout.preferredWidth: Math.max(104, checkRow.implicitWidth + 24)
                 Layout.preferredHeight: 32
                 radius: 10
@@ -943,11 +972,6 @@ ColumnLayout {
                        : Qt.rgba(page.sys.colFg.r, page.sys.colFg.g, page.sys.colFg.b, 0.06)
                 Behavior on color { ColorAnimation { duration: page.sys.animFade } }
 
-                // Пока идёт проверка — вместо надписи крутится стрелка.
-                // Проверка занимает секунду-другую, и всё это время кнопка
-                // обязана показывать, что её нажатие дошло: если версия
-                // окажется прежней, в карточке больше ничего не изменится, и
-                // без крутилки нажатие выглядело бы проигнорированным.
                 RowLayout {
                     id: checkRow
                     anchors.centerIn: parent
@@ -968,8 +992,6 @@ ColumnLayout {
                             duration: 900
                             loops: Animation.Infinite
                         }
-                        // Оборвали на полпути — возвращаем в исходное
-                        // положение, иначе значок замирал под случайным углом.
                         onVisibleChanged: if (!visible) checkSpin.rotation = 0
                     }
 
@@ -984,9 +1006,142 @@ ColumnLayout {
                     id: checkMa
                     anchors.fill: parent
                     hoverEnabled: true
-                    enabled: !page.sys.updChecking
-                    cursorShape: Qt.PointingHandCursor
+                    enabled: !page.sys.updChecking && page.reinstallStep === 0
+                    cursorShape: enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
                     onClicked: page.sys.checkUpdate()
+                }
+            }
+
+            // Reinstalar con 2 confirmaciones consecutivas y cooldown obligatorio de 5s por confirmación
+            Rectangle {
+                id: reinstallBtn
+                visible: !page.sys.updBusy
+                Layout.preferredWidth: Math.max(110, reinstallRow.implicitWidth + 24)
+                Layout.preferredHeight: 32
+                radius: 10
+                color: {
+                    if (page.reinstallStep === 2 && page.reinstallCooldown === 0) {
+                        return reinstallMa.containsMouse
+                               ? Qt.rgba(page.sys.colCrit.r, page.sys.colCrit.g, page.sys.colCrit.b, 0.40)
+                               : Qt.rgba(page.sys.colCrit.r, page.sys.colCrit.g, page.sys.colCrit.b, 0.25);
+                    }
+                    if (page.reinstallStep > 0) {
+                        return (reinstallMa.containsMouse && page.reinstallCooldown === 0)
+                               ? Qt.rgba(page.sys.colWarn.r, page.sys.colWarn.g, page.sys.colWarn.b, 0.35)
+                               : Qt.rgba(page.sys.colWarn.r, page.sys.colWarn.g, page.sys.colWarn.b, 0.16);
+                    }
+                    return reinstallMa.containsMouse
+                           ? Qt.rgba(page.sys.colFg.r, page.sys.colFg.g, page.sys.colFg.b, 0.14)
+                           : Qt.rgba(page.sys.colFg.r, page.sys.colFg.g, page.sys.colFg.b, 0.06);
+                }
+                border.width: page.reinstallStep > 0 ? 1 : 0
+                border.color: page.reinstallStep === 2 ? page.sys.colCrit : page.sys.colWarn
+                Behavior on color { ColorAnimation { duration: page.sys.animFade } }
+
+                RowLayout {
+                    id: reinstallRow
+                    anchors.centerIn: parent
+                    spacing: 6
+
+                    Glyph {
+                        id: reinstallIcon
+                        visible: page.reinstallStep === 0 || page.reinstallCooldown === 0
+                        glyph: page.reinstallStep === 2
+                               ? String.fromCodePoint(0xF0026) // md-alert
+                               : String.fromCodePoint(0xF0450) // md-refresh
+                        color: page.reinstallStep === 2
+                               ? page.sys.colCrit
+                               : (page.reinstallStep === 1 ? page.sys.colWarn : page.sys.colMuted)
+                        fontFam: page.sys.fontFam
+                        size: 13
+                    }
+
+                    Text {
+                        text: {
+                            if (page.reinstallStep === 0)
+                                return page.sys.tr("Reinstalar");
+                            if (page.reinstallCooldown > 0)
+                                return page.sys.tr("Espera %1s…").arg(page.reinstallCooldown);
+                            if (page.reinstallStep === 1)
+                                return page.sys.tr("Confirmar (1/2)");
+                            return page.sys.tr("Confirmar y reinstalar");
+                        }
+                        color: {
+                            if (page.reinstallStep === 2 && page.reinstallCooldown === 0)
+                                return page.sys.colFg;
+                            if (page.reinstallStep > 0 && page.reinstallCooldown > 0)
+                                return page.sys.colMuted;
+                            if (page.reinstallStep === 1 && page.reinstallCooldown === 0)
+                                return page.sys.colWarn;
+                            return page.sys.colMuted;
+                        }
+                        font {
+                            family: page.sys.fontBody
+                            pixelSize: page.sys.fontSize - 3
+                            bold: page.reinstallStep > 0 && page.reinstallCooldown === 0
+                        }
+                    }
+                }
+
+                MouseArea {
+                    id: reinstallMa
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    enabled: !page.sys.updBusy && (page.reinstallStep === 0 || page.reinstallCooldown === 0)
+                    cursorShape: enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
+                    onClicked: {
+                        if (page.reinstallStep === 0) {
+                            page.reinstallStep = 1;
+                            page.reinstallCooldown = 5;
+                            reinstallDisarmTimer.restart();
+                            if (page.sys && page.sys.playSound) page.sys.playSound("tock");
+                        } else if (page.reinstallStep === 1 && page.reinstallCooldown === 0) {
+                            page.reinstallStep = 2;
+                            page.reinstallCooldown = 5;
+                            reinstallDisarmTimer.restart();
+                            if (page.sys && page.sys.playSound) page.sys.playSound("tock");
+                        } else if (page.reinstallStep === 2 && page.reinstallCooldown === 0) {
+                            page.reinstallStep = 0;
+                            page.cancelReinstall();
+                            if (page.sys && page.sys.playSound) page.sys.playSound("warn");
+                            page.sys.applyReinstall();
+                        }
+                    }
+                }
+            }
+
+            // Botón cancelar confirmación de reinstalación
+            Rectangle {
+                id: cancelReinstallBtn
+                visible: !page.sys.updBusy && page.reinstallStep > 0
+                Layout.preferredWidth: Math.max(88, cancelRow.implicitWidth + 20)
+                Layout.preferredHeight: 32
+                radius: 10
+                color: cancelMa.containsMouse
+                       ? Qt.rgba(page.sys.colFg.r, page.sys.colFg.g, page.sys.colFg.b, 0.14)
+                       : Qt.rgba(page.sys.colFg.r, page.sys.colFg.g, page.sys.colFg.b, 0.06)
+                Behavior on color { ColorAnimation { duration: page.sys.animFade } }
+
+                RowLayout {
+                    id: cancelRow
+                    anchors.centerIn: parent
+                    spacing: 4
+                    Text {
+                        text: page.sys.tr("Cancelar")
+                        color: page.sys.colMuted
+                        font { family: page.sys.fontBody; pixelSize: page.sys.fontSize - 3 }
+                    }
+                }
+
+                MouseArea {
+                    id: cancelMa
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: {
+                        page.cancelReinstall();
+                        if (page.sys && page.sys.playSound) page.sys.playSound("tock");
+                    }
                 }
             }
 
@@ -1019,6 +1174,55 @@ ColumnLayout {
                     enabled: !page.sys.updBusy
                     cursorShape: Qt.PointingHandCursor
                     onClicked: page.sys.applyUpdate()
+                }
+            }
+        }
+
+        // Banner de advertencia de reinstalación limpia
+        Rectangle {
+            Layout.fillWidth: true
+            Layout.topMargin: 4
+            visible: page.reinstallStep > 0 && !page.sys.updBusy
+            radius: 10
+            color: Qt.rgba(page.sys.colCrit.r, page.sys.colCrit.g, page.sys.colCrit.b, 0.12)
+            border.width: 1
+            border.color: page.reinstallStep === 2 ? page.sys.colCrit : page.sys.colWarn
+            implicitHeight: reinstallWarnCol.implicitHeight + 20
+
+            ColumnLayout {
+                id: reinstallWarnCol
+                anchors {
+                    left: parent.left; right: parent.right
+                    verticalCenter: parent.verticalCenter
+                    margins: 12
+                }
+                spacing: 4
+
+                RowLayout {
+                    spacing: 8
+                    Glyph {
+                        glyph: String.fromCodePoint(0xF0026)
+                        color: page.reinstallStep === 2 ? page.sys.colCrit : page.sys.colWarn
+                        fontFam: page.sys.fontFam
+                        size: 15
+                    }
+                    Text {
+                        text: page.reinstallStep === 1
+                              ? page.sys.tr("Шаг 1 из 2: Будет выполнена чистая переустановка Panacea_novZ")
+                              : page.sys.tr("Шаг 2 из 2: Требуется окончательное подтверждение")
+                        color: page.reinstallStep === 2 ? page.sys.colCrit : page.sys.colWarn
+                        font { family: page.sys.fontBody; pixelSize: page.sys.fontSize - 2; bold: true }
+                    }
+                }
+
+                Text {
+                    Layout.fillWidth: true
+                    text: page.reinstallStep === 1
+                          ? page.sys.tr("Внимание! Panacea_novZ будет переустановлен с нуля. Все локальные настройки будут удалены, а кэш (~/.cache/panacea) очищен для чистой установки.")
+                          : page.sys.tr("Это действие загрузит последнюю версию из GitHub, удалит текущие настройки и перезапустит окружение.")
+                    color: page.sys.colFg
+                    wrapMode: Text.WordWrap
+                    font { family: page.sys.fontBody; pixelSize: page.sys.fontSize - 4 }
                 }
             }
         }

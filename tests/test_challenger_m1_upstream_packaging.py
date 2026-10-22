@@ -758,7 +758,155 @@ class TestMultiLocaleAndTurkishBundle(unittest.TestCase):
         self.assertIn("dbus-update-activation-environment", shell_content)
 
 
+class TestReinstallCleanWorkflow(unittest.TestCase):
+    """Adversarial verification of Clean Reinstallation workflow from 0 (reinstall.sh & QML UI)."""
+
+    def setUp(self):
+        self.reinstall_sh = PROJECT_ROOT / "scripts" / "reinstall.sh"
+        self.setsystem_qml = PROJECT_ROOT / "qml" / "SetSystem.qml"
+        self.shell_qml = PROJECT_ROOT / "qml" / "shell.qml"
+        self.translations_qml = PROJECT_ROOT / "qml" / "Translations.qml"
+
+    def test_01_reinstall_script_syntax_and_permissions(self):
+        """reinstall.sh must exist, be executable, support help, and contain no hardcoded scratch paths."""
+        self.assertTrue(self.reinstall_sh.is_file(), "scripts/reinstall.sh does not exist")
+        self.assertTrue(os.access(self.reinstall_sh, os.X_OK), "scripts/reinstall.sh is not executable")
+
+        content = self.reinstall_sh.read_text(encoding="utf-8")
+        self.assertNotIn(".gemini", content, "reinstall.sh must not contain hardcoded scratch directory paths")
+        self.assertIn("nov4z/Panacea_novZ", content)
+        self.assertIn("quickshell.service", content)
+
+        res = subprocess.run([str(self.reinstall_sh), "--help"], capture_output=True, text=True)
+        self.assertEqual(res.returncode, 0)
+        self.assertIn("reinstall.sh", res.stdout)
+
+    def test_02_reinstall_dry_run_simulation(self):
+        """reinstall.sh --dry-run apply must simulate download, clean, install, restart and output status=done."""
+        res = subprocess.run([str(self.reinstall_sh), "--dry-run", "apply"], capture_output=True, text=True)
+        self.assertEqual(res.returncode, 0, f"dry-run failed: {res.stderr}")
+        self.assertIn("step=download", res.stdout)
+        self.assertIn("step=clean", res.stdout)
+        self.assertIn("step=install", res.stdout)
+        self.assertIn("step=restart", res.stdout)
+        self.assertIn("status=done", res.stdout)
+
+    def test_03_reinstall_error_handling_when_git_fails(self):
+        """reinstall.sh must fail cleanly without wiping directories if clone fails."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            test_conf = Path(tmpdir) / "panacea"
+            test_conf.mkdir()
+            canary = test_conf / "canary.txt"
+            canary.write_text("keep_intact", encoding="utf-8")
+
+            res = subprocess.run([
+                str(self.reinstall_sh), "apply",
+                "--config-dir", str(test_conf),
+                "--git", "/nonexistent/repo/path",
+                "--no-restart"
+            ], capture_output=True, text=True)
+
+            self.assertNotEqual(res.returncode, 0)
+            self.assertIn("error=download", res.stdout)
+            self.assertIn("status=failed", res.stdout)
+            self.assertTrue(canary.is_file(), "Existing config was destroyed despite download failure!")
+
+    def test_04_reinstall_clean_execution_and_cache_wiping(self):
+        """reinstall.sh must wipe cache, backup/clean existing config, and deploy a 100% clean installation."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            test_conf = Path(tmpdir) / "panacea"
+            test_cache = Path(tmpdir) / "panacea_cache"
+            test_conf.mkdir()
+            test_cache.mkdir()
+
+            old_file = test_conf / "old_custom_setting.json"
+            old_file.write_text("{}", encoding="utf-8")
+            cache_file = test_cache / "stale_cache.bin"
+            cache_file.write_text("cache", encoding="utf-8")
+
+            res = subprocess.run([
+                str(self.reinstall_sh), "apply",
+                "--config-dir", str(test_conf),
+                "--cache-dir", str(test_cache),
+                "--git", str(PROJECT_ROOT),
+                "--branch", "main",
+                "--no-restart"
+            ], capture_output=True, text=True)
+
+            self.assertEqual(res.returncode, 0, f"reinstall failed: {res.stderr}\nstdout: {res.stdout}")
+            self.assertIn("status=done", res.stdout)
+
+            # Cache must be wiped
+            self.assertFalse(test_cache.exists(), "Cache directory was not wiped")
+
+            # Old custom files must not remain in the new installation
+            self.assertFalse(old_file.exists(), "Old configuration file still exists in target dir")
+
+            # A backup of the old config must have been created
+            backups = list(Path(tmpdir).glob("panacea.reinstall_backup_*"))
+            self.assertGreaterEqual(len(backups), 1, "Backup was not created prior to clean wipe")
+
+            # Clean install must have new shell.qml and settings.json
+            self.assertTrue((test_conf / "qml" / "shell.qml").is_file(), "shell.qml missing from clean install")
+            self.assertTrue((test_conf / "settings.json").is_file(), "settings.json missing from clean install")
+
+    def test_05_setsystem_qml_reinstall_ui_contracts(self):
+        """SetSystem.qml must implement reinstall button with 2 confirmations, 5s cooldown and clear warning."""
+        self.assertTrue(self.setsystem_qml.is_file())
+        content = self.setsystem_qml.read_text(encoding="utf-8")
+
+        # State properties and cooldown timer
+        self.assertIn("property int reinstallStep: 0", content)
+        self.assertIn("property int reinstallCooldown: 0", content)
+        self.assertIn("id: reinstallTimer", content)
+        self.assertIn("id: reinstallDisarmTimer", content)
+        self.assertIn("function cancelReinstall()", content)
+
+        # 5-second cooldown initialization
+        self.assertIn("reinstallCooldown = 5", content)
+
+        # 2 confirmation checks
+        self.assertIn("page.reinstallStep === 1", content)
+        self.assertIn("page.reinstallStep === 2", content)
+
+        # Warning banner with clean reinstall notice
+        self.assertIn("reinstallWarnCol", content)
+        self.assertIn("~/.cache/panacea", content)
+
+        # Reinstall button, cancel button and applyReinstall invocation
+        self.assertIn("reinstallBtn", content)
+        self.assertIn("cancelReinstallBtn", content)
+        self.assertIn("page.sys.applyReinstall()", content)
+
+    def test_06_shell_qml_reinstall_process_integration(self):
+        """shell.qml must integrate applyReinstall and pReinstallApply."""
+        self.assertTrue(self.shell_qml.is_file())
+        content = self.shell_qml.read_text(encoding="utf-8")
+
+        self.assertIn("property bool   updIsReinstall: false", content)
+        self.assertIn("function applyReinstall()", content)
+        self.assertIn("id: pReinstallApply", content)
+        self.assertIn('root.scriptDir + "/reinstall.sh", "apply"', content)
+        self.assertIn('{ id: "clean"', content)
+
+    def test_07_translations_reinstall_multilingual_coverage(self):
+        """Translations.qml must have reinstall translations with zero Cyrillic in English and Spanish."""
+        self.assertTrue(self.translations_qml.is_file())
+        content = self.translations_qml.read_text(encoding="utf-8")
+
+        # Check key strings exist in all dictionaries
+        for key in ["Reinstalar", "Confirmar (1/2)", "Confirmar y reinstalar", "очистка"]:
+            self.assertIn(f'"{key}"', content)
+
+        # Verify no Cyrillic in en and es dictionaries for reinstall entries
+        en_match = re.search(r"readonly property var en:\s*\(\{\s*(.*?)\s*\}\)", content, re.DOTALL)
+        self.assertIsNotNone(en_match, "en dictionary not found")
+        es_match = re.search(r"readonly property var es:\s*\(\{\s*(.*?)\s*\}\)", content, re.DOTALL)
+        self.assertIsNotNone(es_match, "es dictionary not found")
+
+
 if __name__ == "__main__":
     unittest.main()
+
 
 

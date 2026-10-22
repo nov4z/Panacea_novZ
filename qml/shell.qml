@@ -1226,8 +1226,9 @@ PanelWindow {
         case "nogit":    return root.tr("Не установлен git");
         case "offline":  return root.tr("Нет связи с GitHub");
         case "download": return root.tr("Не удалось скачать обновление");
+        case "clean":    return root.tr("Ошибка очистки конфигурации");
         case "install":  return root.tr("Установщик завершился с ошибкой");
-        default:         return root.tr("Обновление не удалось");
+        default:         return root.updIsReinstall ? root.tr("Сбой переустановки") : root.tr("Обновление не удалось");
         }
     }
 
@@ -1246,9 +1247,12 @@ PanelWindow {
         pUpdCheck.running = true;
     }
 
+    property bool   updIsReinstall: false
+
     function applyUpdate() {
         if (root.updBusy) return;
         root.updBusy = true;
+        root.updIsReinstall = false;
         root.updError = "";
         root.updStep = "download";
         root.updCreepAt = 0;
@@ -1256,6 +1260,17 @@ PanelWindow {
         // его в острове, иначе о нём знало бы только открытое окно.
         root.beginBusy(root.tr("Обновление…"), "󰚰", root.updStepPercent);
         pUpdApply.running = true;
+    }
+
+    function applyReinstall() {
+        if (root.updBusy) return;
+        root.updBusy = true;
+        root.updIsReinstall = true;
+        root.updError = "";
+        root.updStep = "download";
+        root.updCreepAt = 0;
+        root.beginBusy(root.tr("Переустановка…"), "󰑓", root.updStepPercent);
+        pReinstallApply.running = true;
     }
 
     // Проценты у обновления считаются по этапам, которые печатает update.sh:
@@ -1269,6 +1284,7 @@ PanelWindow {
     // установщик около одной, остальное — мгновения.
     readonly property var updSteps: [
         { id: "download",   w: 30 },
+        { id: "clean",      w: 5  },
         { id: "selfupdate", w: 2  },
         { id: "backup",     w: 3  },
         { id: "install",    w: 12 },
@@ -1393,6 +1409,24 @@ PanelWindow {
         }
         onExited: code => {
             root.updBusy = false;
+            root.updIsReinstall = false;
+            root.endBusy();
+            if (code !== 0 && root.updError.length === 0)
+                root.updError = "failed";
+            if (code === 0) { root.updStatus = "current"; root.updStep = "done"; }
+        }
+    }
+
+    Process {
+        id: pReinstallApply
+        command: [root.scriptDir + "/reinstall.sh", "apply"]
+        stdout: SplitParser {
+            splitMarker: "\n"
+            onRead: data => root.updParse(data, false)
+        }
+        onExited: code => {
+            root.updBusy = false;
+            root.updIsReinstall = false;
             root.endBusy();
             if (code !== 0 && root.updError.length === 0)
                 root.updError = "failed";

@@ -19,7 +19,7 @@ CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
 # --- Paths & Directories ---
-INSTALL_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/panacea"
+INSTALL_DIR="${PANACEA_INSTALL_DIR:-${XDG_CONFIG_HOME:-$HOME/.config}/panacea}"
 BACKUP_BASE="${XDG_CONFIG_HOME:-$HOME/.config}/panacea.backup"
 SCRIPT_SRC_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PIPEWIRE_CONF_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/pipewire/pipewire-pulse.conf.d"
