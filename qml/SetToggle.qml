@@ -55,6 +55,8 @@ RowLayout {
 
         scale: tMa.pressed ? 0.94 : (tMa.containsMouse ? 1.04 : 1.0)
         Behavior on scale { NumberAnimation { duration: 140; easing.type: Easing.OutCubic } }
+        Behavior on color { ColorAnimation { duration: 180; easing.type: Easing.OutCubic } }
+        Behavior on border.color { ColorAnimation { duration: 180; easing.type: Easing.OutCubic } }
 
         Rectangle {
             id: knob

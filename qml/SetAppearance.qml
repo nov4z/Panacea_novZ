@@ -150,6 +150,9 @@ ColumnLayout {
                                   : Qt.rgba(page.sys.colFg.r, page.sys.colFg.g, page.sys.colFg.b,
                                             swatchMa.containsMouse ? 0.30 : 0.12)
                     Behavior on border.color { ColorAnimation { duration: page.sys.animFade } }
+                    Behavior on color { ColorAnimation { duration: page.sys.animFade } }
+                    scale: swatchMa.pressed ? 0.96 : (swatchMa.containsMouse ? 1.025 : 1.0)
+                    Behavior on scale { NumberAnimation { duration: 140; easing.type: Easing.OutCubic } }
 
                     RowLayout {
                         anchors.fill: parent

@@ -87,6 +87,11 @@ ColumnLayout {
                 height: parent.height
                 radius: parent.radius
                 color: sl.sys.colOn
+                Behavior on width {
+                    enabled: !grab.pressed
+                    NumberAnimation { duration: 160; easing.type: Easing.OutCubic }
+                }
+                Behavior on color { ColorAnimation { duration: sl.sys ? sl.sys.animFade : 150 } }
             }
         }
 
@@ -99,9 +104,15 @@ ColumnLayout {
             radius: (sl.sys && sl.sys.themeMaterial) ? 3 : 8
             anchors.verticalCenter: parent.verticalCenter
             x: Math.max(0, Math.min(bar.width - width, bar.width * bar.frac - width / 2))
+            Behavior on x {
+                enabled: !grab.pressed
+                NumberAnimation { duration: 160; easing.type: Easing.OutCubic }
+            }
             color: sl.sys.colOn
             border.width: (sl.sys && sl.sys.themeMaterial) ? 0 : 2.5
             border.color: Qt.lighter(sl.sys.colOn, 1.5)
+            Behavior on color { ColorAnimation { duration: sl.sys ? sl.sys.animFade : 150 } }
+            Behavior on border.color { ColorAnimation { duration: sl.sys ? sl.sys.animFade : 150 } }
 
             scale: grab.pressed ? 1.15 : (grab.containsMouse ? 1.08 : 1.0)
             Behavior on scale { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } }

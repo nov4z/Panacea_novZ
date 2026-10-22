@@ -466,6 +466,10 @@ Item {
                                           ? Qt.rgba(view.sys.colOn.r, view.sys.colOn.g, view.sys.colOn.b, 0.08)
                                           : Qt.rgba(1, 1, 1, 0.06))
                                 border.width: 1
+                                Behavior on color { ColorAnimation { duration: 150 } }
+                                Behavior on border.color { ColorAnimation { duration: 150 } }
+                                scale: hMa.pressed ? 0.95 : (hMa.containsMouse ? 1.04 : 1.0)
+                                Behavior on scale { NumberAnimation { duration: 140; easing.type: Easing.OutCubic } }
 
                                 ColumnLayout {
                                     anchors.centerIn: parent
@@ -558,6 +562,10 @@ Item {
                                   ? Qt.rgba(view.sys.colOn.r, view.sys.colOn.g, view.sys.colOn.b, 0.06)
                                   : Qt.rgba(1, 1, 1, 0.05))
                         border.width: 1
+                        Behavior on color { ColorAnimation { duration: 150 } }
+                        Behavior on border.color { ColorAnimation { duration: 150 } }
+                        scale: dayMa.pressed ? 0.985 : (dayMa.containsMouse ? 1.012 : 1.0)
+                        Behavior on scale { NumberAnimation { duration: 140; easing.type: Easing.OutCubic } }
 
                         RowLayout {
                             anchors.fill: parent

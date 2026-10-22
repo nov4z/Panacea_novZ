@@ -135,8 +135,10 @@ FocusScope {
                 border.color: view.sys.vaultUnlocked ? Qt.rgba(view.sys.colOk.r, view.sys.colOk.g, view.sys.colOk.b, 0.4)
                                                      : Qt.rgba(view.sys.colFg.r, view.sys.colFg.g, view.sys.colFg.b, 0.08)
                 border.width: 1
+                Behavior on color { ColorAnimation { duration: 140 } }
+                Behavior on border.color { ColorAnimation { duration: 140 } }
                 scale: vaultMa.pressed ? 0.92 : (vaultMa.containsMouse ? 1.06 : 1.0)
-                Behavior on scale { NumberAnimation { duration: 120 } }
+                Behavior on scale { NumberAnimation { duration: 140; easing.type: Easing.OutCubic } }
 
                 Text {
                     anchors.centerIn: parent
@@ -166,7 +168,7 @@ FocusScope {
                 Behavior on color { ColorAnimation { duration: 140 } }
                 Behavior on border.color { ColorAnimation { duration: 140 } }
                 scale: wipeMa.pressed ? 0.94 : (wipeMa.containsMouse ? 1.04 : 1.0)
-                Behavior on scale { NumberAnimation { duration: 120 } }
+                Behavior on scale { NumberAnimation { duration: 140; easing.type: Easing.OutCubic } }
 
                 RowLayout {
                     id: wipeTextRow

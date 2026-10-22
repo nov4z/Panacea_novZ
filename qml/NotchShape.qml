@@ -16,6 +16,7 @@ Shape {
     // "right" — зеркально: верх и левый бок (вырез снизу справа)
     property string side: "left"
     property color fill: "#000000"
+    Behavior on fill { ColorAnimation { duration: 240; easing.type: Easing.OutCubic } }
     property real r: 12
 
     width: corner.r

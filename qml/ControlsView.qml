@@ -307,7 +307,7 @@ Item {
                 radius: 20
                 color: parent.parent.on ? parent.parent.accent : Qt.rgba(1, 1, 1, 0.10)
                 Behavior on color { ColorAnimation { duration: 180 } }
-                scale: iconMa.pressed ? 0.95 : ((iconMa.containsMouse && view.sys.cfg.animTileHover) ? 1.05 : 1.0)
+                scale: iconMa.pressed ? 0.95 : ((iconMa.containsMouse && view.sys.cfg.animTileHover !== false) ? 1.05 : 1.0)
                 Behavior on scale { NumberAnimation { duration: 140; easing.type: Easing.OutCubic } }
 
                 Text {
@@ -576,7 +576,7 @@ Item {
                 border.color: tile.on ? "transparent" : Qt.rgba(view.sys.colFg.r, view.sys.colFg.g, view.sys.colFg.b, 0.08)
                 border.width: 1
                 Behavior on color { ColorAnimation { duration: 180 } }
-                scale: miniIconMa.pressed ? 0.95 : ((miniIconMa.containsMouse && view.sys.cfg.animTileHover) ? 1.05 : 1.0)
+                scale: miniIconMa.pressed ? 0.95 : ((miniIconMa.containsMouse && view.sys.cfg.animTileHover !== false) ? 1.05 : 1.0)
                 Behavior on scale { NumberAnimation { duration: 140; easing.type: Easing.OutCubic } }
 
                 readonly property color ink: tile.on ? view.sys.fgOn(tile.accent) : Qt.rgba(view.sys.colFg.r, view.sys.colFg.g, view.sys.colFg.b, 0.75)
@@ -638,8 +638,8 @@ Item {
                 font { family: view.sys.fontFam; pixelSize: 13 }
                 Layout.alignment: Qt.AlignVCenter
                 transform: Translate {
-                    x: (tileMa.containsMouse && view.sys.cfg.animChevronSlide) ? 2 : 0
-                    Behavior on x { NumberAnimation { duration: 150; easing.type: Easing.OutQuad } }
+                    x: (tileMa.containsMouse && view.sys.cfg.animChevronSlide !== false) ? 2 : 0
+                    Behavior on x { NumberAnimation { duration: 150; easing.type: Easing.OutCubic } }
                 }
                 Behavior on color { ColorAnimation { duration: 150 } }
             }
@@ -1272,7 +1272,7 @@ Item {
                 border.color: view.sys.recActive ? "transparent" : Qt.rgba(1, 1, 1, 0.06)
                 border.width: 1
                 Behavior on color { ColorAnimation { duration: 180 } }
-                scale: recBtnMa.pressed ? 0.95 : ((recBtnMa.containsMouse && view.sys.cfg.animTileHover) ? 1.05 : 1.0)
+                scale: recBtnMa.pressed ? 0.95 : ((recBtnMa.containsMouse && view.sys.cfg.animTileHover !== false) ? 1.05 : 1.0)
                 Behavior on scale { NumberAnimation { duration: 140; easing.type: Easing.OutCubic } }
 
                 Text {
@@ -1323,8 +1323,8 @@ Item {
                 font { family: view.sys.fontFam; pixelSize: 13 }
                 Layout.alignment: Qt.AlignVCenter
                 transform: Translate {
-                    x: (recBodyMa.containsMouse && view.sys.cfg.animChevronSlide) ? 2 : 0
-                    Behavior on x { NumberAnimation { duration: 150; easing.type: Easing.OutQuad } }
+                    x: (recBodyMa.containsMouse && view.sys.cfg.animChevronSlide !== false) ? 2 : 0
+                    Behavior on x { NumberAnimation { duration: 150; easing.type: Easing.OutCubic } }
                 }
                 Behavior on color { ColorAnimation { duration: 150 } }
             }
@@ -3039,8 +3039,8 @@ Item {
                                 color: entryMa.containsMouse ? view.sys.colFg : view.sys.colMuted
                                 font { family: view.sys.fontFam; pixelSize: 11 }
                                 transform: Translate {
-                                    x: (entryMa.containsMouse && view.sys.cfg.animChevronSlide) ? 2 : 0
-                                    Behavior on x { NumberAnimation { duration: 150; easing.type: Easing.OutQuad } }
+                                    x: (entryMa.containsMouse && view.sys.cfg.animChevronSlide !== false) ? 2 : 0
+                                    Behavior on x { NumberAnimation { duration: 150; easing.type: Easing.OutCubic } }
                                 }
                                 Behavior on color { ColorAnimation { duration: 140 } }
                             }

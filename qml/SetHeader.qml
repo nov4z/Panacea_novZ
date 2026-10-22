@@ -17,6 +17,8 @@ Rectangle {
     color: Qt.rgba(head.sys.colFg.r, head.sys.colFg.g, head.sys.colFg.b, 0.045)
     border.width: 1
     border.color: Qt.rgba(head.sys.colFg.r, head.sys.colFg.g, head.sys.colFg.b, 0.08)
+    Behavior on color { ColorAnimation { duration: head.sys ? head.sys.animFade : 180 } }
+    Behavior on border.color { ColorAnimation { duration: head.sys ? head.sys.animFade : 180 } }
 
     ColumnLayout {
         id: body
@@ -34,6 +36,7 @@ Rectangle {
                 height: 5
                 radius: 2.5
                 color: head.sys.colOn
+                Behavior on color { ColorAnimation { duration: head.sys ? head.sys.animFade : 180 } }
             }
 
             Text {
@@ -58,12 +61,15 @@ Rectangle {
             color: Qt.rgba(head.sys.colOn.r, head.sys.colOn.g, head.sys.colOn.b, 0.16)
             border.width: 1.5
             border.color: Qt.rgba(head.sys.colOn.r, head.sys.colOn.g, head.sys.colOn.b, 0.40)
+            Behavior on color { ColorAnimation { duration: head.sys ? head.sys.animFade : 180 } }
+            Behavior on border.color { ColorAnimation { duration: head.sys ? head.sys.animFade : 180 } }
 
             Text {
                 anchors.centerIn: parent
                 text: head.glyph
                 color: head.sys.colOn
                 font { family: head.sys.fontFam; pixelSize: 26 }
+                Behavior on color { ColorAnimation { duration: head.sys ? head.sys.animFade : 180 } }
             }
         }
 

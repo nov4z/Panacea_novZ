@@ -51,6 +51,8 @@ RowLayout {
                               ? Qt.rgba(sel.sys.colFg.r, sel.sys.colFg.g, sel.sys.colFg.b, 0.08)
                               : "transparent")
                     Behavior on color { ColorAnimation { duration: sel.sys.animFade } }
+                    scale: segMa.pressed ? 0.96 : (segMa.containsMouse ? 1.03 : 1.0)
+                    Behavior on scale { NumberAnimation { duration: 120; easing.type: Easing.OutCubic } }
 
                     Text {
                         id: segText
