@@ -400,6 +400,9 @@ class TestComponentHierarchyAndContracts(unittest.TestCase):
         self.assertIn("page.sys.themeMaterial", sys_qml)
         self.assertIn("assets/panacea_bw.svg", sys_qml)
         self.assertNotIn('color: "#ff2825"', sys_qml)
+        self.assertNotIn("assets/lenovo_loq_o.svg", sys_qml)
+        self.assertNotIn("loqHoverLogo", sys_qml)
+        self.assertIn("NumberAnimation on rotation", sys_qml)
 
         # 3. DockView.qml checks
         dock_qml = (QML_DIR / "DockView.qml").read_text(encoding="utf-8")

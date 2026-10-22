@@ -596,46 +596,14 @@ ColumnLayout {
                 spacing: 16
                 width: parent.width - 8
 
-                // Escaparate del Logo en Grande con Hover de Brillo Rojo
+                // Escaparate del Logo en Grande con Giro Continuo (Panacea Nothing OS B&W)
                 Item {
                     id: largeLogoContainer
                     Layout.alignment: Qt.AlignHCenter
                     width: 210
                     height: 210
 
-                    // Hover con el halo / aro orbital sincronizado con el acento dinámico
-                    Image {
-                        id: loqHoverLogo
-                        anchors.centerIn: parent
-                        width: 210
-                        height: 210
-                        source: Qt.resolvedUrl("assets/lenovo_loq_o.svg")
-                        sourceSize.width: 420
-                        sourceSize.height: 420
-                        fillMode: Image.PreserveAspectFit
-                        opacity: largeLogoMa.containsMouse ? 0.85 : 0.0
-                        scale: largeLogoMa.containsMouse ? 1.14 : 0.75
-                        layer.enabled: true
-                        layer.effect: MultiEffect {
-                            colorization: 1.0
-                            colorizationColor: customCard.accentColor
-                        }
-
-                        Behavior on opacity { NumberAnimation { duration: 320; easing.type: Easing.OutCubic } }
-                        Behavior on scale { NumberAnimation { duration: 360; easing.type: Easing.OutBack; easing.overshoot: 1.15 } }
-
-                        // Giro continuo infinito: gira siempre de fondo, continúa girando al aparecer y sigue girando mientras desaparece
-                        NumberAnimation on rotation {
-                            from: 0
-                            to: 360
-                            duration: 5200
-                            loops: Animation.Infinite
-                            easing.type: Easing.Linear
-                            running: true
-                        }
-                    }
-
-                    // Logo Vectorial en Blanco y Negro (Panacea Nothing OS B&W)
+                    // Logo Vectorial en Blanco y Negro (Panacea Nothing OS B&W) con giro continuo infinito
                     Image {
                         id: largeLogoImg
                         anchors.centerIn: parent
@@ -645,10 +613,21 @@ ColumnLayout {
                         sourceSize.width: 360
                         sourceSize.height: 360
                         fillMode: Image.PreserveAspectFit
+                        transformOrigin: Item.Center
 
-                        scale: customCard.largeOpen ? (largeLogoMa.containsMouse ? 1.05 : 1.0) : 0.45
+                        scale: customCard.largeOpen ? (largeLogoMa.containsMouse ? 1.08 : 1.0) : 0.45
                         Behavior on scale {
                             NumberAnimation { duration: 340; easing.type: Easing.OutBack; easing.overshoot: 1.15 }
+                        }
+
+                        // Giro continuo infinito fluido del logo Panacea
+                        NumberAnimation on rotation {
+                            from: 0
+                            to: 360
+                            duration: 6000
+                            loops: Animation.Infinite
+                            easing.type: Easing.Linear
+                            running: true
                         }
                     }
 
