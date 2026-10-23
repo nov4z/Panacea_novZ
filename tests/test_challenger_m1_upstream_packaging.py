@@ -1101,6 +1101,29 @@ class TestReinstallCleanWorkflow(unittest.TestCase):
             self.assertEqual(data.get("status"), "success")
             self.assertTrue(data.get("from_menu"))
 
+    def test_14_welcome_view_robustness_and_glyph_contracts(self):
+        """Verify glyph codepoints, responsive Flow layout, keyboard shortcuts, and state deduplication."""
+        welcome_content = self.welcome_qml.read_text(encoding="utf-8")
+        shell_content = self.shell_qml.read_text(encoding="utf-8")
+
+        # Speedometer (0xF04D2) and Palette (0xF03D8) glyph verification
+        self.assertIn("0xF04D2", welcome_content, "Card 2 must use speedometer glyph 0xF04D2")
+        self.assertIn("0xF03D8", welcome_content, "Card 3 must use palette glyph 0xF03D8")
+        self.assertNotIn("0xF01D8", welcome_content, "Card 3 must not use ellipsis glyph 0xF01D8")
+
+        # Responsive Flow layout for tag pills
+        self.assertIn("Flow {", welcome_content)
+        self.assertEqual(welcome_content.count("Flow {"), 6, "All 6 flagship cards must use Flow for tag chips")
+
+        # Key handling for numpad Enter
+        self.assertIn("Keys.onEnterPressed", welcome_content)
+
+        # Deduplication and cleanup in shell.qml
+        self.assertIn("reinstallStateHandled", shell_content)
+        self.assertIn("root.reinstallStateHandled = true", shell_content)
+        self.assertIn("root.reinstallStatusMsg = \"\"", shell_content)
+        self.assertIn("triggeredOnStart: true", shell_content)
+
 
 if __name__ == "__main__":
     unittest.main()

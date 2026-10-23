@@ -293,7 +293,8 @@ Item {
                                     font { family: view.sys.fontBody; pixelSize: view.sys.fontSize - 3 }
                                 }
 
-                                RowLayout {
+                                Flow {
+                                    Layout.fillWidth: true
                                     spacing: 6
                                     Repeater {
                                         model: ["60 FPS", "50ms Lead", "Shimmer"]
@@ -352,7 +353,7 @@ Item {
                                         color: Qt.rgba(view.sys.colOn.r, view.sys.colOn.g, view.sys.colOn.b, 0.20)
                                         Glyph {
                                             anchors.centerIn: parent
-                                            glyph: String.fromCodePoint(0xF0493) // md-speedometer
+                                            glyph: String.fromCodePoint(0xF04D2) // md-speedometer
                                             color: view.sys.colOn
                                             fontFam: view.sys.fontFam
                                             size: 16
@@ -385,7 +386,8 @@ Item {
                                     font { family: view.sys.fontBody; pixelSize: view.sys.fontSize - 3 }
                                 }
 
-                                RowLayout {
+                                Flow {
+                                    Layout.fillWidth: true
                                     spacing: 6
                                     Repeater {
                                         model: ["Super+M", "Super+Z", "BPM Micro-sync"]
@@ -450,7 +452,7 @@ Item {
                                         color: Qt.rgba(view.sys.colOn.r, view.sys.colOn.g, view.sys.colOn.b, 0.20)
                                         Glyph {
                                             anchors.centerIn: parent
-                                            glyph: String.fromCodePoint(0xF01D8) // md-palette
+                                            glyph: String.fromCodePoint(0xF03D8) // md-palette
                                             color: view.sys.colOn
                                             fontFam: view.sys.fontFam
                                             size: 16
@@ -483,7 +485,8 @@ Item {
                                     font { family: view.sys.fontBody; pixelSize: view.sys.fontSize - 3 }
                                 }
 
-                                RowLayout {
+                                Flow {
+                                    Layout.fillWidth: true
                                     spacing: 6
                                     Repeater {
                                         model: ["Satinado", "Onda Radiante", "Unibody"]
@@ -575,7 +578,8 @@ Item {
                                     font { family: view.sys.fontBody; pixelSize: view.sys.fontSize - 3 }
                                 }
 
-                                RowLayout {
+                                Flow {
+                                    Layout.fillWidth: true
                                     spacing: 6
                                     Repeater {
                                         model: ["7 Sound Packs", "Spatial Width", "Room Reverb"]
@@ -673,7 +677,8 @@ Item {
                                     font { family: view.sys.fontBody; pixelSize: view.sys.fontSize - 3 }
                                 }
 
-                                RowLayout {
+                                Flow {
+                                    Layout.fillWidth: true
                                     spacing: 6
                                     Repeater {
                                         model: ["Español Nativo", "Zero-Restart", "Teclado"]
@@ -765,7 +770,8 @@ Item {
                                     font { family: view.sys.fontBody; pixelSize: view.sys.fontSize - 3 }
                                 }
 
-                                RowLayout {
+                                Flow {
+                                    Layout.fillWidth: true
                                     spacing: 6
                                     Repeater {
                                         model: ["Universal Linux", "GitHub Sync", "2 Pasos Seguros"]
@@ -798,6 +804,9 @@ Item {
                 spacing: 12
 
                 Text {
+                    Layout.fillWidth: true
+                    Layout.minimumWidth: 0
+                    elide: Text.ElideRight
                     text: view.sys.tr("Presiona Esc o Enter para continuar")
                     color: view.sys.colMuted
                     font { family: view.sys.fontBody; pixelSize: view.sys.fontSize - 4 }
@@ -893,5 +902,6 @@ Item {
     focus: true
     Keys.onEscapePressed: view.sys.dismissWelcome()
     Keys.onReturnPressed: view.sys.dismissWelcome()
+    Keys.onEnterPressed: view.sys.dismissWelcome()
     Component.onCompleted: forceActiveFocus()
 }

@@ -1050,7 +1050,11 @@ ColumnLayout {
                     anchors.fill: parent
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
-                    onClicked: page.sys.openWelcome()
+                    onClicked: {
+                        page.sys.reinstallStatusMsg = "";
+                        page.sys.reinstallStatusIsError = false;
+                        page.sys.openWelcome();
+                    }
                 }
             }
 

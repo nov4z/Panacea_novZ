@@ -1429,10 +1429,13 @@ PanelWindow {
         onExited: code => {
             root.updBusy = false;
             root.endBusy();
-            if (code !== 0 && root.updError.length === 0)
-                root.updError = "failed";
-            if (code === 0) {
+            if (code !== 0) {
+                if (root.updError.length === 0)
+                    root.updError = "failed";
                 root.updIsReinstall = false;
+                reinstallStateFile.reload();
+                reinstallCacheFile.reload();
+            } else {
                 root.updStatus = "current";
                 root.updStep = "done";
             }
@@ -1546,13 +1549,23 @@ PanelWindow {
     property bool welcomeOpen: false
     property string reinstallStatusMsg: ""
     property bool   reinstallStatusIsError: false
+    property bool   reinstallStateHandled: false
 
     function openWelcome() {
+        if (arguments.length > 0 && typeof arguments[0] === "string") {
+            root.reinstallStatusMsg = arguments[0];
+            root.reinstallStatusIsError = (arguments[1] === true);
+        } else {
+            root.reinstallStatusMsg = "";
+            root.reinstallStatusIsError = false;
+        }
         root.welcomeOpen = true;
     }
 
     function dismissWelcome() {
         root.welcomeOpen = false;
+        root.reinstallStatusMsg = "";
+        root.reinstallStatusIsError = false;
         if (!root.cfg.hasSeenWelcome) {
             root.cfg.hasSeenWelcome = true;
             root.saveCfg();
@@ -1589,18 +1602,23 @@ PanelWindow {
         interval: 500
         running: true
         repeat: true
+        triggeredOnStart: true
         property int checks: 0
         onTriggered: {
+            if (root.reinstallStateHandled) {
+                running = false;
+                return;
+            }
             reinstallStateFile.reload();
             reinstallCacheFile.reload();
-            if (++checks >= 5) running = false;
+            if (++checks >= 10) running = false;
         }
     }
 
     Process {
         id: pReinstallStateClear
         command: ["sh", "-c",
-                  "rm -f \"$1/.reinstall_state\" \"$2/panacea/reinstall_status.json\"", "_",
+                  "rm -f \"$1/.reinstall_state\" \"$2/panacea/reinstall_status.json\" \"$2/reinstall_status.json\"", "_",
                   Quickshell.env("HOME") + "/.config/panacea",
                   Quickshell.env("XDG_CACHE_HOME") || (Quickshell.env("HOME") + "/.cache")]
     }
@@ -1616,28 +1634,31 @@ PanelWindow {
     }
 
     function handleReinstallState(jsonStr) {
+        if (root.updIsReinstall) return;
+        if (root.reinstallStateHandled) return;
         try {
             var obj = JSON.parse(jsonStr);
             if (!obj || !obj.status) return;
+            root.reinstallStateHandled = true;
             pReinstallStateClear.running = true;
 
             if (obj.status === "success" || obj.status === "ok") {
-                root.reinstallStatusIsError = false;
-                root.reinstallStatusMsg = root.tr("¡Panacea novZ se reinstaló correctamente desde cero de forma limpia!");
+                var sMsg = root.tr("¡Panacea novZ se reinstaló correctamente desde cero de forma limpia!");
                 root.playSound("voice_done");
                 notifyReinstallProcess.urgency = "normal";
                 notifyReinstallProcess.title = "Panacea novZ";
-                notifyReinstallProcess.msg = root.reinstallStatusMsg;
+                notifyReinstallProcess.msg = sMsg;
                 notifyReinstallProcess.running = true;
-                root.openWelcome();
+                root.openWelcome(sMsg, false);
             } else if (obj.status === "failed") {
-                root.reinstallStatusIsError = true;
-                root.reinstallStatusMsg = root.tr("La reinstalación no pudo completarse y se restauró el estado previo.");
+                var fMsg = root.tr("La reinstalación no pudo completarse y se restauró el estado previo.");
                 root.playSound("lowbatt");
                 notifyReinstallProcess.urgency = "critical";
                 notifyReinstallProcess.title = "Panacea novZ";
-                notifyReinstallProcess.msg = root.reinstallStatusMsg;
+                notifyReinstallProcess.msg = fMsg;
                 notifyReinstallProcess.running = true;
+                root.reinstallStatusMsg = "";
+                root.reinstallStatusIsError = false;
             }
         } catch(e) {}
     }
