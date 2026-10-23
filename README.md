@@ -11,13 +11,10 @@
 [![Fedora](https://img.shields.io/badge/FEDORA-294172?style=for-the-badge&logo=fedora&logoColor=white)](https://getfedora.org/)
 <br/>
 [![Hyprland](https://img.shields.io/badge/HYPRLAND-00C7B7?style=for-the-badge&logo=hyprland&logoColor=white)](https://hyprland.org/)
-[![Niri](https://img.shields.io/badge/NIRI-BETA-7852FF?style=for-the-badge&labelColor=444444)](https://github.com/YaLTeR/niri)
 [![Quickshell](https://img.shields.io/badge/QUICKSHELL-777777?style=for-the-badge&logo=qt&logoColor=white)](https://quickshell.outfoxxed.me/)
 [![Fish](https://img.shields.io/badge/FISH-000000?style=for-the-badge&logo=fish&logoColor=white)](https://fishshell.com/)
-[![Tests](https://img.shields.io/badge/TESTS-285%2F285%20PASSED-brightgreen?style=for-the-badge&logo=checkmarx)](tests/)
 [![MIT](https://img.shields.io/badge/MIT-2B78FF?style=for-the-badge)](LICENSE)
 <br/>
-[![Repositorio novZ](https://img.shields.io/badge/GitHub-nov4z%2FPanacea__novZ-black?style=for-the-badge&logo=github)](https://github.com/nov4z/Panacea_novZ)
 [![Repositorio Original](https://img.shields.io/badge/Repositorio%20Original-EnsixD%2FPanacea-blue?style=for-the-badge&logo=github)](https://github.com/EnsixD/Panacea)
 
 <br/>
@@ -226,7 +223,7 @@ qs -c ~/.config/panacea ipc call pill smartClose
 ## 📦 Requisitos del Sistema
 
 - **Sistema Operativo**: Linux (Arch Linux, CachyOS, Fedora, Ubuntu, Debian o cualquier distribución con soporte Wayland).
-- **Compositor Wayland**: Hyprland (recomendado) o compositores compatibles con LayerShell (Niri, Sway).
+- **Compositor Wayland**: Hyprland (recomendado) o compositores compatibles con LayerShell.
 - **Shell Engine**: `quickshell` (o `quickshell-git`).
 - **Librerías Qt6**: `qt6-declarative`, `qt6-multimedia`, `qt6-svg`, `qt6-5compat`, `qt6-wayland`.
 - **Audio & Media**: `pipewire`, `wireplumber`, `pipewire-pulse`, `playerctl`, `cava`.
