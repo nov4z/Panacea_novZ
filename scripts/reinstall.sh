@@ -69,7 +69,7 @@ while [ $# -gt 0 ]; do
             shift 2
             ;;
         -h|--help)
-            echo "Uso: reinstall.sh [apply|-y|--yes|--dry-run|--no-restart|--git <url>]"
+            echo "Uso: reinstall.sh [apply|-y|--yes|--dry-run|--no-restart|--repo <repo>|--branch <branch>|--git <url>|--config-dir <dir>|--cache-dir <dir>]"
             exit 0
             ;;
         *)
@@ -115,9 +115,11 @@ if [ "$DRY" = "1" ]; then
     fi
 else
     if ! git clone --depth 1 --branch "$BRANCH" "$GIT_URL" "$TMP_DIR/src" >/dev/null 2>&1; then
-        echo "error=download"
-        echo "status=failed"
-        exit 1
+        if ! git clone --depth 1 "$GIT_URL" "$TMP_DIR/src" >/dev/null 2>&1; then
+            echo "error=download"
+            echo "status=failed"
+            exit 1
+        fi
     fi
 fi
 
@@ -135,6 +137,9 @@ else
     # Limpiar caché de panacea y archivos temporales, excluyendo el staging dir
     rm -rf "$CACHE_DIR"
     find /tmp -maxdepth 1 \( -name "panacea*" -o -name "spicylyrics*" -o -name "cava*" \) -not -path "$TMP_DIR*" -exec rm -rf {} + 2>/dev/null || true
+    if [ "$CACHE_DIR" = "$CACHE/panacea" ]; then
+        rm -rf "$CACHE/quickshell/qmlcache" "$CACHE/quickshell/qtpipelinecache"* "$CACHE/quickshell/qtshadercache"* 2>/dev/null || true
+    fi
 
     # Si existe una instalación previa, realizar respaldo de seguridad antes de eliminar
     if [ -d "$INSTALL_DIR" ]; then
@@ -154,7 +159,11 @@ else
     chmod +x "$TMP_DIR/src/install.sh" 2>/dev/null || true
     # Ejecutamos el instalador oficial con la ruta de instalación configurada
     target_parent="$(dirname "$INSTALL_DIR")"
-    if ! (cd "$TMP_DIR/src" && env XDG_CONFIG_HOME="$target_parent" PANACEA_INSTALL_DIR="$INSTALL_DIR" bash ./install.sh --yes --skip-deps --no-restart >/dev/null 2>&1); then
+    if ! (cd "$TMP_DIR/src" && env XDG_CONFIG_HOME="$target_parent" PANACEA_INSTALL_DIR="$INSTALL_DIR" bash ./install.sh --yes --skip-deps --no-restart --no-backup >/dev/null 2>&1); then
+        if [ -n "${BACKUP_PATH:-}" ] && [ -d "$BACKUP_PATH" ]; then
+            rm -rf "$INSTALL_DIR"
+            cp -a "$BACKUP_PATH" "$INSTALL_DIR" 2>/dev/null || true
+        fi
         echo "error=install"
         echo "status=failed"
         exit 1
@@ -162,6 +171,10 @@ else
 
     # Verificar integridad de la nueva instalación
     if [ ! -f "$INSTALL_DIR/qml/shell.qml" ] || [ ! -f "$INSTALL_DIR/settings.json" ]; then
+        if [ -n "${BACKUP_PATH:-}" ] && [ -d "$BACKUP_PATH" ]; then
+            rm -rf "$INSTALL_DIR"
+            cp -a "$BACKUP_PATH" "$INSTALL_DIR" 2>/dev/null || true
+        fi
         echo "error=install"
         echo "status=failed"
         exit 1
@@ -176,12 +189,14 @@ if [ "$DRY" = "1" ] || [ "$NO_RESTART" = "1" ]; then
     exit 0
 fi
 
-# Reiniciar quickshell.service de forma desacoplada
+# Reiniciar quickshell.service de forma desacoplada garantizando exactamente 1 proceso
 setsid sh -c '
     sleep 1
-    if systemctl --user is-active --quiet quickshell.service 2>/dev/null; then
-        systemctl --user restart quickshell.service
-    else
+    if systemctl --user is-active --quiet quickshell.service 2>/dev/null || systemctl --user is-enabled --quiet quickshell.service 2>/dev/null; then
+        systemctl --user restart quickshell.service 2>/dev/null || true
+    fi
+    sleep 1
+    if ! pgrep -x qs >/dev/null 2>&1; then
         pkill -x qs 2>/dev/null || true
         sleep 1
         nohup env QSG_RENDER_LOOP=threaded qs -c "'"$INSTALL_DIR"'" </dev/null >/dev/null 2>&1 & disown

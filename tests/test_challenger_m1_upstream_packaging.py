@@ -904,6 +904,88 @@ class TestReinstallCleanWorkflow(unittest.TestCase):
         es_match = re.search(r"readonly property var es:\s*\(\{\s*(.*?)\s*\}\)", content, re.DOTALL)
         self.assertIsNotNone(es_match, "es dictionary not found")
 
+    def test_08_reinstall_rollback_on_installer_failure(self):
+        """reinstall.sh must roll back to pre-wipe backup if install.sh crashes, preventing directory loss."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            fake_repo = Path(tmpdir) / "fake_repo"
+            fake_repo.mkdir()
+            subprocess.run(["git", "init", str(fake_repo)], check=True, capture_output=True)
+            subprocess.run(["git", "-C", str(fake_repo), "config", "user.email", "test@test.com"], check=True)
+            subprocess.run(["git", "-C", str(fake_repo), "config", "user.name", "test"], check=True)
+
+            # Create an install.sh that exits with an error
+            bad_install = fake_repo / "install.sh"
+            bad_install.write_text("#!/bin/bash\necho 'Crash simulation'\nexit 42\n", encoding="utf-8")
+            bad_install.chmod(0o755)
+            subprocess.run(["git", "-C", str(fake_repo), "add", "install.sh"], check=True)
+            subprocess.run(["git", "-C", str(fake_repo), "commit", "-m", "bad installer"], check=True)
+
+            test_conf = Path(tmpdir) / "panacea"
+            test_conf.mkdir()
+            canary = test_conf / "critical_user_state.json"
+            canary.write_text('{"important": true}', encoding="utf-8")
+
+            res = subprocess.run([
+                str(self.reinstall_sh), "apply",
+                "--config-dir", str(test_conf),
+                "--git", str(fake_repo),
+                "--no-restart"
+            ], capture_output=True, text=True)
+
+            self.assertNotEqual(res.returncode, 0)
+            self.assertIn("error=install", res.stdout)
+            self.assertIn("status=failed", res.stdout)
+            # The canary file must still exist because rollback restored the backup
+            self.assertTrue(test_conf.is_dir(), "Config directory was destroyed and not restored on install failure!")
+            self.assertTrue(canary.is_file(), "Canary file was lost despite safety backup!")
+            self.assertEqual(canary.read_text(encoding="utf-8"), '{"important": true}')
+
+    def test_09_reinstall_interactive_cli_prompt(self):
+        """reinstall.sh interactive prompt must safely abort on 'n', Enter, or EOF, and proceed on 's'/'y'."""
+        # Case 1: Cancel with 'n'
+        p1 = subprocess.run([str(self.reinstall_sh), "--dry-run"], input="n\n", capture_output=True, text=True)
+        self.assertEqual(p1.returncode, 0)
+        self.assertIn("Operación cancelada", p1.stdout)
+
+        # Case 2: Cancel on empty enter
+        p2 = subprocess.run([str(self.reinstall_sh), "--dry-run"], input="\n", capture_output=True, text=True)
+        self.assertEqual(p2.returncode, 0)
+        self.assertIn("Operación cancelada", p2.stdout)
+
+        # Case 3: Cancel on EOF
+        p3 = subprocess.run([str(self.reinstall_sh), "--dry-run"], input="", capture_output=True, text=True)
+        self.assertEqual(p3.returncode, 0)
+        self.assertIn("Operación cancelada", p3.stdout)
+
+        # Case 4: Confirm with 's'
+        p4 = subprocess.run([str(self.reinstall_sh), "--dry-run"], input="s\n", capture_output=True, text=True)
+        self.assertEqual(p4.returncode, 0)
+        self.assertIn("status=done", p4.stdout)
+
+        # Case 5: Confirm with 'si'
+        p5 = subprocess.run([str(self.reinstall_sh), "--dry-run"], input="si\n", capture_output=True, text=True)
+        self.assertEqual(p5.returncode, 0)
+        self.assertIn("status=done", p5.stdout)
+
+        # Case 6: Confirm with 'y'
+        p6 = subprocess.run([str(self.reinstall_sh), "--dry-run"], input="y\n", capture_output=True, text=True)
+        self.assertEqual(p6.returncode, 0)
+        self.assertIn("status=done", p6.stdout)
+
+    def test_10_reinstall_ui_consistency_and_sound(self):
+        """SetSystem.qml and shell.qml must maintain visual consistency and valid alert sounds."""
+        setsystem_content = self.setsystem_qml.read_text(encoding="utf-8")
+        shell_content = self.shell_qml.read_text(encoding="utf-8")
+
+        # Update note hidden during reinstall
+        self.assertIn("visible: page.reinstallStep === 0 && !page.sys.updIsReinstall", setsystem_content)
+        # Update button hidden during reinstall
+        self.assertIn("visible: !page.sys.updIsReinstall && (page.sys.updateAvailable || page.sys.updBusy)", setsystem_content)
+        # Lowbatt alert sound used
+        self.assertIn('page.sys.playSound("lowbatt")', setsystem_content)
+        # Shell preserves updIsReinstall on failure
+        self.assertIn('root.updIsReinstall ? root.tr("Не удалось скачать Panacea_novZ")', shell_content)
+
 
 if __name__ == "__main__":
     unittest.main()

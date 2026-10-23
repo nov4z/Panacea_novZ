@@ -1225,7 +1225,7 @@ PanelWindow {
         case "":         return "";
         case "nogit":    return root.tr("Не установлен git");
         case "offline":  return root.tr("Нет связи с GitHub");
-        case "download": return root.tr("Не удалось скачать обновление");
+        case "download": return root.updIsReinstall ? root.tr("Не удалось скачать Panacea_novZ") : root.tr("Не удалось скачать обновление");
         case "clean":    return root.tr("Ошибка очистки конфигурации");
         case "install":  return root.tr("Установщик завершился с ошибкой");
         default:         return root.updIsReinstall ? root.tr("Сбой переустановки") : root.tr("Обновление не удалось");
@@ -1243,6 +1243,7 @@ PanelWindow {
         if (root.updBusy || root.updChecking) return;
         root.updChecking = true;
         root.updError = "";
+        root.updIsReinstall = false;
         pUpdCheck.running = false;
         pUpdCheck.running = true;
     }
@@ -1426,11 +1427,14 @@ PanelWindow {
         }
         onExited: code => {
             root.updBusy = false;
-            root.updIsReinstall = false;
             root.endBusy();
             if (code !== 0 && root.updError.length === 0)
                 root.updError = "failed";
-            if (code === 0) { root.updStatus = "current"; root.updStep = "done"; }
+            if (code === 0) {
+                root.updIsReinstall = false;
+                root.updStatus = "current";
+                root.updStep = "done";
+            }
         }
     }
 

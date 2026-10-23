@@ -967,6 +967,8 @@ ColumnLayout {
                 Layout.preferredHeight: 32
                 radius: 10
                 visible: !page.sys.updBusy
+                opacity: (page.reinstallStep > 0) ? 0.4 : 1
+                Behavior on opacity { NumberAnimation { duration: page.sys.animFade } }
                 color: checkMa.containsMouse
                        ? Qt.rgba(page.sys.colFg.r, page.sys.colFg.g, page.sys.colFg.b, 0.14)
                        : Qt.rgba(page.sys.colFg.r, page.sys.colFg.g, page.sys.colFg.b, 0.06)
@@ -1103,7 +1105,7 @@ ColumnLayout {
                         } else if (page.reinstallStep === 2 && page.reinstallCooldown === 0) {
                             page.reinstallStep = 0;
                             page.cancelReinstall();
-                            if (page.sys && page.sys.playSound) page.sys.playSound("warn");
+                            if (page.sys && page.sys.playSound) page.sys.playSound("lowbatt");
                             page.sys.applyReinstall();
                         }
                     }
@@ -1152,7 +1154,7 @@ ColumnLayout {
                 Layout.preferredWidth: Math.max(120, updRow.implicitWidth + 24)
                 Layout.preferredHeight: 32
                 radius: 10
-                visible: page.sys.updateAvailable || page.sys.updBusy
+                visible: !page.sys.updIsReinstall && (page.sys.updateAvailable || page.sys.updBusy)
                 opacity: page.sys.updBusy ? 0.6 : 1
                 color: updMa.containsMouse && !page.sys.updBusy
                        ? Qt.rgba(page.sys.colOn.r, page.sys.colOn.g, page.sys.colOn.b, 0.34)
@@ -1279,6 +1281,7 @@ ColumnLayout {
 
         Text {
             Layout.fillWidth: true
+            visible: page.reinstallStep === 0 && !page.sys.updIsReinstall
             text: page.sys.tr("Настройки, сочетания клавиш и обои остаются на месте: перед установкой они уносятся в сторону и возвращаются после.")
             color: page.sys.colMuted
             wrapMode: Text.WordWrap
