@@ -170,6 +170,7 @@
     "fontSize": 15,
     "forceCustomColors": false,
     "fullBatteryAlert": true,
+    "hasSeenWelcome": false,
     "iconSize": 17,
     "islandGap": 12,
     "islandLyricsBehavior": "manual",

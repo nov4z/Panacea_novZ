@@ -32,11 +32,16 @@ INSTALL_DIR="${PANACEA_CONFIG_DIR:-$CONF/panacea}"
 CACHE_DIR="${PANACEA_CACHE_DIR:-$CACHE/panacea}"
 
 UNATTENDED=0
+FROM_MENU="${PANACEA_FROM_MENU:-0}"
 
 while [ $# -gt 0 ]; do
     case "$1" in
         apply|-y|--yes|--unattended)
             UNATTENDED=1
+            shift
+            ;;
+        --from-menu)
+            FROM_MENU=1
             shift
             ;;
         --dry-run)
@@ -92,6 +97,19 @@ if [ "$UNATTENDED" -ne 1 ]; then
     esac
 fi
 
+record_status() {
+    local st="$1"
+    local err="${2:-}"
+    if [ "$FROM_MENU" = "1" ]; then
+        local ts
+        ts="$(date +%s 2>/dev/null || echo 0)"
+        mkdir -p "$CACHE_DIR" 2>/dev/null || true
+        mkdir -p "$INSTALL_DIR" 2>/dev/null || true
+        printf '{"status":"%s","error":"%s","from_menu":true,"timestamp":%s}\n' "$st" "$err" "$ts" > "$CACHE_DIR/reinstall_status.json" 2>/dev/null || true
+        printf '{"status":"%s","error":"%s","from_menu":true,"timestamp":%s}\n' "$st" "$err" "$ts" > "$INSTALL_DIR/.reinstall_state" 2>/dev/null || true
+    fi
+}
+
 # 1. Descarga / Clonación limpia
 echo "step=download"
 TMP_DIR="$(mktemp -d "${TMPDIR:-/tmp}/panacea_reinstall_stage_XXXXXX")"
@@ -101,6 +119,7 @@ cleanup() {
 trap cleanup EXIT
 
 if ! command -v git >/dev/null 2>&1; then
+    record_status "failed" "nogit"
     echo "error=nogit"
     echo "status=failed"
     exit 1
@@ -116,6 +135,7 @@ if [ "$DRY" = "1" ]; then
 else
     if ! git clone --depth 1 --branch "$BRANCH" "$GIT_URL" "$TMP_DIR/src" >/dev/null 2>&1; then
         if ! git clone --depth 1 "$GIT_URL" "$TMP_DIR/src" >/dev/null 2>&1; then
+            record_status "failed" "download"
             echo "error=download"
             echo "status=failed"
             exit 1
@@ -124,6 +144,7 @@ else
 fi
 
 if [ ! -f "$TMP_DIR/src/install.sh" ]; then
+    record_status "failed" "download"
     echo "error=download"
     echo "status=failed"
     exit 1
@@ -164,6 +185,7 @@ else
             rm -rf "$INSTALL_DIR"
             cp -a "$BACKUP_PATH" "$INSTALL_DIR" 2>/dev/null || true
         fi
+        record_status "failed" "install"
         echo "error=install"
         echo "status=failed"
         exit 1
@@ -175,6 +197,7 @@ else
             rm -rf "$INSTALL_DIR"
             cp -a "$BACKUP_PATH" "$INSTALL_DIR" 2>/dev/null || true
         fi
+        record_status "failed" "integrity"
         echo "error=install"
         echo "status=failed"
         exit 1
@@ -182,6 +205,7 @@ else
 fi
 
 # 4. Reinicio de Quickshell (desacoplado)
+record_status "success" ""
 echo "step=restart"
 echo "status=done"
 

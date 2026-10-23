@@ -766,6 +766,9 @@ class TestReinstallCleanWorkflow(unittest.TestCase):
         self.setsystem_qml = PROJECT_ROOT / "qml" / "SetSystem.qml"
         self.shell_qml = PROJECT_ROOT / "qml" / "shell.qml"
         self.translations_qml = PROJECT_ROOT / "qml" / "Translations.qml"
+        self.welcome_qml = PROJECT_ROOT / "qml" / "WelcomeView.qml"
+        self.settings_json = PROJECT_ROOT / "settings.json"
+        self.settings_example = PROJECT_ROOT / "settings.json.example"
 
     def test_01_reinstall_script_syntax_and_permissions(self):
         """reinstall.sh must exist, be executable, support help, and contain no hardcoded scratch paths."""
@@ -985,6 +988,118 @@ class TestReinstallCleanWorkflow(unittest.TestCase):
         self.assertIn('page.sys.playSound("lowbatt")', setsystem_content)
         # Shell preserves updIsReinstall on failure
         self.assertIn('root.updIsReinstall ? root.tr("Не удалось скачать Panacea_novZ")', shell_content)
+
+    def test_11_welcome_view_syntax_and_structure(self):
+        """WelcomeView.qml must exist, parse cleanly without delimiter errors, and define the 6 flagship features."""
+        self.assertTrue(self.welcome_qml.is_file(), "qml/WelcomeView.qml does not exist")
+        content = self.welcome_qml.read_text(encoding="utf-8")
+
+        parser = QmlLexerBracketParser(content, str(self.welcome_qml))
+        ok, errs = parser.parse()
+        self.assertTrue(ok, f"Delimiter errors in WelcomeView.qml: {errs}")
+
+        # Header, logo, and title checks
+        self.assertIn("assets/logo-128.png", content)
+        self.assertIn("¡Bienvenido a Panacea novZ!", content)
+        self.assertIn("Gracias por instalar", content)
+        self.assertIn("V:NOVZ · PANACEA SHELL", content)
+
+        # 6 Flagship Features
+        self.assertIn("Motor SpicyLyrics", content)
+        self.assertIn("60 FPS", content)
+        self.assertIn("Sincronización BPM y Tempo", content)
+        self.assertIn("Super + M", content)
+        self.assertIn("Diseño Dark Unibody & Modo Radiante", content)
+        self.assertIn("Estudio Acústico Desacoplado", content)
+        self.assertIn("7 Packs Hápticos", content)
+        self.assertIn("Localización en Tiempo Real", content)
+        self.assertIn("ES · EN · RU", content)
+        self.assertIn("Soporte Universal & Reinstalación Limpia", content)
+
+        # Interactive controls & Dismiss
+        self.assertIn("Comenzar a explorar", content)
+        self.assertIn("Abrir Ajustes", content)
+        self.assertIn("view.sys.dismissWelcome()", content)
+        self.assertIn("Keys.onEscapePressed", content)
+        self.assertIn("Keys.onReturnPressed", content)
+
+    def test_12_welcome_settings_contracts_and_first_run(self):
+        """settings.json, settings.json.example, and shell.qml must configure hasSeenWelcome and first-run display."""
+        # settings schema check
+        cfg_raw = json.loads(self.settings_json.read_text(encoding="utf-8"))
+        cfg_ex_raw = json.loads(self.settings_example.read_text(encoding="utf-8"))
+        self.assertIn("hasSeenWelcome", cfg_raw)
+        self.assertFalse(cfg_raw["hasSeenWelcome"])
+        self.assertIn("hasSeenWelcome", cfg_ex_raw)
+        self.assertFalse(cfg_ex_raw["hasSeenWelcome"])
+
+        # shell.qml adapter and state properties
+        shell_content = self.shell_qml.read_text(encoding="utf-8")
+        self.assertIn("property bool   hasSeenWelcome: false", shell_content)
+        self.assertIn("property bool welcomeOpen: false", shell_content)
+        self.assertIn("function openWelcome()", shell_content)
+        self.assertIn("function dismissWelcome()", shell_content)
+        self.assertIn("firstRunWelcomeTimer", shell_content)
+        self.assertIn("WelcomeView", shell_content)
+        self.assertIn("function welcome(): void { root.openWelcome(); }", shell_content)
+
+        # SetSystem.qml manual reopen button
+        setsystem_content = self.setsystem_qml.read_text(encoding="utf-8")
+        self.assertIn("welcomeBtn", setsystem_content)
+        self.assertIn("page.sys.openWelcome()", setsystem_content)
+
+    def test_13_reinstall_menu_status_generation_and_consumption(self):
+        """reinstall.sh --from-menu must generate status JSON on failure/success, and shell.qml must handle state."""
+        # shell.qml integration
+        shell_content = self.shell_qml.read_text(encoding="utf-8")
+        self.assertIn("--from-menu", shell_content)
+        self.assertIn("handleReinstallState", shell_content)
+        self.assertIn("reinstallStateFile", shell_content)
+        self.assertIn("reinstallCacheFile", shell_content)
+        self.assertIn("pReinstallStateClear", shell_content)
+
+        # Test failure status generation with --from-menu
+        with tempfile.TemporaryDirectory() as tmpdir:
+            test_conf = Path(tmpdir) / "panacea_conf"
+            test_cache = Path(tmpdir) / "panacea_cache"
+            test_conf.mkdir()
+            test_cache.mkdir()
+
+            res = subprocess.run([
+                str(self.reinstall_sh), "apply", "--from-menu",
+                "--config-dir", str(test_conf),
+                "--cache-dir", str(test_cache),
+                "--git", "/invalid/repo/fail",
+                "--no-restart"
+            ], capture_output=True, text=True)
+
+            self.assertNotEqual(res.returncode, 0)
+            status_file = test_cache / "reinstall_status.json"
+            self.assertTrue(status_file.is_file(), "reinstall_status.json was not created on failure with --from-menu")
+            data = json.loads(status_file.read_text(encoding="utf-8"))
+            self.assertEqual(data.get("status"), "failed")
+            self.assertTrue(data.get("from_menu"))
+
+        # Test success status generation with --from-menu in dry-run simulated execution
+        with tempfile.TemporaryDirectory() as tmpdir:
+            test_conf = Path(tmpdir) / "panacea_conf"
+            test_cache = Path(tmpdir) / "panacea_cache"
+            test_conf.mkdir()
+            test_cache.mkdir()
+
+            res = subprocess.run([
+                str(self.reinstall_sh), "--dry-run", "apply", "--from-menu",
+                "--config-dir", str(test_conf),
+                "--cache-dir", str(test_cache),
+                "--no-restart"
+            ], capture_output=True, text=True)
+
+            self.assertEqual(res.returncode, 0)
+            status_file = test_cache / "reinstall_status.json"
+            self.assertTrue(status_file.is_file(), "reinstall_status.json was not created on success with --from-menu")
+            data = json.loads(status_file.read_text(encoding="utf-8"))
+            self.assertEqual(data.get("status"), "success")
+            self.assertTrue(data.get("from_menu"))
 
 
 if __name__ == "__main__":

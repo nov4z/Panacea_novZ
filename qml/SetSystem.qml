@@ -1014,6 +1014,46 @@ ColumnLayout {
                 }
             }
 
+            // Botón Bienvenida / Características
+            Rectangle {
+                id: welcomeBtn
+                Layout.preferredWidth: Math.max(104, welcomeRow.implicitWidth + 24)
+                Layout.preferredHeight: 32
+                radius: 10
+                visible: !page.sys.updBusy && page.reinstallStep === 0
+                color: welcomeMa.containsMouse
+                       ? Qt.rgba(page.sys.colFg.r, page.sys.colFg.g, page.sys.colFg.b, 0.14)
+                       : Qt.rgba(page.sys.colFg.r, page.sys.colFg.g, page.sys.colFg.b, 0.06)
+                Behavior on color { ColorAnimation { duration: page.sys.animFade } }
+
+                RowLayout {
+                    id: welcomeRow
+                    anchors.centerIn: parent
+                    spacing: 6
+
+                    Glyph {
+                        glyph: String.fromCodePoint(0xF075A) // md-sparkles
+                        color: page.sys.colOn
+                        fontFam: page.sys.fontFam
+                        size: 13
+                    }
+
+                    Text {
+                        text: page.sys.tr("Bienvenida")
+                        color: page.sys.colFg
+                        font { family: page.sys.fontBody; pixelSize: page.sys.fontSize - 3 }
+                    }
+                }
+
+                MouseArea {
+                    id: welcomeMa
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: page.sys.openWelcome()
+                }
+            }
+
             // Reinstalar con 2 confirmaciones consecutivas y cooldown obligatorio de 5s por confirmación
             Rectangle {
                 id: reinstallBtn

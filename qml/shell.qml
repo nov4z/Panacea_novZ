@@ -280,6 +280,7 @@ PanelWindow {
             property bool   featOsd: true
             property bool   featPowermenu: true
             property bool   featPolkit: true
+            property bool   hasSeenWelcome: false
 
             // ---------------------------------------------- macOS Dock
             property bool   dockEnabled: true
@@ -1420,7 +1421,7 @@ PanelWindow {
 
     Process {
         id: pReinstallApply
-        command: [root.scriptDir + "/reinstall.sh", "apply"]
+        command: [root.scriptDir + "/reinstall.sh", "apply", "--from-menu"]
         stdout: SplitParser {
             splitMarker: "\n"
             onRead: data => root.updParse(data, false)
@@ -1539,6 +1540,119 @@ PanelWindow {
         command: ["sh", "-c",
                   "rm -f \"$1/.whatsnew\" \"$1/.missingdeps\" \"$1/.obsoletedeps\"", "_",
                   Quickshell.env("HOME") + "/.config/panacea"]
+    }
+
+    // ----------------------------------------------------- Bienvenida y Primera Ejecución
+    property bool welcomeOpen: false
+    property string reinstallStatusMsg: ""
+    property bool   reinstallStatusIsError: false
+
+    function openWelcome() {
+        root.welcomeOpen = true;
+    }
+
+    function dismissWelcome() {
+        root.welcomeOpen = false;
+        if (!root.cfg.hasSeenWelcome) {
+            root.cfg.hasSeenWelcome = true;
+            root.saveCfg();
+        }
+    }
+
+    // Comprobación de estado de reinstalación desde el menú (~/.cache o ~/.config)
+    FileView {
+        id: reinstallStateFile
+        path: Quickshell.env("HOME") + "/.config/panacea/.reinstall_state"
+        watchChanges: true
+        printErrors: false
+        onFileChanged: reload()
+        onLoaded: {
+            var t = String(reinstallStateFile.text()).trim();
+            if (t.length > 0) root.handleReinstallState(t);
+        }
+    }
+
+    FileView {
+        id: reinstallCacheFile
+        path: (Quickshell.env("XDG_CACHE_HOME") || (Quickshell.env("HOME") + "/.cache")) + "/panacea/reinstall_status.json"
+        watchChanges: true
+        printErrors: false
+        onFileChanged: reload()
+        onLoaded: {
+            var t = String(reinstallCacheFile.text()).trim();
+            if (t.length > 0) root.handleReinstallState(t);
+        }
+    }
+
+    Timer {
+        id: reinstallCheckTimer
+        interval: 500
+        running: true
+        repeat: true
+        property int checks: 0
+        onTriggered: {
+            reinstallStateFile.reload();
+            reinstallCacheFile.reload();
+            if (++checks >= 5) running = false;
+        }
+    }
+
+    Process {
+        id: pReinstallStateClear
+        command: ["sh", "-c",
+                  "rm -f \"$1/.reinstall_state\" \"$2/panacea/reinstall_status.json\"", "_",
+                  Quickshell.env("HOME") + "/.config/panacea",
+                  Quickshell.env("XDG_CACHE_HOME") || (Quickshell.env("HOME") + "/.cache")]
+    }
+
+    Process {
+        id: notifyReinstallProcess
+        property string title: ""
+        property string msg: ""
+        property string urgency: "normal"
+        command: ["notify-send", "-u", urgency, "-a", "Panacea", "-i",
+                  ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/panacea/assets/logo-128.png"),
+                  title, msg]
+    }
+
+    function handleReinstallState(jsonStr) {
+        try {
+            var obj = JSON.parse(jsonStr);
+            if (!obj || !obj.status) return;
+            pReinstallStateClear.running = true;
+
+            if (obj.status === "success" || obj.status === "ok") {
+                root.reinstallStatusIsError = false;
+                root.reinstallStatusMsg = root.tr("¡Panacea novZ se reinstaló correctamente desde cero de forma limpia!");
+                root.playSound("voice_done");
+                notifyReinstallProcess.urgency = "normal";
+                notifyReinstallProcess.title = "Panacea novZ";
+                notifyReinstallProcess.msg = root.reinstallStatusMsg;
+                notifyReinstallProcess.running = true;
+                root.openWelcome();
+            } else if (obj.status === "failed") {
+                root.reinstallStatusIsError = true;
+                root.reinstallStatusMsg = root.tr("La reinstalación no pudo completarse y se restauró el estado previo.");
+                root.playSound("lowbatt");
+                notifyReinstallProcess.urgency = "critical";
+                notifyReinstallProcess.title = "Panacea novZ";
+                notifyReinstallProcess.msg = root.reinstallStatusMsg;
+                notifyReinstallProcess.running = true;
+            }
+        } catch(e) {}
+    }
+
+    // Temporizador de primera instalación: si no ha visto la bienvenida, mostrarla
+    Timer {
+        id: firstRunWelcomeTimer
+        interval: 800
+        running: true
+        repeat: false
+        onTriggered: {
+            if (!root.cfg.hasSeenWelcome) {
+                root.openWelcome();
+            }
+        }
     }
 
     // Первая проверка не на старте: при входе в систему сеть ещё поднимается,
@@ -5359,6 +5473,7 @@ PanelWindow {
         function battery(): void {
             root.openSub("battery");
         }
+        function welcome(): void { root.openWelcome(); }
         function settings(): void { root.settingsTab = 0; root.togglePage("settings"); }
         // открыть окно настроек сразу на нужном разделе: удобно вешать на
         // сочетание клавиш и незаменимо при проверке самих настроек
@@ -5395,13 +5510,14 @@ PanelWindow {
         function weather(): void { root.openWeatherDetails(); }
         function smartClose(): string {
             if (!root.cfg.closePanaceaFirst) return "disabled";
-            var anyOpen = root.expanded || root.overviewOpen || root.wallsOpen || root.keysWindowOpen || root.whatsNewOpen || root.weatherDetailsOpen;
+            var anyOpen = root.expanded || root.overviewOpen || root.wallsOpen || root.keysWindowOpen || root.whatsNewOpen || root.welcomeOpen || root.weatherDetailsOpen;
             if (anyOpen) {
                 if (root.weatherDetailsOpen) root.weatherDetailsOpen = false;
                 else if (root.overviewOpen) root.closeOverview();
                 else if (root.wallsOpen) root.closeWalls();
                 else if (root.keysWindowOpen) root.closeKeysWindow();
                 else if (root.whatsNewOpen) root.dismissWhatsNew();
+                else if (root.welcomeOpen) root.dismissWelcome();
                 else if (root.expanded) root.collapse();
                 return "closed_overlay";
             }
@@ -9870,6 +9986,27 @@ PanelWindow {
         sourceComponent: WhatsNewView {
             sys: root
             lines: root.whatsNew
+        }
+    }
+}
+
+// Ventana de Bienvenida e Introducción (primera instalación o apertura voluntaria)
+PanelWindow {
+    visible: root.welcomeOpen
+    anchors { top: true; bottom: true; left: true; right: true }
+    screen: root.screen
+    color: "transparent"
+    WlrLayershell.layer: WlrLayer.Overlay
+    WlrLayershell.keyboardFocus: root.welcomeOpen ? WlrKeyboardFocus.Exclusive
+                                                  : WlrKeyboardFocus.None
+
+    Loader {
+        anchors.fill: parent
+        active: root.welcomeOpen
+        sourceComponent: WelcomeView {
+            sys: root
+            reinstallBanner: root.reinstallStatusMsg
+            reinstallIsError: root.reinstallStatusIsError
         }
     }
 }
