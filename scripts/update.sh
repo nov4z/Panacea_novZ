@@ -283,7 +283,7 @@ restore_user_state() {
             if [ "$f" = "$CONF/panacea/settings.json" ] && command -v jq >/dev/null 2>&1 && [ -f "$f" ]; then
                 local tmp_json
                 tmp_json="$(mktemp)"
-                if jq -s '.[0] * .[1]' "$f" "$STASH/${f#$HOME/}" > "$tmp_json" 2>/dev/null; then
+                if jq -s '.[0] * .[1] | .hasSeenWelcome = true' "$f" "$STASH/${f#$HOME/}" > "$tmp_json" 2>/dev/null; then
                     mv "$tmp_json" "$f"
                 else
                     rm -f "$tmp_json"
@@ -600,33 +600,34 @@ EOF
     echo "status=done"
     echo "version=$sha"
 
-    # Перезапуск отдельным сеансом: он переживёт смерть и оболочки, и нас
-    # самих. Пауза даёт оболочке дочитать вывод и закрыться по-человечески.
-    if have hyprctl && [ -n "${HYPRLAND_INSTANCE_SIGNATURE:-}" ]; then
-        setsid sh -c '
-            sleep 1
-            hyprctl reload >/dev/null 2>&1
+    # Перезапуск отдельным сеансом или через systemd-run: он переживёт смерть
+    # оболочки и выход из её cgroup. Пауза даёт оболочке дочитать вывод и
+    # закрыться по-человечески.
+    local restart_worker='
+        sleep 1
+        if command -v hyprctl >/dev/null 2>&1 && [ -n "${HYPRLAND_INSTANCE_SIGNATURE:-}" ]; then
+            hyprctl reload >/dev/null 2>&1 || true
             [ -x "'"$CONF"'/hypr/scripts/switch_theme.sh" ] \
-                && "'"$CONF"'/hypr/scripts/switch_theme.sh" --restore >/dev/null 2>&1
-            pkill -x qs >/dev/null 2>&1
+                && "'"$CONF"'/hypr/scripts/switch_theme.sh" --restore >/dev/null 2>&1 || true
+        elif [ -n "${NIRI_SOCKET:-}" ] || [ "${XDG_CURRENT_DESKTOP,,}" = "niri" ]; then
+            command -v niri >/dev/null 2>&1 && niri msg action load-config >/dev/null 2>&1 || true
+        fi
+
+        if systemctl --user is-active --quiet quickshell.service 2>/dev/null || systemctl --user is-enabled --quiet quickshell.service 2>/dev/null; then
+            systemctl --user restart quickshell.service 2>/dev/null || true
+        fi
+        sleep 1
+        if ! pgrep -x qs >/dev/null 2>&1; then
+            pkill -x qs 2>/dev/null || true
             sleep 1
-            exec qs -c "'"$CONF"'/panacea"
-        ' >/dev/null 2>&1 &
-    elif [ -n "${NIRI_SOCKET:-}" ] || [ "${XDG_CURRENT_DESKTOP,,}" = "niri" ]; then
-        setsid sh -c '
-            sleep 1
-            command -v niri >/dev/null 2>&1 && niri msg action load-config >/dev/null 2>&1
-            pkill -x qs >/dev/null 2>&1
-            sleep 1
-            exec qs -c "'"$CONF"'/panacea"
-        ' >/dev/null 2>&1 &
+            nohup env QSG_RENDER_LOOP=threaded qs -c "'"$CONF"'/panacea" </dev/null >/dev/null 2>&1 & disown
+        fi
+    '
+
+    if command -v systemd-run >/dev/null 2>&1; then
+        systemd-run --user sh -c "$restart_worker" >/dev/null 2>&1 &
     else
-        setsid sh -c '
-            sleep 1
-            pkill -x qs >/dev/null 2>&1
-            sleep 1
-            exec qs -c "'"$CONF"'/panacea"
-        ' >/dev/null 2>&1 &
+        setsid sh -c "$restart_worker" >/dev/null 2>&1 &
     fi
 }
 

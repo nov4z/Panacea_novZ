@@ -1536,6 +1536,10 @@ PanelWindow {
         root.whatsNew = [];
         root.missingDeps = "";
         root.obsoleteDeps = "";
+        if (!root.cfg.hasSeenWelcome) {
+            root.cfg.hasSeenWelcome = true;
+            root.saveCfg();
+        }
         pWhatsNewClear.running = true;
     }
     Process {
@@ -1670,7 +1674,7 @@ PanelWindow {
         running: true
         repeat: false
         onTriggered: {
-            if (!root.cfg.hasSeenWelcome) {
+            if (!root.cfg.hasSeenWelcome && !root.whatsNewOpen) {
                 root.openWelcome();
             }
         }
@@ -5495,6 +5499,7 @@ PanelWindow {
             root.openSub("battery");
         }
         function welcome(): void { root.openWelcome(); }
+        function dismissWelcome(): void { root.dismissWelcome(); }
         function settings(): void { root.settingsTab = 0; root.togglePage("settings"); }
         // открыть окно настроек сразу на нужном разделе: удобно вешать на
         // сочетание клавиш и незаменимо при проверке самих настроек
@@ -10018,7 +10023,7 @@ PanelWindow {
     screen: root.screen
     color: "transparent"
     WlrLayershell.layer: WlrLayer.Overlay
-    WlrLayershell.keyboardFocus: root.welcomeOpen ? WlrKeyboardFocus.Exclusive
+    WlrLayershell.keyboardFocus: (root.welcomeOpen && !root.whatsNewOpen) ? WlrKeyboardFocus.Exclusive
                                                   : WlrKeyboardFocus.None
 
     Loader {

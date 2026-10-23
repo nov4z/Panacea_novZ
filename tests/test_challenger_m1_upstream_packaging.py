@@ -1124,6 +1124,30 @@ class TestReinstallCleanWorkflow(unittest.TestCase):
         self.assertIn("root.reinstallStatusMsg = \"\"", shell_content)
         self.assertIn("triggeredOnStart: true", shell_content)
 
+    def test_15_update_and_reinstall_decoupled_systemd_restart_contracts(self):
+        """Verify update.sh, reinstall.sh, install.sh and shell.qml decoupled systemd restart and welcome non-collision."""
+        update_content = (PROJECT_ROOT / "scripts" / "update.sh").read_text(encoding="utf-8")
+        reinstall_content = self.reinstall_sh.read_text(encoding="utf-8")
+        install_content = (PROJECT_ROOT / "install.sh").read_text(encoding="utf-8")
+        shell_content = self.shell_qml.read_text(encoding="utf-8")
+
+        # 1. update.sh quickshell.service and systemd-run integration
+        self.assertIn("quickshell.service", update_content, "update.sh must manage quickshell.service")
+        self.assertIn("systemctl --user restart quickshell.service", update_content)
+        self.assertIn("systemd-run", update_content, "update.sh must decouple restart via systemd-run")
+        self.assertIn(".hasSeenWelcome = true", update_content, "update.sh must mark hasSeenWelcome on update restore")
+
+        # 2. reinstall.sh systemd-run decoupling
+        self.assertIn("systemd-run", reinstall_content, "reinstall.sh must decouple restart via systemd-run")
+
+        # 3. install.sh checks both is-active and is-enabled
+        self.assertIn("is-active", install_content)
+        self.assertIn("is-enabled", install_content)
+
+        # 4. shell.qml modal collision prevention
+        self.assertIn("!root.whatsNewOpen", shell_content, "firstRunWelcomeTimer and focus must guard against whatsNewOpen")
+        self.assertIn("dismissWhatsNew", shell_content)
+
 
 if __name__ == "__main__":
     unittest.main()

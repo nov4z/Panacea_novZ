@@ -420,11 +420,11 @@ CLEANCONF
 
     if [ -n "$WAYLAND_DISPLAY" ] || [ "${XDG_SESSION_TYPE:-}" = "wayland" ]; then
         local qs_action="iniciar"
-        if pgrep -x qs >/dev/null 2>&1 || systemctl --user is-active --quiet quickshell.service 2>/dev/null; then
+        if pgrep -x qs >/dev/null 2>&1 || systemctl --user is-active --quiet quickshell.service 2>/dev/null || systemctl --user is-enabled --quiet quickshell.service 2>/dev/null; then
             qs_action="reiniciar"
         fi
         if confirm "¿Deseas $qs_action Quickshell ahora para cargar Panacea Shell V:NOVZ?" "Y"; then
-            if systemctl --user is-active --quiet quickshell.service 2>/dev/null; then
+            if systemctl --user is-active --quiet quickshell.service 2>/dev/null || systemctl --user is-enabled --quiet quickshell.service 2>/dev/null; then
                 systemctl --user restart quickshell.service
             else
                 pkill -x qs 2>/dev/null || true

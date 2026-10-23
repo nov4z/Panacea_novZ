@@ -214,7 +214,7 @@ if [ "$DRY" = "1" ] || [ "$NO_RESTART" = "1" ]; then
 fi
 
 # Reiniciar quickshell.service de forma desacoplada garantizando exactamente 1 proceso
-setsid sh -c '
+restart_worker='
     sleep 1
     if systemctl --user is-active --quiet quickshell.service 2>/dev/null || systemctl --user is-enabled --quiet quickshell.service 2>/dev/null; then
         systemctl --user restart quickshell.service 2>/dev/null || true
@@ -225,6 +225,12 @@ setsid sh -c '
         sleep 1
         nohup env QSG_RENDER_LOOP=threaded qs -c "'"$INSTALL_DIR"'" </dev/null >/dev/null 2>&1 & disown
     fi
-' >/dev/null 2>&1 &
+'
+
+if command -v systemd-run >/dev/null 2>&1; then
+    systemd-run --user sh -c "$restart_worker" >/dev/null 2>&1 &
+else
+    setsid sh -c "$restart_worker" >/dev/null 2>&1 &
+fi
 
 exit 0
