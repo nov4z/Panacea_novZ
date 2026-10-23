@@ -3,7 +3,7 @@
 # 🌌 Panacea_novZ
 
 **Suite de interfaz de escritorio, Notch Dinámico y Centro de Control para Wayland & Hyprland**  
-*Bifurcación, optimización y rediseño profundo del proyecto original [Panacea](https://github.com/EnsixD/Panacea) creado por [EnsixD](https://github.com/EnsixD)*
+*Bifurcación, optimización, expansión y rediseño profundo del proyecto original [Panacea](https://github.com/EnsixD/Panacea) creado por [EnsixD](https://github.com/EnsixD)*
 
 [![Arch Linux](https://img.shields.io/badge/ARCH%20LINUX-1793D1?style=for-the-badge&logo=arch-linux&logoColor=white)](https://archlinux.org/)
 [![Ubuntu](https://img.shields.io/badge/UBUNTU-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)](https://ubuntu.com/)
@@ -14,8 +14,10 @@
 [![Niri](https://img.shields.io/badge/NIRI-BETA-7852FF?style=for-the-badge&labelColor=444444)](https://github.com/YaLTeR/niri)
 [![Quickshell](https://img.shields.io/badge/QUICKSHELL-777777?style=for-the-badge&logo=qt&logoColor=white)](https://quickshell.outfoxxed.me/)
 [![Fish](https://img.shields.io/badge/FISH-000000?style=for-the-badge&logo=fish&logoColor=white)](https://fishshell.com/)
+[![Tests](https://img.shields.io/badge/TESTS-285%2F285%20PASSED-brightgreen?style=for-the-badge&logo=checkmarx)](tests/)
 [![MIT](https://img.shields.io/badge/MIT-2B78FF?style=for-the-badge)](LICENSE)
 <br/>
+[![Repositorio novZ](https://img.shields.io/badge/GitHub-nov4z%2FPanacea__novZ-black?style=for-the-badge&logo=github)](https://github.com/nov4z/Panacea_novZ)
 [![Repositorio Original](https://img.shields.io/badge/Repositorio%20Original-EnsixD%2FPanacea-blue?style=for-the-badge&logo=github)](https://github.com/EnsixD/Panacea)
 
 <br/>
@@ -26,10 +28,10 @@
 > 
 > Este repositorio es una versión perfeccionada, expandida y adaptada del proyecto original **[Panacea](https://github.com/EnsixD/Panacea)**, cuyo creador y autor conceptual original es **[EnsixD](https://github.com/EnsixD)**. Todo el mérito por la concepción arquitectónica de la barra y el concepto inicial le pertenece a él.
 > 
-> Todas las optimizaciones visuales, el motor acústico desacoplado, el sistema dinámico de letras sincronizadas, el rediseño Dark Unibody y las correcciones de estabilidad fueron **completamente vibecodeados por NovZ** (*vibecoding / vibecodeado por NovZ*), llevando la experiencia a un estándar cinematográfico, fluido y libre de asperezas.
+> Todas las optimizaciones visuales, el motor acústico desacoplado, el sistema dinámico de letras sincronizadas (SpicyLyrics 60 FPS / 50ms), el rediseño Dark Unibody, la localización trilingüe en tiempo real, el gestor de instalación limpia y las correcciones de estabilidad universal fueron **completamente vibecodeadas por NovZ** (*vibecoding / vibecodeado por NovZ*), llevando la experiencia a un estándar cinematográfico, fluido y libre de asperezas.
 
-> [!NOTE]
-> **🌐 Idioma de la interfaz**: Por ahora, todos los menús, paneles de configuración y módulos nuevos que no forman parte del Panacea original están disponibles actualmente **únicamente en español**.
+> [!TIP]
+> **🌐 Soporte Multilingüe en Tiempo Real**: Panacea_novZ cuenta con localización trilingüe completa (**Español**, **English** y **Русский**) con más de 1,500 claves traducidas y cambio instantáneo reactivo sin necesidad de reiniciar la sesión, además de selector visual de distribución y atajos de teclado desde el menú.
 
 </div>
 
@@ -83,45 +85,58 @@
 
 ---
 
-## 🔍 Comparativa Detallada: ¿Qué se añadió en comparación al original de EnsixD?
+## 🔍 Novedades y Características Exclusivas de Panacea_novZ
 
-A continuación se detalla punto por punto el compendio de novedades, refactorizaciones y correcciones vibecodeadas en **Panacea_novZ** frente a la versión original de EnsixD:
+A continuación se detalla el compendio de novedades, refactorizaciones y correcciones desarrolladas y calibradas en **Panacea_novZ**:
 
-### 1. 🏝️ Notch Dinámico e Isla Interactiva (inspirada en la dinámica visual de la isla flotante tipo iPhone)
-- **Chasis Dark Unibody Continuo**: En el original existían recuadros de borde y fondos planos que producían desajustes visuales. En `Panacea_novZ` la cápsula utiliza un acabado unibody negro satinado continuo (`#141218`), con curvas hiperelípticas suaves.
-- **Resplandor Ambiental Reactivo (*Ambient Glow*)**: Sistema de halo y difusión de luz atmosférica configurable en intensidad (5% a 100%) y radio de dispersión (20px a 160px) que rodea el notch al compás de la música.
-- **Hover Peek Inteligente**: Capacidad de pasar el ratón por encima del notch contraído para ver de inmediato el título y glifo de la ventana actualmente activa.
+### 1. 🏝️ Notch Dinámico e Isla Interactiva (Dynamic Island)
+- **Chasis Dark Unibody Continuo**: Acabado negro satinado continuo (`#141218`) con curvas hiperelípticas suaves y eliminación total de recuadros o fondos desalineados.
+- **Resplandor Ambiental Reactivo (*Ambient Glow*)**: Sistema de halo atmosférico configurable en intensidad (5% a 100%) y radio de dispersión (20px a 160px) que pulsa con la música.
+- **Hover Peek Inteligente**: Muestra de inmediato el título y glifo de la ventana actualmente enfocada al pasar el puntero por el notch contraído.
 - **Aviso Háptico de Portapapeles (*Clipboard Flash*)**: Destello dinámico en la cápsula cada vez que se copia un elemento al buffer del sistema.
-- **Aura Reactiva de Audio (*Audio Ripple*)**: Pulsaciones suaves detrás del notch en reproducción activa sin interferir con la barra de tareas.
-- **Indicador Dinámico de Batería con Modos de Carga**: Animación de rayo fluido al conectar la fuente de poder y cambio dinámico de colorimetría por estado de carga.
+- **Aura Reactiva de Audio (*Audio Ripple*)**: Pulsaciones sutiles detrás del notch en reproducción activa sin interferir con la barra de tareas.
+- **Indicador Dinámico de Batería**: Animación de rayo fluido al conectar el cargador y colorimetría dinámica por estado de energía.
 
-### 2. 🎤 SpicyLyrics: Motor de Letras Sincronizadas en Tiempo Real
-- **Eliminación Total del "Efecto Punto Seguido"**: En implementaciones estándar de letras sincronizadas, al expandir tipográficamente la frase que está sonando, la última palabra salta de renglón de manera tosca. En `Panacea_novZ`, el motor precalcula márgenes y saltos de línea con predicción elástica, logrando que el texto fluya de forma 100% natural.
-- **Anticipación Acústica Milimétrica (~50 ms)**: Adelanto de fotograma acústico calibrado para que el resplandor de la frase coincida exactamente con el golpe de voz del cantante.
-- **Detección Dinámica de Tempo & Alineación Métrica (BPM Sync)**: Botón interactivo accesible universalmente en la cabecera flotante de SpicyLyrics y directamente en los controles de reproducción de la cápsula musical (`Super + M`) y centro de control (`Super + Z`). Analiza armónicamente la cadencia de la canción, calculando el BPM y alineando los versos con el pulso rítmico (*downbeat*), junto con controles de micro-ajuste fino (±10 ms).
-- **Backend LRCLIB Robusto**: Estrategia de búsqueda de 4 niveles (coincidencia estricta, limpieza de remasters/feat, búsqueda difusa y fallback para piezas puramente instrumentales).
-- **Caché Local Persistente y Atómico**: Almacenamiento local en `~/.cache/panacea/lyrics/` con hashes SHA-256 de alta velocidad, permitiendo lectura instantánea sin latencia de red.
-- **Desvanecimiento de Canvas**: Las ondas acústicas de fondo atenúan suavemente su opacidad al abrirse la vista de letras para garantizar contraste y legibilidad absoluta.
+### 2. 🎤 SpicyLyrics: Motor Cinemático de Letras a 60 FPS
+- **Eliminación Total del "Efecto Punto Seguido"**: Predicción elástica de márgenes y saltos de línea para que las palabras no salten bruscamente de renglón al agrandarse la fuente en tiempo real.
+- **Anticipación Acústica Milimétrica (~50 ms)**: Adelanto de fotograma calibrado para que el resplandor de la frase coincida exactamente con la voz del cantante.
+- **Sincronización BPM y Detección de Tempo (BPM Sync)**: Botón flotante accesible universalmente en la cabecera de SpicyLyrics y directamente en los controles de reproducción de la cápsula (`Super + M`) y centro de control (`Super + Z`). Calcula el BPM y alinea versos con el compás musical (*downbeat*), con micro-ajustes de $\pm 10\text{ ms}$.
+- **Backend LRCLIB Robusto**: Búsqueda en 4 niveles (coincidencia estricta, limpieza de remasters/tags, búsqueda difusa y fallback instrumental).
+- **Caché Local Atómico**: Almacenamiento instantáneo en `~/.cache/panacea/lyrics/` con hashes SHA-256.
 
 ### 3. 🎵 Cápsula Musical Expandida (`Super + M`)
-- **Modo Blanco y Negro Radiante**: Cuando la portada del álbum en reproducción carece de saturación de color (carátulas en escala de grises o minimalistas), el visualizador de ondas conmuta automáticamente a blanco puro radiante (`#ffffff`), evitando tonalidades opacas y manteniendo una estética premium.
-- **Transiciones de Altura Suaves**: La cápsula se redimensiona dinámicamente según se encuentre en modo control estándar o modo SpicyLyrics sin solapamientos de contenido.
+- **Modo Blanco y Negro Radiante**: Si la portada es monocromática o en escala de grises, el visualizador de ondas conmuta automáticamente a blanco puro radiante (`#ffffff`), evitando tonalidades opacas y manteniendo una estética premium.
+- **Transiciones de Altura Suaves**: Redimensionamiento dinámico entre modo control estándar y modo SpicyLyrics con físicas desacopladas.
 
 ### 4. 🎛️ Centro de Control Unificado Perfeccionado (`Super + Z`)
-- **Erradicación de Artefactos de Esquina**: Se eliminó de raíz el recuadro cuadrado residual que se dibujaba detrás de la tarjeta multimedia en esquinas redondeadas.
-- **Sliders Hápticos Continuos**: Deslizadores táctiles con física fluida para volumen maestro y brillo de pantalla.
-- **Selector Rápido de Dispositivos PipeWire**: Interfaz directa para conmutar entre altavoces, auriculares inalámbricos y salidas auxiliares con un solo clic.
+- **Erradicación de Artefactos de Esquina**: Chasis satinado sin recuadros residuales detrás de las carátulas multimedia.
+- **Sliders Hápticos Continuos**: Deslizadores táctiles fluidos para volumen maestro y brillo de pantalla.
+- **Selector Rápido de Dispositivos PipeWire**: Interfaz directa para conmutar entre altavoces, auriculares y salidas auxiliares con un solo clic.
 
 ### 5. 🔊 Estudio de Sonido Acústico Sintetizado (`sound_engine.py`)
-- **Desacoplamiento Matemático Estricto**: El motor acústico en Python fue completamente reescrito para independizar el *Spatial Stereo Width* (ancho estéreo vía efecto Haas / Mid-Side) de la *Cola de Reverb* (Room Decay Reverb). Variar el ancho estéreo no altera la duración del buffer, y variar el reverb no distorsiona el balance de canales.
-- **Síntesis Procedural a 48 kHz / 16-Bit**: Generación en tiempo real de tonos armónicos (`marimba`, `glass`, `fm`, `bit`, `bubble`) y pops hápticos de retroalimentación sin depender de archivos de audio de baja calidad.
-- **Librería de 7 Soundpacks Integrados**: Incluye `custom`, `nothing`, `material`, `zen`, `cyber`, `retro` y `bubble`.
+- **Desacoplamiento Matemático Estricto**: Independencia completa entre *Spatial Stereo Width* (efecto Haas / Mid-Side) y *Room Decay Reverb*. Variar el ancho no altera la duración del buffer, y variar el reverb no distorsiona el balance de canales.
+- **Síntesis Procedural a 48 kHz / 16-Bit**: Generación en tiempo real de tonos armónicos (`marimba`, `glass`, `fm`, `bit`, `bubble`) y pops hápticos sin archivos comprimidos de baja calidad.
+- **7 Soundpacks Integrados**: `custom`, `nothing`, `material`, `zen`, `cyber`, `retro` y `bubble`.
 
-### 6. 🛠️ Corrección de Bugs del Sistema & Portabilidad
-- **Solución al Bug de Caída de Volumen al 13% en Spotify**: Regla de configuración específica para `pipewire-pulse` que elimina la frustrante bajada de volumen automática que Spotify sufría en Linux al cambiar de canción.
-- **Localización Completa en Español y Estado de Batería Limpio**: Corrección de textos concatenados o residuales en ruso en la tarjeta de batería del centro de control; ahora muestra el estado en español impecable (`"En batería · Ahorro"`, `"Cargando · Ahorro"`, `"Conectado · Ahorro"`) con separador tipográfico limpio y traducciones pulidas.
-- **Cero Rutas Fijas (Hardcoding)**: Todos los componentes usan rutas relativas dinámicas y respetan la especificación XDG (`$XDG_CONFIG_HOME`, `$XDG_CACHE_HOME`).
-- **Instalador y Desinstalador Limpios**: Scripts [`install.sh`](install.sh) y [`uninstall.sh`](uninstall.sh) con soporte para respaldos automáticos fechados (*timestamped backups*).
+### 6. 🌐 Localización Trilingüe en Tiempo Real & Selector de Teclado
+- **Español, English y Русский**: Traducción completa y sin fugas idiomáticas en todos los paneles, widgets, centros de control y ajustes del sistema.
+- **Cambio Reactivo sin Reiniciar**: La interfaz conmuta el idioma en milisegundos mediante señales dinámicas en memoria sin necesidad de reiniciar Quickshell ni Hyprland.
+- **Configurador de Teclado desde el Menú (`SetInput.qml`)**: Selector visual de distribuciones (`Latam`, `España`, `US`, `Ruso`, combinados) y atajos de conmutación rápida (`Alt+Shift`, `Super+Space`) con aplicación en vivo vía `hyprctl`.
+
+### 7. 🚀 Ventana de Bienvenida & Detección de Primera Instalación
+- **Pantalla de Bienvenida Cinemática (`WelcomeView.qml`)**: Al instalar por primera vez o restablecer el sistema, despliega automáticamente una tarjeta interactiva con animación suave que presenta las modificaciones y características más destacadas.
+- **Acceso Permanente**: Se puede volver a abrir en cualquier momento desde **Ajustes → Sistema** (*"Ver Bienvenida y Novedades"*) o mediante el comando IPC `qs -c ~/.config/panacea ipc call pill welcome`.
+
+### 8. 🔄 Actualizador Conectado a nov4z & Reinstalación Limpia con Cooldown
+- **Actualizador Oficial nov4z**: Comprueba y descarga actualizaciones directamente desde [`nov4z/Panacea_novZ`](https://github.com/nov4z/Panacea_novZ), mostrando con precisión la versión y el commit instalado (`Panacea 1.0.14-novz · compilación <hash>`).
+- **Reinstalación Limpia desde Cero con Doble Confirmación**: Botón dedicado al lado de "Comprobar versiones" con cuenta regresiva obligatoria de **5 segundos por cada confirmación**.
+- **Limpieza Completa y Rollback Atómico**: Limpia la configuración, la caché de bytecode compilado (`~/.cache/quickshell/qmlcache`), canalizaciones de shaders y temporales. Si ocurre un fallo durante la descarga o compilación, el sistema restaura de forma atómica el estado anterior para no romper tu sesión.
+- **Detección de Estado Post-Reinstalación**: Al iniciar tras reinstalar desde el menú, la shell notifica si la instalación concluyó con éxito (banner verde + `voice_done`) o si requirió restaurar el respaldo (aviso crítico + `lowbatt`).
+
+### 9. 🖥️ Widgets de Escritorio Nothing OS & Universalidad de Hardware
+- **Widgets Dinámicos (`WidgetsView.qml`, `WeatherDetailsView.qml`, `CalendarView.qml`)**: Reloj Nothing OS, clima multilínea sin colisiones tipográficas, calendario interactivo y medidores de sistema independientes.
+- **Hardware Universal**: Adaptado para cualquier laptop o PC de escritorio (no solo Lenovo LOQ), con monitores de hardware precisos (disco, carga, procesos) y fallbacks limpios.
+- **Solución al Bug de Caída de Volumen en Spotify**: Regla de configuración específica para `pipewire-pulse` que elimina la bajada de volumen automática al 13% en Spotify.
 
 ---
 
@@ -158,12 +173,12 @@ curl -sSL https://raw.githubusercontent.com/nov4z/Panacea_novZ/main/install.sh |
    ```
 
 El instalador se encargará de:
-1. Comprobar e instalar dependencias del sistema vía `pacman`/`yay`/`paru`.
+1. Comprobar e instalar dependencias del sistema vía gestores de paquetes (`pacman`, `yay`, `paru`, `apt`, `dnf`).
 2. Crear un respaldo fechado de cualquier configuración previa en `~/.config/panacea.backup_<fecha>`.
-3. Desplegar los componentes QML, scripts, temas y soundpacks en `~/.config/panacea/`.
+3. Sincronizar y enlazar todos los componentes QML, scripts, temas y soundpacks en `~/.config/panacea/`.
 4. Asignar permisos ejecutables a todos los scripts auxiliares.
 5. Aplicar la regla de estabilidad de volumen para Spotify en `pipewire-pulse`.
-6. Configurar el arranque automático en tu archivo de configuración de Hyprland (`exec-once = qs -c ~/.config/panacea`).
+6. Configurar el arranque automático seguro en tu archivo de configuración de Hyprland (`exec-once = pgrep -x qs >/dev/null || qs -c ~/.config/panacea`).
 
 ---
 
@@ -173,7 +188,7 @@ El instalador se encargará de:
 | :--- | :--- | :--- |
 | <kbd>SUPER</kbd> + <kbd>M</kbd> | **Cápsula Musical / Dynamic Island** | Expande el reproductor con onda acústica y letras sincronizadas (SpicyLyrics). |
 | <kbd>SUPER</kbd> + <kbd>Z</kbd> | **Centro de Control Unibody** | Abre el panel general de volumen, brillo, estado de red y toggles rápidos. |
-| <kbd>SUPER</kbd> + <kbd>I</kbd> | **Ajustes de Notch & Audio** | Abre el estudio de personalización visual y el banco de sonido acústico. |
+| <kbd>SUPER</kbd> + <kbd>I</kbd> | **Hub de Configuración** | Abre el panel central de ajustes (Apariencia, Idioma, Teclado, Notch, Sonido, Sistema). |
 | <kbd>SUPER</kbd> + <kbd>Space</kbd> | **Lanzador de Aplicaciones** | Despliega el launcher flotante de aplicaciones. |
 | <kbd>SUPER</kbd> + <kbd>Shift</kbd> + <kbd>W</kbd> | **Menú Rápido Wi-Fi** | Lista interactiva de redes inalámbricas para conexión inmediata. |
 | <kbd>SUPER</kbd> + <kbd>Shift</kbd> + <kbd>B</kbd> | **Menú Rápido Bluetooth** | Administrador de emparejamiento y conexión de auriculares y dispositivos. |
@@ -187,24 +202,31 @@ El instalador se encargará de:
 Puedes interactuar con Panacea_novZ desde cualquier terminal o script en tiempo real:
 
 ```bash
-# Alternar reproductor y letras
+# Alternar reproductor musical y letras en tiempo real
 qs -c ~/.config/panacea ipc call pill music
 qs -c ~/.config/panacea ipc call pill toggleLyrics
 
-# Abrir el Centro de Control
+# Abrir el Centro de Control y Ajustes
 qs -c ~/.config/panacea ipc call pill controls
+qs -c ~/.config/panacea ipc call pill settings
 
 # Desplegar menús rápidos de red
 qs -c ~/.config/panacea ipc call pill wifi
 qs -c ~/.config/panacea ipc call pill bluetooth
+
+# Abrir la ventana de Bienvenida y Novedades
+qs -c ~/.config/panacea ipc call pill welcome
+
+# Cerrar de forma inteligente cualquier ventana o modal activo
+qs -c ~/.config/panacea ipc call pill smartClose
 ```
 
 ---
 
 ## 📦 Requisitos del Sistema
 
-- **Sistema Operativo**: Linux (Arch Linux, CachyOS, Fedora, Ubuntu o cualquier distribución con soporte Wayland).
-- **Compositor Wayland**: Hyprland (recomendado) o compositores compatibles con LayerShell.
+- **Sistema Operativo**: Linux (Arch Linux, CachyOS, Fedora, Ubuntu, Debian o cualquier distribución con soporte Wayland).
+- **Compositor Wayland**: Hyprland (recomendado) o compositores compatibles con LayerShell (Niri, Sway).
 - **Shell Engine**: `quickshell` (o `quickshell-git`).
 - **Librerías Qt6**: `qt6-declarative`, `qt6-multimedia`, `qt6-svg`, `qt6-5compat`, `qt6-wayland`.
 - **Audio & Media**: `pipewire`, `wireplumber`, `pipewire-pulse`, `playerctl`, `cava`.
@@ -221,23 +243,59 @@ Panacea_novZ/
 │   ├── shell.qml                 # Contenedor central, Notch Dinámico e IpcHandler
 │   ├── ControlsView.qml          # Centro de Control Super + Z Dark Unibody
 │   ├── IslandMusicView.qml       # Cápsula musical expandible Super + M
-│   ├── SpicyLyricsView.qml       # Visor cinemático de letras en tiempo real
+│   ├── SpicyLyricsView.qml       # Visor cinemático de letras en tiempo real (60 FPS / 50ms)
+│   ├── WelcomeView.qml           # Ventana de Bienvenida y vitrina de novedades novZ
+│   ├── SettingsView.qml          # Hub central de configuración
+│   ├── SetAppearance.qml         # Selector de temas (Material You, Nothing OS) e idioma en tiempo real
+│   ├── SetInput.qml              # Configurador interactivo de teclado y variantes
+│   ├── SetSystem.qml             # Monitor del sistema, autor cards, actualizador y reinstalación
 │   ├── SetCustomNotch.qml        # Estudio de personalización y vista previa de Notch
 │   ├── SetSounds.qml             # Estudio de audio, efectos y reverberación
-│   ├── SettingsView.qml          # Hub central de configuración
+│   ├── WidgetsView.qml           # Widgets de escritorio Nothing OS
+│   ├── WeatherDetailsView.qml    # Modal detallado del pronóstico del tiempo
+│   ├── CalendarView.qml          # Calendario dinámico Nothing OS
 │   ├── Themes.js                 # Paletas de color dinámicas y tokens de diseño
-│   └── Translations.qml          # Soporte multi-idioma (Español / Inglés)
+│   └── Translations.qml          # Soporte multi-idioma completo (Español, English, Русский)
 ├── assets/                       # Iconos vectoriales y gráficos de interfaz
-├── scripts/                      # Daemons y scripts auxiliares (brillo, red, letras)
+├── scripts/                      # Daemons y scripts auxiliares
+│   ├── update.sh                 # Actualizador semántico vinculado a nov4z/Panacea_novZ
+│   ├── reinstall.sh              # Script de reinstalación limpia desde 0 con rollback de seguridad
+│   ├── geninput.sh               # Gestor de distribuciones de teclado en vivo
+│   ├── sound_engine.py           # Motor acústico en tiempo real (ancho estéreo + reverb)
+│   └── ...                       # Módulos de red, batería, clima y portapapeles
 ├── screenshots/                  # Galería visual y demos grabadas en alta resolución
 ├── sounds/                       # Soundpacks acústicos completos
-├── tests/                        # Suite de pruebas de integridad automatizadas
+├── tests/                        # Suite automatizada (285 pruebas de integridad en 10 tiers)
+│   ├── run_tests.py              # Ejecutor de pruebas unificado
+│   └── test_*.py                 # Tests unitarios y de integración
 ├── install.sh                    # Asistente de instalación automatizado
-├── uninstall.sh                  # Script de desinstalación y restauración
-├── sound_engine.py               # Motor acústico en tiempo real (ancho + reverb)
+├── uninstall.sh                  # Script de desinstalación y restauración limpia
 ├── settings.json.example         # Plantilla predeterminada de configuración
 └── LICENSE                       # Licencia MIT de software libre
 ```
+
+---
+
+## 🧪 Pruebas Automatizadas e Integridad
+
+Panacea_novZ cuenta con una rigurosa suite de pruebas automatizadas que cubren 10 niveles (*tiers*) de arquitectura:
+
+```bash
+python3 tests/run_tests.py
+```
+
+- **Tier 1**: Sintaxis y validación de gramática QML.
+- **Tier 2**: Integridad y cobertura de localización (1,521+ claves en ES, EN, RU).
+- **Tier 3**: Pruebas acústicas y desacoplamiento matemático del motor de sonido.
+- **Tier 4**: Backend y algoritmos de sincronización de SpicyLyrics.
+- **Tier 5**: Consistencia de tokens y paletas de color en `Themes.js`.
+- **Tier 6**: Permisos, robustez y ejecución segura de scripts en `scripts/`.
+- **Tier 7**: Cobertura de atajos de teclado y contratos IPC.
+- **Tier 8**: Respeto al estándar XDG y persistencia de configuración.
+- **Tier 9**: Contratos de diseño visual Dark Unibody y métricas.
+- **Tier 10**: Scripts de actualización, rollback seguro de reinstalación limpia y ciclo de vida de bienvenida.
+
+> **Resultado actual**: `285/285 pruebas aprobadas (100% SUCCESS)` con cero fallos y cero regresiones.
 
 ---
 
@@ -265,7 +323,7 @@ El script detectará los respaldos generados previamente durante la instalación
 Quiero dar el debido crédito y agradecer de corazón a las personas y proyectos que hacen posible esta experiencia:
 
 - **Proyecto Original**: Todo el reconocimiento y respeto a **[EnsixD](https://github.com/EnsixD)** por concebir la idea y crear la base de **[Panacea](https://github.com/EnsixD/Panacea)**. Yo tomé su excelente trabajo como punto de partida y me dediqué a vibecodearlo, rediseñarlo y pulirlo a fondo para llevarlo al siguiente nivel.
-- **Modificación y Vibecoding**: NovZ ([@nov4z](https://github.com/nov4z)) — arquitectura visual Dark Unibody, motor acústico procedural desacoplado, sincronización y predicción cinemática de SpicyLyrics, optimizaciones de rendimiento y estabilidad en Wayland/Hyprland.
+- **Modificación y Vibecoding**: NovZ ([@nov4z](https://github.com/nov4z)) — arquitectura visual Dark Unibody, motor acústico procedural desacoplado, sincronización y predicción cinemática de SpicyLyrics, localización trilingüe en tiempo real, ventana de bienvenida, actualizador directo novZ con reinstalación limpia y optimizaciones de rendimiento y estabilidad en Wayland/Hyprland.
 - **Licencia de Código**: Publicado bajo licencia abierta **MIT**, en total respeto y apego a los términos del software libre original. Revisa el archivo [LICENSE](LICENSE) para más información.
 
 <br/>
@@ -295,5 +353,5 @@ Esta suite fue construida sobre el trabajo de fantásticos proyectos de la comun
 ---
 
 <div align="center">
-  <sub>Basado con admiración en el trabajo original de <b><a href="https://github.com/EnsixD/Panacea">EnsixD</a></b> • Edición vibecodeada por NovZ</sub>
+  <sub>Basado con admiración en el trabajo original de <b><a href="https://github.com/EnsixD/Panacea">EnsixD</a></b> • Edición vibecodeada por NovZ (<a href="https://github.com/nov4z/Panacea_novZ">nov4z/Panacea_novZ</a>)</sub>
 </div>
