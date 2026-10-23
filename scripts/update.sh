@@ -280,11 +280,35 @@ restore_user_state() {
     for f in "${KEEP[@]}"; do
         if [ -f "$STASH/${f#$HOME/}" ]; then
             mkdir -p "$(dirname "$f")"
-            if [ "$f" = "$CONF/panacea/settings.json" ] && command -v jq >/dev/null 2>&1 && [ -f "$f" ]; then
+            if [ "$f" = "$CONF/panacea/settings.json" ] && [ -f "$f" ]; then
                 local tmp_json
                 tmp_json="$(mktemp)"
-                if jq -s '.[0] * .[1] | .hasSeenWelcome = true' "$f" "$STASH/${f#$HOME/}" > "$tmp_json" 2>/dev/null; then
-                    mv "$tmp_json" "$f"
+                if command -v jq >/dev/null 2>&1; then
+                    if jq -s '.[0] * .[1] | .hasSeenWelcome = true' "$f" "$STASH/${f#$HOME/}" > "$tmp_json" 2>/dev/null; then
+                        mv "$tmp_json" "$f"
+                    else
+                        rm -f "$tmp_json"
+                        cp "$STASH/${f#$HOME/}" "$f"
+                    fi
+                elif command -v python3 >/dev/null 2>&1; then
+                    if python3 -c '
+import json, sys
+try:
+    with open(sys.argv[1]) as f1, open(sys.argv[2]) as f2:
+        d1 = json.load(f1)
+        d2 = json.load(f2)
+    d1.update(d2)
+    d1["hasSeenWelcome"] = True
+    with open(sys.argv[3], "w") as out:
+        json.dump(d1, out, indent=4)
+except Exception:
+    sys.exit(1)
+' "$f" "$STASH/${f#$HOME/}" "$tmp_json" 2>/dev/null; then
+                        mv "$tmp_json" "$f"
+                    else
+                        rm -f "$tmp_json"
+                        cp "$STASH/${f#$HOME/}" "$f"
+                    fi
                 else
                     rm -f "$tmp_json"
                     cp "$STASH/${f#$HOME/}" "$f"
@@ -470,7 +494,7 @@ cmd_apply() {
     # выглядело сорвавшимся и предлагалось снова при каждом запуске. Поэтому
     # установщик оболочку не трогает, а перезапуск делаем сами и в самом конце.
     echo "step=install"
-    if ! (cd "$tmp/src" && bash ./install.sh --no-deps --no-sddm --no-grub \
+    if ! (cd "$tmp/src" && env XDG_CONFIG_HOME="$CONF" PANACEA_INSTALL_DIR="$CONF/panacea" bash ./install.sh --no-deps --no-sddm --no-grub \
             --no-services --no-wallpapers --no-restart --no-backup --yes >"$tmp/log" 2>&1); then
         restore_user_state
         echo "status=error"
@@ -503,6 +527,16 @@ cmd_apply() {
 
     echo "step=restore"
     restore_user_state
+
+    # Asegurar sincronización y vinculación de componentes QML (WelcomeView, etc.)
+    if [ -d "$CONF/panacea/qml" ]; then
+        for f in "$CONF/panacea/qml/"*.qml "$CONF/panacea/qml/Themes.js"; do
+            [ -f "$f" ] && ln -sfn "qml/$(basename "$f")" "$CONF/panacea/$(basename "$f")"
+        done
+        ln -sfn ../assets "$CONF/panacea/qml/assets" 2>/dev/null || true
+        ln -sfn ../scripts "$CONF/panacea/qml/scripts" 2>/dev/null || true
+        ln -sfn ../sounds "$CONF/panacea/qml/sounds" 2>/dev/null || true
+    fi
 
     # Новая версия могла добавить зависимости, а ставим мы с --no-deps:
     # хватать пакеты без спроса, да ещё и через sudo из-под кнопки в
@@ -615,19 +649,20 @@ EOF
 
         if systemctl --user is-active --quiet quickshell.service 2>/dev/null || systemctl --user is-enabled --quiet quickshell.service 2>/dev/null; then
             systemctl --user restart quickshell.service 2>/dev/null || true
-        fi
-        sleep 1
-        if ! pgrep -x qs >/dev/null 2>&1; then
-            pkill -x qs 2>/dev/null || true
             sleep 1
-            nohup env QSG_RENDER_LOOP=threaded qs -c "'"$CONF"'/panacea" </dev/null >/dev/null 2>&1 & disown
+            if systemctl --user is-active --quiet quickshell.service 2>/dev/null; then
+                exit 0
+            fi
         fi
+        pkill -x qs 2>/dev/null || true
+        sleep 1
+        exec qs -c "'"$CONF"'/panacea"
     '
 
     if command -v systemd-run >/dev/null 2>&1; then
-        systemd-run --user sh -c "$restart_worker" >/dev/null 2>&1 &
+        systemd-run --user bash -c "$restart_worker" >/dev/null 2>&1 &
     else
-        setsid sh -c "$restart_worker" >/dev/null 2>&1 &
+        setsid bash -c "$restart_worker" >/dev/null 2>&1 &
     fi
 }
 

@@ -5500,6 +5500,7 @@ PanelWindow {
         }
         function welcome(): void { root.openWelcome(); }
         function dismissWelcome(): void { root.dismissWelcome(); }
+        function dismissWhatsNew(): void { root.dismissWhatsNew(); }
         function settings(): void { root.settingsTab = 0; root.togglePage("settings"); }
         // открыть окно настроек сразу на нужном разделе: удобно вешать на
         // сочетание клавиш и незаменимо при проверке самих настроек

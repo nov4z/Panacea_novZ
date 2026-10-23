@@ -218,19 +218,20 @@ restart_worker='
     sleep 1
     if systemctl --user is-active --quiet quickshell.service 2>/dev/null || systemctl --user is-enabled --quiet quickshell.service 2>/dev/null; then
         systemctl --user restart quickshell.service 2>/dev/null || true
-    fi
-    sleep 1
-    if ! pgrep -x qs >/dev/null 2>&1; then
-        pkill -x qs 2>/dev/null || true
         sleep 1
-        nohup env QSG_RENDER_LOOP=threaded qs -c "'"$INSTALL_DIR"'" </dev/null >/dev/null 2>&1 & disown
+        if systemctl --user is-active --quiet quickshell.service 2>/dev/null; then
+            exit 0
+        fi
     fi
+    pkill -x qs 2>/dev/null || true
+    sleep 1
+    exec qs -c "'"$INSTALL_DIR"'"
 '
 
 if command -v systemd-run >/dev/null 2>&1; then
-    systemd-run --user sh -c "$restart_worker" >/dev/null 2>&1 &
+    systemd-run --user bash -c "$restart_worker" >/dev/null 2>&1 &
 else
-    setsid sh -c "$restart_worker" >/dev/null 2>&1 &
+    setsid bash -c "$restart_worker" >/dev/null 2>&1 &
 fi
 
 exit 0

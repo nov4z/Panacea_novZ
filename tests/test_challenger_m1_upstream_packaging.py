@@ -1136,9 +1136,13 @@ class TestReinstallCleanWorkflow(unittest.TestCase):
         self.assertIn("systemctl --user restart quickshell.service", update_content)
         self.assertIn("systemd-run", update_content, "update.sh must decouple restart via systemd-run")
         self.assertIn(".hasSeenWelcome = true", update_content, "update.sh must mark hasSeenWelcome on update restore")
+        self.assertIn("PANACEA_INSTALL_DIR", update_content, "update.sh must propagate PANACEA_INSTALL_DIR to install.sh")
+        self.assertIn("exec qs -c", update_content, "update.sh restart worker must exec qs for reliable standalone lifetime")
+        self.assertIn("ln -sfn \"qml/$(basename \"$f\")\"", update_content, "update.sh must ensure QML components are linked")
 
-        # 2. reinstall.sh systemd-run decoupling
+        # 2. reinstall.sh systemd-run decoupling and exec fallback
         self.assertIn("systemd-run", reinstall_content, "reinstall.sh must decouple restart via systemd-run")
+        self.assertIn("exec qs -c", reinstall_content, "reinstall.sh restart worker must exec qs for reliable standalone lifetime")
 
         # 3. install.sh checks both is-active and is-enabled
         self.assertIn("is-active", install_content)
